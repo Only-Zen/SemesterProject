@@ -10,6 +10,11 @@ public class Enemy
     /**
      * The abstract class for a general enemy.
      */
+    protected Coordinate position;
+    protected Coordinate nextCoord;
+    protected int speed;
+    protected int health;
+    protected int size;
     
     
     public Enemy(Coordinate position, int speed, int health, GamePanel gp){
@@ -89,10 +94,4 @@ public class Enemy
         
         return size;
     }
-
-    protected Coordinate position;
-    protected Coordinate nextCoord;
-    protected int speed;
-    protected int health;
-    protected int size;
 }
