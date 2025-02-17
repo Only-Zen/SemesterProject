@@ -79,6 +79,9 @@ public class GamePanel extends JPanel implements Runnable {
         mouseCoord.setY(newMouseCoord.getY());
         
         // Update all projectiles (so they move toward their targets)
+        for (Tower tower : towers) {
+            tower.update();
+        }
         for (Projectile projectile : projectile) {
             projectile.update();
         }

@@ -2,6 +2,8 @@ package tower;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import entity.Enemy;
+import entity.Projectile;
 import main.Coordinate;
 import main.GamePanel;
 
@@ -18,7 +20,7 @@ public class Tower {
         this.range = range;
         this.damage = damage;
         this.firerate = firerate;
-        this.cooldownTimer = cooldownTimer;
+        this.cooldownTimer = 0; //cooldownTimer; I believe cooldownTimer constructor parameter not needed
         this.gp = gp;
     }
     
@@ -30,11 +32,30 @@ public class Tower {
     }
     
     public void update(){
-        // to do
+        // countsdown cooldownTimer if it isn't 0. If countdownTimer is 0, it can iterate through enemy list
+        
+        if (cooldownTimer > 0){
+            cooldownTimer--;
+        }
+        else{
+            for (Enemy enemy: gp.enemies){
+            //iterates through all enemies and checks if they are in range. Will stop if enemy targeted
+            
+                if(this.isEnemyInRange(enemy)){
+                    this.shoot(enemy.getPosition());
+                    cooldownTimer = gp.FPS/firerate;
+                    break;
+                }
+            }
+        }
+        
     }
     
-    public void shoot(){
-        //to do
+    public void shoot(Coordinate target){
+        //adds a projectile to the projectile array list
+        Coordinate projPos = new Coordinate(position.getX() + gp.tileSize/2, position.getY() + gp.tileSize/2, gp);
+        int projDam = damage;
+        gp.projectile.add(new Projectile(projPos, target, 4, projDam, gp));
     }
     
     public void place(Coordinate mouseCoordinate){
@@ -43,10 +64,16 @@ public class Tower {
         position.setX(Math.floorDiv(mouseCoordinate.getX(), gp.tileSize) * gp.tileSize);
         position.setY(Math.floorDiv(mouseCoordinate.getY(), gp.tileSize) * gp.tileSize);
         
+        gp.towers.add(this);
+        
     }
     
-    public boolean isEnemyInRange(){
-        //to do
-        return false;
+    public boolean isEnemyInRange(Enemy enemy){
+        //calculates the hypotanus of the x difference and y difference of distance between tower and enemy
+        //returns if it is less than or equal the range
+        
+        double xDiff = enemy.getPosition().getX() - this.position.getX();
+        double yDiff = enemy.getPosition().getY() - this.position.getY();
+        return Math.hypot(xDiff,yDiff) <= this.range;
     }
 }
