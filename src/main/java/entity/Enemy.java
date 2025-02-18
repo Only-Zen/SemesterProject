@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import main.Coordinate;
 import main.GamePanel;
+
 public class Enemy
 {
     /**
