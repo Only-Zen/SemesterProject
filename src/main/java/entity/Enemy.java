@@ -1,10 +1,8 @@
 package entity;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import main.Coordinate;
 import main.GamePanel;
-
 public class Enemy
 {
     /**
@@ -15,16 +13,17 @@ public class Enemy
     protected int speed;
     protected int health;
     protected int size;
-    
+    GamePanel gp;
     
     public Enemy(Coordinate position, int speed, int health, GamePanel gp){
         // Instantiate the coordinate with the given x and y values.
-        this.position = position;
+        this.position   = position;
         // Optionally, if you need nextCoord for pathfinding or movement, initialize it:
-        this.nextCoord = position;
-        this.speed = speed;
-        this.health = health;
-        this.size = gp.tileSize;
+        this.nextCoord  = position;
+        this.speed      = speed;
+        this.health     = health;
+        this.gp         = gp;
+        this.size       = gp.tileSize;
     }
     
     public void draw(Graphics2D g2)
@@ -56,7 +55,7 @@ public class Enemy
          */
         
         health = (health - damage);
-        if (health < 0)
+        if (health <= 0)
         {
             onDeath();
         }
@@ -68,7 +67,7 @@ public class Enemy
          * Handles deleting an enemy upon death.
          */
         
-        //Leaving blank for now. Return to this later.
+        gp.enemies.removeIf(enem -> enem.equals(this));
     }
     
     public int getHealth()
@@ -82,6 +81,11 @@ public class Enemy
     }
     
     public Coordinate getPosition(){
+        /**
+         * Getter that returns the position of an enemy.
+         * @return the position value as a Coordinate
+         */
+        
         return position;
     }
     
