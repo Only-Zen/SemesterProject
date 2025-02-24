@@ -73,7 +73,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
-
+    
     public void update() {
         // Update the mouse coordinate from the MouseHandler
         Coordinate newMouseCoord = mouseH.getMouseCoordinate();
@@ -87,8 +87,22 @@ public class GamePanel extends JPanel implements Runnable {
         for (Projectile projectile : projectile) {
             projectile.update();
         }
+        // Update all projectiles (so striking projectiles do damage and despawn)
+        for (Projectile curProjectile : projectile){
+            for (Enemy enemy : enemies) {
+                // Find cartesian distances from enemy to projectile
+                int deltaX = (enemy.getPosition().getX()) - (curProjectile.getPosition().getX());
+                int deltaY = (enemy.getPosition().getY()) - (curProjectile.getPosition().getY());
+                
+                if((Math.abs(deltaX) <= enemy.getSize()) || (Math.abs(deltaY) <= enemy.getSize()) ){
+                    enemy.takeDamage(curProjectile.getDamage()); //enemy takes damage if in range                   
+                    projectile.remove(curProjectile); //Remove current projectile from Projectile
+                    break; //skip to next projectile
+                }
+            }
+        }
     }
-
+    
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
