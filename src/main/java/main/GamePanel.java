@@ -8,20 +8,24 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import entity.Enemy;
 import entity.Projectile;
+import java.util.Iterator;
+import java.util.Random;
 import tile.Grid;
 import tower.Tower;
 
 public class GamePanel extends JPanel implements Runnable {
 
     // Tile and screen settings
-    final int originalTileSize = 16;
-    final int scale = 3;
-    public final int tileSize = originalTileSize * scale;
-    public final int maxScreenCol = 32;
-    public final int maxScreenRow = 16;
-    public final int screenWidth = tileSize * maxScreenCol;
-    public final int screenHeight = tileSize * maxScreenRow;
+    final int ORIGINALTILESIZE = 16;
+    final int SCALE = 3;
+    public final int TILESIZE = ORIGINALTILESIZE * SCALE;
+    public final int MAXSCREENCOL = 32;
+    public final int MAXSCREENROW = 16;
+    public final int SCREENWIDTH = TILESIZE * MAXSCREENCOL;
+    public final int SCREENHEIGHT = TILESIZE * MAXSCREENROW;
 
+    public Random random = new Random();
+    Sound sound = new Sound();
     Grid grid = new Grid(this);
     public final int FPS = 60;
     Thread gameThread;
@@ -35,7 +39,7 @@ public class GamePanel extends JPanel implements Runnable {
     private Coordinate mouseCoord;
 
     public GamePanel() {
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        this.setPreferredSize(new Dimension(SCREENWIDTH, SCREENHEIGHT));
         this.setBackground(Color.GRAY);
         this.setDoubleBuffered(true);
         this.setFocusable(true);
@@ -47,6 +51,7 @@ public class GamePanel extends JPanel implements Runnable {
         mouseH = new MouseHandler(this);
         this.addMouseListener(mouseH);
         this.addMouseMotionListener(mouseH);
+        playMusic(0);
     }
 
     public void startGameThread() {
@@ -84,21 +89,37 @@ public class GamePanel extends JPanel implements Runnable {
         for (Tower tower : towers) {
             tower.update();
         }
-        for (Projectile projectile : projectile) {
-            projectile.update();
+        
+        for (Enemy enemy : enemies){
+            enemy.update();
         }
-        // Update all projectiles (so striking projectiles do damage and despawn)
-        for (Projectile curProjectile : projectile){
+        
+        Iterator<Projectile> projectileIterator = projectile.iterator();
+        
+        while (projectileIterator.hasNext()) {
+            Projectile curProjectile = projectileIterator.next();
+
+            // Move/update the projectile
+            curProjectile.update();
+
             for (Enemy enemy : enemies) {
-                // Find cartesian distances from enemy to projectile
-                int deltaX = (enemy.getPosition().getX()) - (curProjectile.getPosition().getX());
-                int deltaY = (enemy.getPosition().getY()) - (curProjectile.getPosition().getY());
+
+                // Calculate deltaX and deltaY
+                int deltaX = enemy.getPosition().getX()+(enemy.getSize()/2) - curProjectile.getPosition().getX();
+                int deltaY = enemy.getPosition().getY()+(enemy.getSize()/2) - curProjectile.getPosition().getY();
+
                 
-                if((Math.abs(deltaX) <= enemy.getSize()) || (Math.abs(deltaY) <= enemy.getSize()) ){
-                    enemy.takeDamage(curProjectile.getDamage()); //enemy takes damage if in range                   
-                    projectile.remove(curProjectile); //Remove current projectile from Projectile
-                    break; //skip to next projectile
+                double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+                if (distance <= enemy.getSize()/2) {
+                    // The projectile has collided with the enemy
+                    enemy.takeDamage(curProjectile.getDamage());
+
+                    // Remove the projectile from the list
+                    projectileIterator.remove();
+                    break; // No need to check more enemies for this projectile
                 }
+
             }
         }
     }
@@ -120,7 +141,7 @@ public class GamePanel extends JPanel implements Runnable {
         // (We use the tile coordinate from the MouseHandler and multiply by the tile size.)
         Coordinate tileCoord = mouseH.getTileCoordinate();
         g.setColor(new Color(255, 0, 0, 80));
-        g.fillRect(tileCoord.getX(), tileCoord.getY(), tileSize, tileSize);
+        g.fillRect(tileCoord.getX(), tileCoord.getY(), TILESIZE, TILESIZE);
         
         
         
@@ -138,5 +159,10 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         g2.dispose();
+    }
+    
+    public void playMusic(int i){
+        sound.setFile(i);
+        sound.play();
     }
 }

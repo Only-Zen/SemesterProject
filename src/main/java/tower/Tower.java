@@ -53,7 +53,7 @@ public class Tower {
     
     public void shoot(Coordinate target){
         //adds a projectile to the projectile array list
-        Coordinate projPos = new Coordinate(position.getX() + gp.tileSize/2, position.getY() + gp.tileSize/2, gp);
+        Coordinate projPos = new Coordinate(position.getX() + gp.TILESIZE/2, position.getY() + gp.TILESIZE/2, gp);
         int projDam = damage;
         gp.projectile.add(new Projectile(projPos, target, 4, projDam, gp));
     }
@@ -61,8 +61,8 @@ public class Tower {
     public void place(Coordinate mouseCoordinate){
         //places and orientates the tower to the center of the tile
         
-        position.setX(Math.floorDiv(mouseCoordinate.getX(), gp.tileSize) * gp.tileSize);
-        position.setY(Math.floorDiv(mouseCoordinate.getY(), gp.tileSize) * gp.tileSize);
+        position.setX(Math.floorDiv(mouseCoordinate.getX(), gp.TILESIZE) * gp.TILESIZE);
+        position.setY(Math.floorDiv(mouseCoordinate.getY(), gp.TILESIZE) * gp.TILESIZE);
         
         gp.towers.add(this);
         

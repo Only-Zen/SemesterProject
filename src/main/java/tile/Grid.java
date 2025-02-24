@@ -15,14 +15,17 @@ public class Grid {
 
     public Grid(GamePanel gp){
         this.gp = gp;
-        tile = new Tile[10];
-        mapTileNum = new int[gp.maxScreenRow][gp.maxScreenCol];
+        // Make sure the array is big enough for all variants
+        tile = new Tile[100]; 
+        mapTileNum = new int[gp.MAXSCREENROW][gp.MAXSCREENCOL];
+
         getTileImage();
         loadMap("/maps/map.txt");
     }
 
     public void getTileImage(){
-        try{
+        try {
+            // Existing tiles
             tile[0] = new Tile();
             tile[0].image = ImageIO.read(getClass().getResourceAsStream("/tiles/sand.png"));
 
@@ -30,6 +33,7 @@ public class Grid {
             tile[1].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water.png"));
             tile[1].occupied = true;
 
+            // Original tile index 2 (generic grass)
             tile[2] = new Tile();
             tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass.png"));
 
@@ -42,6 +46,16 @@ public class Grid {
 
             tile[5] = new Tile();
             tile[5].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grasspath.png"));
+            
+            // New grass variants for randomization
+            tile[20] = new Tile();
+            tile[20].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass/0.png"));
+
+            tile[21] = new Tile();
+            tile[21].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass/1.png"));
+
+            tile[22] = new Tile();
+            tile[22].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass/2.png"));
 
         } catch(IOException e) {
             e.printStackTrace();
@@ -58,19 +72,31 @@ public class Grid {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             System.out.println("[PASS] Map file found!");
 
-            for (int row = 0; row < gp.maxScreenRow; row++) {
+            // Read each row
+            for (int row = 0; row < gp.MAXSCREENROW; row++) {
                 String line = br.readLine();
                 if (line == null) {
                     System.out.println("[FAIL] Map file is incomplete.");
                     return;
                 }
 
+                // Split each line into columns
                 String[] numbers = line.split(" ");
 
-                for (int col = 0; col < gp.maxScreenCol; col++) {
-                    mapTileNum[row][col] = Integer.parseInt(numbers[col]);
+                for (int col = 0; col < gp.MAXSCREENCOL; col++) {
+                    int value = Integer.parseInt(numbers[col]);
+
+                    // If the map says '2', randomly pick one of the new grass variants (6,7,8)
+                    if (value == 2) {
+                        int randomVariant = gp.random.nextInt(3); // 0..2
+                        value = 20 + randomVariant; // shift to tile index 6, 7, or 8
+                    }
+
+                    // Store the final tile index in the map array
+                    mapTileNum[row][col] = value;
                 }
             }
+
             br.close();
             System.out.println("[PASS] Map loaded successfully!");
 
@@ -81,14 +107,19 @@ public class Grid {
     }
 
     public void draw(Graphics2D g2) {
-        for (int row = 0; row < gp.maxScreenRow; row++) {
-            for (int col = 0; col < gp.maxScreenCol; col++) {
+        for (int row = 0; row < gp.MAXSCREENROW; row++) {
+            for (int col = 0; col < gp.MAXSCREENCOL; col++) {
                 int tileNum = mapTileNum[row][col];
-                int screenX = col * gp.tileSize;
-                int screenY = row * gp.tileSize;
-                if (screenX + gp.tileSize > 0 && screenX < gp.screenWidth &&
-                    screenY + gp.tileSize > 0 && screenY < gp.screenHeight) {
-                    g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+
+                int screenX = col * gp.TILESIZE;
+                int screenY = row * gp.TILESIZE;
+
+                // A simple cull check, so we don't draw offscreen tiles
+                if (screenX + gp.TILESIZE > 0 && screenX < gp.SCREENWIDTH &&
+                    screenY + gp.TILESIZE > 0 && screenY < gp.SCREENHEIGHT) {
+
+                    g2.drawImage(tile[tileNum].image, screenX, screenY, 
+                                 gp.TILESIZE, gp.TILESIZE, null);
                 }
             }
         }
