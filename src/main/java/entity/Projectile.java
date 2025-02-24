@@ -43,8 +43,8 @@ public class Projectile {
     
     public void update() {
         // find the distance to the target along the x and y axis
-        int dx = target.getX() - position.getX() + gp.tileSize/2;
-        int dy = target.getY() - position.getY() + gp.tileSize/2;
+        int dx = target.getX() - position.getX() + gp.TILESIZE/2;
+        int dy = target.getY() - position.getY() + gp.TILESIZE/2;
         
         // Calculate the straight line distance
         double distance = Math.sqrt(dx * dx + dy * dy);
