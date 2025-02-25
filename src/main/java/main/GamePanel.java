@@ -101,6 +101,11 @@ public class GamePanel extends JPanel implements Runnable {
 
             // Move/update the projectile
             curProjectile.update();
+            
+            if (curProjectile.hasReachedTarget()) {
+                projectileIterator.remove();
+                continue;
+            }
 
             for (Enemy enemy : enemies) {
 
