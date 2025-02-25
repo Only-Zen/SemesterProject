@@ -49,7 +49,7 @@ public class Projectile {
         // Calculate the straight line distance
         double distance = Math.sqrt(dx * dx + dy * dy);
         
-        if (distance != 0) {
+        if (distance >= speed) {
             // Determine the unit vector components
             double unitX = dx / distance;
             double unitY = dy / distance;
@@ -57,7 +57,7 @@ public class Projectile {
             // Update the position by moving it a little closer to the target
             position.setX(position.getX() + (int)(unitX * speed));
             position.setY(position.getY() + (int)(unitY * speed));
-        }
+        } 
     }
     
     public int getDamage() {
@@ -71,5 +71,11 @@ public class Projectile {
     public Coordinate getTarget() {
         return target;
     }
-
+    
+    public boolean hasReachedTarget() {
+        int dx = target.getX() - position.getX() + gp.TILESIZE/2;
+        int dy = target.getY() - position.getY() + gp.TILESIZE/2;
+        double distance = Math.sqrt(dx * dx + dy * dy);
+        return distance < speed;
+    }
 }
