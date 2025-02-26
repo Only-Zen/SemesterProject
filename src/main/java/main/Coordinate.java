@@ -33,8 +33,8 @@ public class Coordinate {
     
     public Coordinate getGrid(){
         Coordinate gridPosition = new Coordinate(0,0, gp);
-        gridPosition.setX(Math.floorDiv(x, gp.tileSize) * gp.tileSize);
-        gridPosition.setY(Math.floorDiv(y, gp.tileSize) * gp.tileSize);
+        gridPosition.setX(Math.floorDiv(x, gp.TILESIZE) * gp.TILESIZE);
+        gridPosition.setY(Math.floorDiv(y, gp.TILESIZE) * gp.TILESIZE);
         
         return gridPosition;
     }

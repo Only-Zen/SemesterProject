@@ -24,7 +24,7 @@ public class Enemy
         this.speed      = speed;
         this.health     = health;
         this.gp         = gp;
-        this.size       = gp.tileSize;
+        this.size       = gp.TILESIZE;
     }
     
     public void draw(Graphics2D g2)
@@ -37,6 +37,10 @@ public class Enemy
         g2.setColor(Color.RED);
         g2.fillRect(position.getX(), position.getY(), size, size);
         // Draw the enemy as a red square
+        
+        // Draw health bar
+        g2.setColor(Color.GREEN);
+        g2.fillRect(position.getX(), position.getY() - 10, (int) ((health / 100.0) * size), 5);
     }
     
     public void update()
