@@ -23,10 +23,13 @@ public class GamePanel extends JPanel implements Runnable {
     public final int MAXSCREENROW = 16;
     public final int SCREENWIDTH = TILESIZE * MAXSCREENCOL;
     public final int SCREENHEIGHT = TILESIZE * MAXSCREENROW;
+    
 
     public Random random = new Random();
     Sound sound = new Sound();
+    public boolean[][] occupiedTiles = new boolean[MAXSCREENCOL][MAXSCREENROW];
     Grid grid = new Grid(this);
+    
     public final int FPS = 60;
     Thread gameThread;
     MouseHandler mouseH;
@@ -43,7 +46,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setBackground(Color.GRAY);
         this.setDoubleBuffered(true);
         this.setFocusable(true);
-
+        
         // Initialize the mouse coordinate (starts at 0,0)
         mouseCoord = new Coordinate(0, 0, this);
 
@@ -103,9 +106,9 @@ public class GamePanel extends JPanel implements Runnable {
             curProjectile.update();
             
             if (curProjectile.hasReachedTarget()) {
-                projectileIterator.remove();
-                continue;
-            }
+            projectileIterator.remove();
+            continue;
+        }
 
             for (Enemy enemy : enemies) {
 
