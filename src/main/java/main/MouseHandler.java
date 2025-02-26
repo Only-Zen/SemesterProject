@@ -31,6 +31,10 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] == true){
+            return;
+        }
+        
         if (e.getButton() == MouseEvent.BUTTON3) { // Right-click to place an enemy
             Enemy newEnemy = new Enemy(
                 tileCoordinate,
@@ -58,8 +62,9 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
         else if (e.getButton() == MouseEvent.BUTTON1) {
             // Create a new Tower instance with desired parameters.
             // (For example, here range = 100, damage = 10, firerate = 1, cooldownTimer = 0)
-            Tower newTower = new Tower(tileCoordinate, 200, 10, 1, 0.0, gp);
+            Tower newTower = new Tower(tileCoordinate, 150, 10, 1, 0.0, gp);
             gp.towers.add(newTower);
+            gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] = true;
             System.out.println("Tower placed!");
         }
     }
