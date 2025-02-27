@@ -56,9 +56,6 @@ public class Grid {
             tile[11] = new Tile();
             tile[11].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/1.png"));
             
-            tile[12] = new Tile();
-            tile[12].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/2.png"));
-            
             // New grass variants for randomization
             tile[20] = new Tile();
             tile[20].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass/0.png"));
