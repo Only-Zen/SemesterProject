@@ -23,8 +23,10 @@ public class Grid {
 
         getTileImage();
         loadMap("/maps/map.txt");
+        boolean dummy = generatePath();
     }
 
+    
     public void getTileImage(){
         try {
             // Existing tiles
@@ -156,7 +158,7 @@ public class Grid {
         }
     }
 
-    public boolean generatePath(int objectiveRow, int objectiveCol){ // builds a set of waypoints that enemies can navagate
+    public boolean generatePath(){ // builds a set of waypoints that enemies can navagate
         /**
         * There are some requirements for this program to work:
         *   The algorithm assumes there is only a single possible and correct path
@@ -171,25 +173,21 @@ public class Grid {
         final int DESTINATION = -123; //SET MEE!!!
         int currentDirection = EAST;
         
-        int row = 0;
-        int col = 0;
-        
-        int nextRow = 0;
-        int nextCol = 0;
-        
-        int leftRow = 0;
-        int leftCol = 0;
-        
-        int rightRow = 0;
-        int rightCol = 0;
+        int row      = 0;   int col      = 0;       
+        int nextRow  = 0;   int nextCol  = 0;
+        int leftRow  = 0;   int leftCol  = 0;       
+        int rightRow = 0;   int rightCol = 0;
         
         LinkedList enemyRoute = new LinkedList(); 
         
         // Find begining of path
-        for (row = 0; row < gp.MAXSCREENROW; row++) {
-            if(isPath(row, 0) == true){
+        for (row = 1; row < gp.MAXSCREENROW; row++) {
+            if(isPath(row, 1) == true){
                 enemyRoute.add(row);
+                // Print Waypoint for debug
+                //System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
                 
+                break;
             }
             
         }
@@ -208,30 +206,35 @@ public class Grid {
                case 5: //overflow into NORTH
                    currentDirection = NORTH;
                case NORTH:
-                   row++;
-                   nextRow  = row + 1;
+                   //System.out.println("Northward!");
+                   row--;
+                   nextRow  = row - 1;
                    leftRow  = row;
                    rightRow = row;
                    
                    nextCol  = col;
                    leftCol  = col - 1;
                    rightCol = col + 1;
+                   //------------
+                   
                    break;
                    
                case EAST:
+                   //System.out.println("Eastward!");
                    col++;
-                   nextCol++;
-                   leftCol  = col + 1;
-                   rightCol = col - 1;
+                   nextCol = col + 1;
+                   leftCol  = col;
+                   rightCol = col;
                    
                    nextRow  = row;
-                   leftRow  = row;
-                   rightRow = row;
+                   leftRow  = row - 1;
+                   rightRow = row + 1;
                    break;
                    
                case SOUTH:
-                   row--;
-                   nextRow  = row - 1;
+                   //System.out.println("Southbound!");
+                   row++;
+                   nextRow  = row + 1;
                    leftRow  = row;
                    rightRow = row;
                    
@@ -243,62 +246,91 @@ public class Grid {
                case 0: //underflow into WEST
                    currentDirection = WEST;
                case WEST:
+                  // System.out.println("Westward!");
                    col--;
-                   nextCol--;
-                   leftCol--;
-                   rightCol--;
+                   nextCol = col - 1;
+                   leftCol  = col;
+                   rightCol = col;
                    
                    nextRow  = row;
-                   leftRow  = row;
-                   rightRow = row;
+                   leftRow  = row + 1;
+                   rightRow = row - 1;
                    break;
            }
+           //check for edge of map (will try to get rid of this)
+           int isDestination = 0;
+           if(row >= gp.MAXSCREENROW - 1 || col >= gp.MAXSCREENCOL - 1) {
+               isDestination = 1; //accept edge of map as destination
+           }
+           else if(mapTileNum [nextRow][nextCol] == DESTINATION){
+               isDestination = 1;
+           }
            
-            if(isPath(nextRow, nextCol) == false) { //Path cannot continue streight 
-                if(mapTileNum [nextRow][nextCol] == DESTINATION) { 
+           //Evaluate turns and stubs
+           if(isPath(nextRow, nextCol) == false) { //Path cannot continue streight 
+                if(isDestination == 1) { 
                     areWeThereYet = true;
                     currentDirection++; //this is a silly way to ensure waypoint logic works as intended
                 }
                 else if(isPath(leftRow, leftCol) == true) { //Path shall bend to the left
-                    currentDirection++;
-                }
-                else if(isPath(rightRow, rightCol) == true) { //Path shall bend to the right
                     currentDirection--;
                 }
+                else if(isPath(rightRow, rightCol) == true) { //Path shall bend to the right
+                    currentDirection++;
+                }
+                else { //Dead-end?
+                    areWeThereYet = true; // give-up and don't backtrack
+                    currentDirection++; //this is a silly way to ensure waypoint logic works as intended
+                    
+                }
+                
                 //Add waypoint to list
                 if(currentDirection % 2 == 0) { //An Even dir post imcrement/decrement => previously traveling vertically
-                    enemyRoute.add(row);                    
+                    enemyRoute.add(-row);                    
                 }
                 else { //Odd dir => previously traveling horizontially 
                     enemyRoute.add(col);
                 }
+                // Print Waypoint for debug
+                //System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
             }
             
             
         }
+        
+        System.out.println("Path genarted!");
         return true;    
     }
       
     public boolean isPath (int row, int col){
         //all tile codes repersenting paths
-        final int PATH_SAND  = 4;
+        final int PATH_SAND  = -1;
         final int PATH_GRASS = 5;
-        //read in tile
-        int intarigatedTile = mapTileNum[row][col];
         
+        //read in tile
+        if (row >= gp.MAXSCREENROW - 1 || col >= gp.MAXSCREENCOL - 1) {
+            //System.out.print("Out Of Bounds"); System.out.print(row); System.out.print(", "); System.out.print(col);
+            return false; //out of bounds tile cannot be path
+        }
+        int intarigatedTile = mapTileNum[row][col];
+        //System.out.print(intarigatedTile);System.out.print(", ");
         if(intarigatedTile > 9){
             intarigatedTile = (intarigatedTile/10); //alows for path tile variations such as 50 or 45
+            // Print Waypoint for debug
+                //System.out.println(intarigatedTile);
         }
         //check file against known path codes
         if(intarigatedTile == PATH_SAND || intarigatedTile == PATH_GRASS) {
+            //System.out.println("Path!");
             return true;
         }
         else {
+            //System.out.println("Not Path!");
             return false;
         }
     }
     
-    
+        
     public void draw(Graphics2D g2) {
         for (int row = 0; row < gp.MAXSCREENROW; row++) {
             for (int col = 0; col < gp.MAXSCREENCOL; col++) {
