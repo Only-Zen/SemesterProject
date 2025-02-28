@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
@@ -106,6 +107,149 @@ public class Grid {
         }
     }
 
+    public boolean generatePath(int objectiveRow, int objectiveCol){ // builds a set of waypoints that enemies can navagate
+        /**
+        * There are some requirements for this program to work:
+        *   The algorithm assumes there is only a single possible and correct path
+        *   Except for the start, the path must not reach the edge
+        *   The path must have no dead-ends
+        *   The path might get stuck in cycles, although loop-de-loops should work
+        */
+        final int NORTH = 1;
+        final int EAST  = 2;
+        final int SOUTH = 3;
+        final int WEST  = 4;
+        final int DESTINATION = -123; //SET MEE!!!
+        int currentDirection = EAST;
+        
+        int row = 0;
+        int col = 0;
+        
+        int nextRow = 0;
+        int nextCol = 0;
+        
+        int leftRow = 0;
+        int leftCol = 0;
+        
+        int rightRow = 0;
+        int rightCol = 0;
+        
+        LinkedList enemyRoute = new LinkedList(); 
+        
+        // Find begining of path
+        for (row = 0; row < gp.MAXSCREENROW; row++) {
+            if(isPath(row, 0) == true){
+                enemyRoute.add(row);
+                
+            }
+            
+        }
+        //create spawn-point
+         
+        //Generate rest of map
+        boolean areWeThereYet = false;
+        int loopCounter = 0;
+        while (areWeThereYet == false){
+            loopCounter++;
+            if(loopCounter  > 500) {return false;}
+            
+            //move one tile in current direction of travel
+           switch (currentDirection) {
+               
+               case 5: //overflow into NORTH
+                   currentDirection = NORTH;
+               case NORTH:
+                   row++;
+                   nextRow  = row + 1;
+                   leftRow  = row;
+                   rightRow = row;
+                   
+                   nextCol  = col;
+                   leftCol  = col - 1;
+                   rightCol = col + 1;
+                   break;
+                   
+               case EAST:
+                   col++;
+                   nextCol++;
+                   leftCol  = col + 1;
+                   rightCol = col - 1;
+                   
+                   nextRow  = row;
+                   leftRow  = row;
+                   rightRow = row;
+                   break;
+                   
+               case SOUTH:
+                   row--;
+                   nextRow  = row - 1;
+                   leftRow  = row;
+                   rightRow = row;
+                   
+                   nextCol  = col;
+                   leftCol  = col + 1;
+                   rightCol = col - 1;
+                   break;
+                   
+               case 0: //underflow into WEST
+                   currentDirection = WEST;
+               case WEST:
+                   col--;
+                   nextCol--;
+                   leftCol--;
+                   rightCol--;
+                   
+                   nextRow  = row;
+                   leftRow  = row;
+                   rightRow = row;
+                   break;
+           }
+           
+            if(isPath(nextRow, nextCol) == false) { //Path cannot continue streight 
+                if(mapTileNum [nextRow][nextCol] == DESTINATION) { 
+                    areWeThereYet = true;
+                    currentDirection++; //this is a silly way to ensure waypoint logic works as intended
+                }
+                else if(isPath(leftRow, leftCol) == true) { //Path shall bend to the left
+                    currentDirection++;
+                }
+                else if(isPath(rightRow, rightCol) == true) { //Path shall bend to the right
+                    currentDirection--;
+                }
+                //Add waypoint to list
+                if(currentDirection % 2 == 0) { //An Even dir post imcrement/decrement => previously traveling vertically
+                    enemyRoute.add(row);                    
+                }
+                else { //Odd dir => previously traveling horizontially 
+                    enemyRoute.add(col);
+                }
+            }
+            
+            
+        }
+        return true;    
+    }
+      
+    public boolean isPath (int row, int col){
+        //all tile codes repersenting paths
+        final int PATH_SAND  = 4;
+        final int PATH_GRASS = 5;
+        //read in tile
+        int intarigatedTile = mapTileNum[row][col];
+        
+        if(intarigatedTile > 9){
+            intarigatedTile = (intarigatedTile/10); //alows for path tile variations such as 50 or 45
+        }
+        //check file against known path codes
+        if(intarigatedTile == PATH_SAND || intarigatedTile == PATH_GRASS) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    
     public void draw(Graphics2D g2) {
         for (int row = 0; row < gp.MAXSCREENROW; row++) {
             for (int col = 0; col < gp.MAXSCREENCOL; col++) {
