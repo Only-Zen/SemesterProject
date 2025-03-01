@@ -14,6 +14,7 @@ public class Grid {
     GamePanel gp;
     public Tile[] tile;
     public int mapTileNum[][];
+    public LinkedList enemyRoute = new LinkedList();
 
     public Grid(GamePanel gp){
         this.gp = gp;
@@ -178,14 +179,14 @@ public class Grid {
         int leftRow  = 0;   int leftCol  = 0;       
         int rightRow = 0;   int rightCol = 0;
         
-        LinkedList enemyRoute = new LinkedList(); 
+        //LinkedList enemyRoute = new LinkedList(); 
         
         // Find begining of path
-        for (row = 1; row < gp.MAXSCREENROW; row++) {
-            if(isPath(row, 1) == true){
+        for (row = 0; row < gp.MAXSCREENROW; row++) {
+            if(isPath(row, 0) == true){
                 enemyRoute.add(row);
                 // Print Waypoint for debug
-                //System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
+                System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
                 
                 break;
             }
@@ -198,7 +199,10 @@ public class Grid {
         int loopCounter = 0;
         while (areWeThereYet == false){
             loopCounter++;
-            if(loopCounter  > 500) {return false;}
+            if(loopCounter  > 500) {
+                System.out.println("Path incomplete due to timeout! \n     Check for cycle");
+                return false;
+            }
             
             //move one tile in current direction of travel
            switch (currentDirection) {
@@ -292,7 +296,7 @@ public class Grid {
                     enemyRoute.add(col);
                 }
                 // Print Waypoint for debug
-                //System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
+                System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
             }
             
             
@@ -308,7 +312,7 @@ public class Grid {
         final int PATH_GRASS = 5;
         
         //read in tile
-        if (row >= gp.MAXSCREENROW - 1 || col >= gp.MAXSCREENCOL - 1) {
+        if (row >= gp.MAXSCREENROW || col >= gp.MAXSCREENCOL) {
             //System.out.print("Out Of Bounds"); System.out.print(row); System.out.print(", "); System.out.print(col);
             return false; //out of bounds tile cannot be path
         }
