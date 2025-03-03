@@ -40,6 +40,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // Use Coordinate to store the mouse's position
     private Coordinate mouseCoord;
+    protected int frame = 1;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(SCREENWIDTH, SCREENHEIGHT));
@@ -130,6 +131,14 @@ public class GamePanel extends JPanel implements Runnable {
 
             }
         }
+        
+        if (frame == 60){
+            frame = 1;
+        }
+        else {
+            frame++;
+        }
+        //System.out.println(frame); //(debug)
     }
     
     @Override
@@ -172,5 +181,9 @@ public class GamePanel extends JPanel implements Runnable {
     public void playMusic(int i){
         sound.setFile(i);
         sound.play();
+    }
+    
+    public int getFrame(){
+        return frame;
     }
 }

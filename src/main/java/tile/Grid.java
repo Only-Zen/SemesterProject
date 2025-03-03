@@ -1,5 +1,6 @@
 package tile;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.io.BufferedReader;
@@ -53,6 +54,9 @@ public class Grid {
             tile[5] = new Tile();
             tile[5].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grasspath.png"));
             
+            tile[6] = new Tile();
+            tile[6].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle.png"));
+            
             // New water variants for randomization
             tile[10] = new Tile();
             tile[10].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/0.png"));
@@ -90,6 +94,21 @@ public class Grid {
             
             tile[52] = new Tile();
             tile[52].image = ImageIO.read(getClass().getResourceAsStream("/tiles/path/corner.png"));
+            
+            tile[60] = new Tile();
+            tile[60].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle/1.png"));
+            
+            tile[61] = new Tile();
+            tile[61].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle/2.png"));
+            
+            tile[62] = new Tile();
+            tile[62].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle/3.png"));
+            
+            tile[63] = new Tile();
+            tile[63].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle/4.png"));
+            
+            tile[64] = new Tile();
+            tile[64].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle/5.png"));
 
 
         } catch(IOException e) {
@@ -299,10 +318,9 @@ public class Grid {
                 System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
             }
             
-            
         }
         
-        System.out.println("Path genarted!");
+        System.out.println("Path generated!");
         return true;    
     }
       
@@ -369,9 +387,54 @@ public class Grid {
                         // Restore transform
                         g2.setTransform(old);
                     }
+                    
+                    if (tileNum == 6){
+                        int animatedFrame = Math.floorDiv(gp.getFrame(), 12);
+                        if (animatedFrame == 5){
+                            animatedFrame = 4;
+                        }
+                        //System.out.println(60+animatedFrame);
+                        g2.drawImage(tile[60 + animatedFrame].image, screenX, screenY, 
+                                     gp.TILESIZE, gp.TILESIZE, null);
+                    }
                 }
             }
         }
+        /*
+        
+        ############################################################
+            Debug to show waypoints created by the path function
+        ############################################################
+        
+        //Draw blue squares at each waypoint using enemyRoute
+        g2.setColor(Color.BLUE);
+
+        if (!enemyRoute.isEmpty()) {
+            // The starting waypoint is (first element as row, 0 as col)
+            int currRow = ((Integer) enemyRoute.get(0)).intValue();
+            int currCol = 0;
+
+            // Draw the starting waypoint
+            int screenX = currCol * gp.TILESIZE;
+            int screenY = currRow * gp.TILESIZE;
+            g2.fillRect(screenX, screenY, gp.TILESIZE, gp.TILESIZE);
+
+            // Process each subsequent waypoint in enemyRoute
+            for (int i = 1; i < enemyRoute.size(); i++) {
+                int value = ((Integer) enemyRoute.get(i)).intValue();
+                if (value < 0) {
+                    // Negative value indicates a vertical change (row update)
+                    currRow = -value;
+                } else {
+                    // Positive value indicates a horizontal change (column update)
+                    currCol = value;
+                }
+                screenX = currCol * gp.TILESIZE;
+                screenY = currRow * gp.TILESIZE;
+                g2.fillRect(screenX, screenY, gp.TILESIZE, gp.TILESIZE);
+            }
+        }
+        */
     }
     
     public class PathVariant {
