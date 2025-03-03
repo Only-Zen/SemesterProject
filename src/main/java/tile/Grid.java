@@ -1,5 +1,6 @@
 package tile;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.io.BufferedReader;
@@ -399,6 +400,41 @@ public class Grid {
                 }
             }
         }
+        /*
+        
+        ############################################################
+            Debug to show waypoints created by the path function
+        ############################################################
+        
+        //Draw blue squares at each waypoint using enemyRoute
+        g2.setColor(Color.BLUE);
+
+        if (!enemyRoute.isEmpty()) {
+            // The starting waypoint is (first element as row, 0 as col)
+            int currRow = ((Integer) enemyRoute.get(0)).intValue();
+            int currCol = 0;
+
+            // Draw the starting waypoint
+            int screenX = currCol * gp.TILESIZE;
+            int screenY = currRow * gp.TILESIZE;
+            g2.fillRect(screenX, screenY, gp.TILESIZE, gp.TILESIZE);
+
+            // Process each subsequent waypoint in enemyRoute
+            for (int i = 1; i < enemyRoute.size(); i++) {
+                int value = ((Integer) enemyRoute.get(i)).intValue();
+                if (value < 0) {
+                    // Negative value indicates a vertical change (row update)
+                    currRow = -value;
+                } else {
+                    // Positive value indicates a horizontal change (column update)
+                    currCol = value;
+                }
+                screenX = currCol * gp.TILESIZE;
+                screenY = currRow * gp.TILESIZE;
+                g2.fillRect(screenX, screenY, gp.TILESIZE, gp.TILESIZE);
+            }
+        }
+        */
     }
     
     public class PathVariant {
