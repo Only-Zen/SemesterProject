@@ -388,7 +388,11 @@ public class Grid {
                     }
                     
                     if (tileNum == 6){
-                        int animatedFrame = gp.getFrame() / 12;
+                        int animatedFrame = Math.floorDiv(gp.getFrame(), 12);
+                        if (animatedFrame == 5){
+                            animatedFrame = 4;
+                        }
+                        //System.out.println(60+animatedFrame);
                         g2.drawImage(tile[60 + animatedFrame].image, screenX, screenY, 
                                      gp.TILESIZE, gp.TILESIZE, null);
                     }
