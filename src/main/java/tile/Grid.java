@@ -1,14 +1,15 @@
 package tile;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
+import main.Coordinate;
 import main.GamePanel;
 
 public class Grid {
@@ -16,6 +17,7 @@ public class Grid {
     public Tile[] tile;
     public int mapTileNum[][];
     public LinkedList enemyRoute = new LinkedList();
+    public ArrayList<Coordinate> enemyWaypoints = new ArrayList<>();
 
     public Grid(GamePanel gp){
         this.gp = gp;
@@ -217,6 +219,7 @@ public class Grid {
                 enemyRoute.add(row);
                 // Print Waypoint for debug
                 System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
+                enemyWaypoints.add(new Coordinate(col, row, gp));
                 
                 break;
             }
@@ -326,12 +329,14 @@ public class Grid {
                     enemyRoute.add(col);
                 }
                 // Print Waypoint for debug
-                System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
+                System.out.print('('); System.out.print(col); System.out.print(','); System.out.print(row); System.out.print(") \n");
+                enemyWaypoints.add(new Coordinate(col, row, gp));
             }
             
         }
         
         System.out.println("Path generated!");
+        System.out.println(enemyWaypoints);
         return true;    
     }
       
@@ -491,6 +496,10 @@ public class Grid {
 
         // Default: if it doesn’t match any pattern, return a generic path block
         return new PathVariant(5, 0);
+    }
+    
+    public ArrayList getWaypoints(){
+        return enemyWaypoints;
     }
 
 }
