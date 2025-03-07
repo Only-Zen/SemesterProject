@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import main.Coordinate;
 import main.GamePanel;
@@ -14,9 +15,12 @@ public class Enemy
      */
     protected Coordinate position;
     protected Coordinate nextCoord;
+    protected int coordinateCounter = 0;
     protected int speed;
     protected int health;
     protected int size;
+    public boolean isAlive = true;
+    protected ArrayList<Coordinate> waypoints;
     GamePanel gp;
     private BufferedImage enemyImage;
     
@@ -24,7 +28,8 @@ public class Enemy
         // Instantiate the coordinate with the given x and y values.
         this.position   = position;
         // Optionally, if you need nextCoord for pathfinding or movement, initialize it:
-        this.nextCoord  = position;
+        this.waypoints = gp.getWaypoints();
+        this.nextCoord  = new Coordinate(waypoints.get(0).getX() * gp.TILESIZE, waypoints.get(0).getY() * gp.TILESIZE, gp);
         this.speed      = speed;
         this.health     = health;
         this.gp         = gp;
@@ -55,14 +60,38 @@ public class Enemy
         g2.fillRect(position.getX(), position.getY() - 10, (int) ((health / 100.0) * size), 5);
     }
     
-    public void update()
-    {
-        /**
-         * Manages movement and health updates.
-         */
-        
-        //Leaving blank for now. Return to this later.
+    public void update() {
+        int dx = nextCoord.getX() - position.getX();
+        int dy = nextCoord.getY() - position.getY();
+        double distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance >= speed) {
+            double unitX = dx / distance;
+            double unitY = dy / distance;
+            position.setX(position.getX() + (int)(unitX * speed));
+            position.setY(position.getY() + (int)(unitY * speed));
+        } else {
+            // Snap to the next coordinate:
+            position = new Coordinate(
+                nextCoord.getX(), 
+                nextCoord.getY(), 
+                gp);
+
+            // If we're at the last waypoint, remove the enemy.
+            if (coordinateCounter >= waypoints.size() - 1) {
+                onDeath();
+                return; // Exit update to prevent further processing.
+            } else {
+                // Otherwise, increment the counter and update nextCoord.
+                coordinateCounter++;
+                nextCoord = new Coordinate(
+                    waypoints.get(coordinateCounter).getX() * gp.TILESIZE, 
+                    waypoints.get(coordinateCounter).getY() * gp.TILESIZE, 
+                    gp);
+            }
+        }
     }
+
     
     public void takeDamage(int damage)
     {
@@ -84,7 +113,7 @@ public class Enemy
          * Handles deleting an enemy upon death.
          */
         
-        gp.enemies.removeIf(enem -> enem.equals(this));
+        isAlive = false;
     }
     
     public int getHealth()

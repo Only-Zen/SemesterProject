@@ -159,6 +159,8 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
         
+        enemies.removeIf(enemy -> !enemy.isAlive);
+        
         if (frame == 60){
             frame = 1;
         }
@@ -213,5 +215,9 @@ public class GamePanel extends JPanel implements Runnable {
     
     public int getFrame(){
         return frame;
+    }
+    
+    public ArrayList getWaypoints(){
+        return grid.getWaypoints();
     }
 }
