@@ -498,7 +498,7 @@ public class Grid {
         return new PathVariant(5, 0);
     }
     
-    public ArrayList getWaypoints(){
+    public ArrayList<Coordinate> getWaypoints(){
         return enemyWaypoints;
     }
 
