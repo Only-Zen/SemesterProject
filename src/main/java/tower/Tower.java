@@ -66,7 +66,7 @@ public class Tower {
         //adds a projectile to the projectile array list
         Coordinate projPos = new Coordinate(position.getX() + gp.TILESIZE/2, position.getY() + gp.TILESIZE/2, gp);
         int projDam = damage;
-        gp.projectile.add(new Projectile(projPos, target, 4, projDam, gp));
+        gp.projectile.add(new Projectile(projPos, target, 6, projDam, gp));
     }
     
     public void place(Coordinate mouseCoordinate){
