@@ -6,8 +6,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
+import main.Coordinate;
 import main.GamePanel;
 
 public class Grid {
@@ -15,6 +17,7 @@ public class Grid {
     public Tile[] tile;
     public int mapTileNum[][];
     public LinkedList enemyRoute = new LinkedList();
+    public ArrayList<Coordinate> enemyWaypoints = new ArrayList<>();
 
     public Grid(GamePanel gp){
         this.gp = gp;
@@ -25,6 +28,11 @@ public class Grid {
         getTileImage();
         loadMap("/maps/map.txt");
         boolean dummy = generatePath();
+        for (int i = -1; i<=1; i++){
+            for (int j = -2; j <= 0; j++){
+                gp.occupiedTiles[enemyWaypoints.get(enemyWaypoints.size() - 1).getX() + i][enemyWaypoints.get(enemyWaypoints.size() - 1).getY() + j] = true;
+            }
+        }
     }
 
     
@@ -53,12 +61,18 @@ public class Grid {
             tile[5] = new Tile();
             tile[5].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grasspath.png"));
             
+            tile[6] = new Tile();
+            tile[6].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle.png"));
+            tile[6].occupied = true;
+            
+            /*
             // New water variants for randomization
             tile[10] = new Tile();
             tile[10].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/0.png"));
             
             tile[11] = new Tile();
             tile[11].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/1.png"));
+            */
             
             // New grass variants for randomization
             tile[20] = new Tile();
@@ -69,6 +83,9 @@ public class Grid {
 
             tile[22] = new Tile();
             tile[22].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass/2.png"));
+            
+            tile[23] = new Tile();
+            tile[23].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass/3.png"));
             
             tile[30] = new Tile();
             tile[30].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree/0.png"));
@@ -82,6 +99,12 @@ public class Grid {
             tile[32].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree/2.png"));
             tile[32].occupied = true;
             
+            tile[40] = new Tile();
+            tile[40].image = ImageIO.read(getClass().getResourceAsStream("/tiles/rock/1.png"));
+            
+            tile[41] = new Tile();
+            tile[41].image = ImageIO.read(getClass().getResourceAsStream("/tiles/rock/2.png"));
+            
             tile[50] = new Tile();
             tile[50].image = ImageIO.read(getClass().getResourceAsStream("/tiles/path/cross.png"));
             
@@ -90,6 +113,22 @@ public class Grid {
             
             tile[52] = new Tile();
             tile[52].image = ImageIO.read(getClass().getResourceAsStream("/tiles/path/corner.png"));
+            
+            tile[60] = new Tile();
+            tile[60].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle/1.png"));
+            
+            tile[61] = new Tile();
+            tile[61].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle/2.png"));
+            
+            tile[62] = new Tile();
+            tile[62].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle/3.png"));
+            
+            tile[63] = new Tile();
+            tile[63].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle/4.png"));
+            
+            tile[64] = new Tile();
+            tile[64].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle/5.png"));
+            
 
 
         } catch(IOException e) {
@@ -123,13 +162,13 @@ public class Grid {
 
                     // If the map says '2', randomly pick one of the new grass variants
                     if (value == 1) {
-                        int randomVariant = gp.random.nextInt(2); // 0..2
-                        value = 10 + randomVariant; // shift to tile index 20-23
+                        //int randomVariant = gp.random.nextInt(2); // 0..2
+                        //value = 10 + randomVariant; // shift to tile index 10-11
                         gp.occupiedTiles[col][row] = true;
                     }
                     
                     if (value == 2) {
-                        int randomVariant = gp.random.nextInt(3); // 0..2
+                        int randomVariant = gp.random.nextInt(4); // 0..3
                         value = 20 + randomVariant; // shift to tile index 20-23
                     }
                     
@@ -139,9 +178,15 @@ public class Grid {
                         gp.occupiedTiles[col][row] = true;
                     }
                     if (value == 4){
+                        int randomVariant = gp.random.nextInt(2); // 0..1
+                        value = 40 + randomVariant; // shift to tile index 40-41
                         gp.occupiedTiles[col][row] = true;
                     }
                     if (value == 5){
+                        gp.occupiedTiles[col][row] = true;
+                    }
+                    
+                    if (value == 6){
                         gp.occupiedTiles[col][row] = true;
                     }
 
@@ -149,7 +194,7 @@ public class Grid {
                     mapTileNum[row][col] = value;
                 }
             }
-
+            
             br.close();
             System.out.println("[PASS] Map loaded successfully!");
 
@@ -187,6 +232,7 @@ public class Grid {
                 enemyRoute.add(row);
                 // Print Waypoint for debug
                 System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
+                enemyWaypoints.add(new Coordinate(col, row, gp));
                 
                 break;
             }
@@ -296,13 +342,14 @@ public class Grid {
                     enemyRoute.add(col);
                 }
                 // Print Waypoint for debug
-                System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
+                System.out.print('('); System.out.print(col); System.out.print(','); System.out.print(row); System.out.print(") \n");
+                enemyWaypoints.add(new Coordinate(col, row, gp));
             }
-            
             
         }
         
-        System.out.println("Path genarted!");
+        System.out.println("Path generated!");
+        System.out.println(enemyWaypoints);
         return true;    
     }
       
@@ -369,9 +416,54 @@ public class Grid {
                         // Restore transform
                         g2.setTransform(old);
                     }
+                    
+                    if (tileNum == 6){
+                        int animatedFrame = Math.floorDiv(gp.getFrame(), 12);
+                        if (animatedFrame == 5){
+                            animatedFrame = 4;
+                        }
+                        //System.out.println(60+animatedFrame);
+                        g2.drawImage(tile[60 + animatedFrame].image, screenX, screenY, 
+                                     gp.TILESIZE, gp.TILESIZE, null);
+                    }
                 }
             }
         }
+        /*
+        
+        ############################################################
+            Debug to show waypoints created by the path function
+        ############################################################
+        
+        //Draw blue squares at each waypoint using enemyRoute
+        g2.setColor(Color.BLUE);
+
+        if (!enemyRoute.isEmpty()) {
+            // The starting waypoint is (first element as row, 0 as col)
+            int currRow = ((Integer) enemyRoute.get(0)).intValue();
+            int currCol = 0;
+
+            // Draw the starting waypoint
+            int screenX = currCol * gp.TILESIZE;
+            int screenY = currRow * gp.TILESIZE;
+            g2.fillRect(screenX, screenY, gp.TILESIZE, gp.TILESIZE);
+
+            // Process each subsequent waypoint in enemyRoute
+            for (int i = 1; i < enemyRoute.size(); i++) {
+                int value = ((Integer) enemyRoute.get(i)).intValue();
+                if (value < 0) {
+                    // Negative value indicates a vertical change (row update)
+                    currRow = -value;
+                } else {
+                    // Positive value indicates a horizontal change (column update)
+                    currCol = value;
+                }
+                screenX = currCol * gp.TILESIZE;
+                screenY = currRow * gp.TILESIZE;
+                g2.fillRect(screenX, screenY, gp.TILESIZE, gp.TILESIZE);
+            }
+        }
+        */
     }
     
     public class PathVariant {
@@ -417,6 +509,10 @@ public class Grid {
 
         // Default: if it doesn’t match any pattern, return a generic path block
         return new PathVariant(5, 0);
+    }
+    
+    public ArrayList<Coordinate> getWaypoints(){
+        return enemyWaypoints;
     }
 
 }

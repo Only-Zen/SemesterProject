@@ -32,16 +32,16 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] == true){
+            if (e.getButton() == MouseEvent.BUTTON3) { // Right-click to place an enemy
+                Enemy newEnemy = new Enemy(
+                    tileCoordinate,
+                    4, 100, gp);
+                gp.enemies.add(newEnemy);
+                System.out.println("Enemy placed");
+            }
             return;
         }
         
-        if (e.getButton() == MouseEvent.BUTTON3) { // Right-click to place an enemy
-            Enemy newEnemy = new Enemy(
-                tileCoordinate,
-                4, 100, gp);
-            gp.enemies.add(newEnemy);
-            System.out.println("Enemy placed");
-        }
         // Left-click: fire a projectile if there is at least one enemy
         else if (e.getButton() == MouseEvent.BUTTON2) {
             if (!gp.enemies.isEmpty()) {
@@ -62,7 +62,7 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
         else if (e.getButton() == MouseEvent.BUTTON1) {
             // Create a new Tower instance with desired parameters.
             // (For example, here range = 100, damage = 10, firerate = 1, cooldownTimer = 0)
-            Tower newTower = new Tower(tileCoordinate, 150, 10, 1, 0.0, gp);
+            Tower newTower = new Tower(tileCoordinate, 150, 15, 2, 0.0, gp);
             gp.towers.add(newTower);
             gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] = true;
             System.out.println("Tower placed!");

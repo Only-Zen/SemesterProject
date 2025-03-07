@@ -11,7 +11,7 @@ public class Main {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
-        window.setTitle("TD Test");
+        window.setTitle("The Last Pint");
         
         GamePanel gamePanel = new GamePanel();
         window.add(gamePanel);

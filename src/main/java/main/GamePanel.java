@@ -8,8 +8,15 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import entity.Enemy;
 import entity.Projectile;
+import java.awt.Cursor;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Random;
+import javax.imageio.ImageIO;
 import tile.Grid;
 import tower.Tower;
 
@@ -33,6 +40,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int FPS = 60;
     Thread gameThread;
     MouseHandler mouseH;
+    EnemySpawner enemySpawner = new EnemySpawner(("/entities/enemy/enemyWaves.txt"), this);
 
     public ArrayList<Enemy> enemies = new ArrayList<>();
     public ArrayList<Projectile> projectile = new ArrayList<>();
@@ -40,6 +48,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     // Use Coordinate to store the mouse's position
     private Coordinate mouseCoord;
+    protected int frame = 1;
+    private BufferedImage mouseImage;
+    private Image tavernImage;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(SCREENWIDTH, SCREENHEIGHT));
@@ -54,6 +65,26 @@ public class GamePanel extends JPanel implements Runnable {
         mouseH = new MouseHandler(this);
         this.addMouseListener(mouseH);
         this.addMouseMotionListener(mouseH);
+        try {
+            // Load the image you want to use as the cursor
+            mouseImage = ImageIO.read(getClass().getResourceAsStream("/icons/shovel.png"));
+            tavernImage = ImageIO.read(getClass().getResourceAsStream("/tiles/tavern.png"));
+            
+            // Determine the new size (e.g., double the original width and height)
+            int newWidth = mouseImage.getWidth() * 2;
+            int newHeight = mouseImage.getHeight() * 2;
+            
+            // Scale the image
+            Image scaledMouseImage = mouseImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+            
+            // Create a custom cursor using the scaled image
+            // Adjust the hotspot as needed; here it remains at (0, 0)
+            Cursor customCursor = Toolkit.getDefaultToolkit()
+                    .createCustomCursor(scaledMouseImage, new Point(0, 0), "custom cursor");
+            this.setCursor(customCursor);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         playMusic(0);
     }
 
@@ -130,6 +161,18 @@ public class GamePanel extends JPanel implements Runnable {
 
             }
         }
+        
+        enemies.removeIf(enemy -> !enemy.isAlive);
+        
+        enemySpawner.update();
+        
+        if (frame == 60){
+            frame = 1;
+        }
+        else {
+            frame++;
+        }
+        //System.out.println(frame); //(debug)
     }
     
     @Override
@@ -139,8 +182,10 @@ public class GamePanel extends JPanel implements Runnable {
         grid.draw(g2); // Draw tiles
 
         // Draw a small red circle at the mouse's current position
-        g2.setColor(Color.RED);
-        g2.fillOval(mouseCoord.getX() - 5, mouseCoord.getY() - 5, 10, 10);
+        // g2.setColor(Color.RED);
+        // g2.fillOval(mouseCoord.getX() - 5, mouseCoord.getY() - 5, 10, 10);
+        // g2.drawImage(mouseImage, mouseCoord.getX() - 5, mouseCoord.getY() - 5, 
+                                    // TILESIZE / 2, TILESIZE / 2, null);
         g2.setColor(Color.WHITE);
         g2.drawString("MouseX: " + mouseCoord.getX() + " MouseY: " + mouseCoord.getY(),
                 mouseCoord.getX() + 8, mouseCoord.getY() - 8);
@@ -151,8 +196,25 @@ public class GamePanel extends JPanel implements Runnable {
         g.setColor(new Color(255, 0, 0, 80));
         g.fillRect(tileCoord.getX(), tileCoord.getY(), TILESIZE, TILESIZE);
         
+        ArrayList<Coordinate> waypoints = getWaypoints();
+        Coordinate lastWaypoint = waypoints.get(waypoints.size() - 1);
+
+        // Calculate the pixel position using TILESIZE (not TILESIZE - 1)
+        int baseX = lastWaypoint.getX() * TILESIZE;
+        int baseY = lastWaypoint.getY() * TILESIZE;
+
+        // If your tavern image is larger than one tile (here it's drawn at 3*TILESIZE),
+        // adjust the coordinates so it is centered over the final tile.
+        int offset = (3 * TILESIZE - TILESIZE) / 2;
+        int tavernX = baseX - offset;
+        int tavernY = baseY - offset - TILESIZE;
+
+        g2.drawImage(tavernImage, tavernX, tavernY, 3 * TILESIZE, 3 * TILESIZE, null);
         
-        
+        // Draw towers
+        for (Tower tower : towers) {
+            tower.draw(g2);
+        }
         // Draw enemies
         for (Enemy enemy : enemies) {
             enemy.draw(g2);
@@ -161,10 +223,6 @@ public class GamePanel extends JPanel implements Runnable {
         for (Projectile projectile : projectile) {
             projectile.draw(g2);
         }
-        // Draw towers
-        for (Tower tower : towers) {
-            tower.draw(g2);
-        }
 
         g2.dispose();
     }
@@ -172,5 +230,13 @@ public class GamePanel extends JPanel implements Runnable {
     public void playMusic(int i){
         sound.setFile(i);
         sound.play();
+    }
+    
+    public int getFrame(){
+        return frame;
+    }
+    
+    public ArrayList<Coordinate> getWaypoints(){
+        return grid.getWaypoints();
     }
 }
