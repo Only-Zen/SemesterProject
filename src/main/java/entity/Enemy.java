@@ -23,6 +23,11 @@ public class Enemy
     protected ArrayList<Coordinate> waypoints;
     GamePanel gp;
     private BufferedImage enemyImage;
+    private String enemyUp;
+    private String enemyDown;
+    private String enemyLeft;
+    private String enemyRight;
+    private String direction = "/entities/enemy/Right.png";
     
     public Enemy(Coordinate position, int speed, int health, GamePanel gp){
         // Instantiate the coordinate with the given x and y values.
@@ -36,6 +41,10 @@ public class Enemy
         this.size       = gp.TILESIZE;
         try {
             enemyImage = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/rat.png"));
+            enemyUp = "/entities/enemy/Up.png";
+            enemyDown = "/entities/enemy/Down.png";
+            enemyLeft = "/entities/enemy/Left.png";
+            enemyRight = "/entities/enemy/Right.png";
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,6 +73,17 @@ public class Enemy
         int dx = nextCoord.getX() - position.getX();
         int dy = nextCoord.getY() - position.getY();
         double distance = Math.sqrt(dx * dx + dy * dy);
+        if (dx > 0){ direction = enemyRight;
+        }   else if (dx < 0) { direction = enemyLeft;
+        }   else if (dy > 0) { direction = enemyDown;
+        }   else if (dy < 0) { direction = enemyUp;
+        }
+        
+        try {
+            enemyImage = ImageIO.read(getClass().getResourceAsStream(direction));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         if (distance >= speed) {
             double unitX = dx / distance;
