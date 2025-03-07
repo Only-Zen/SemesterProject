@@ -40,6 +40,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int FPS = 60;
     Thread gameThread;
     MouseHandler mouseH;
+    EnemySpawner enemySpawner = new EnemySpawner(("/entities/enemy/enemyWaves.txt"), this);
 
     public ArrayList<Enemy> enemies = new ArrayList<>();
     public ArrayList<Projectile> projectile = new ArrayList<>();
@@ -163,6 +164,8 @@ public class GamePanel extends JPanel implements Runnable {
         
         enemies.removeIf(enemy -> !enemy.isAlive);
         
+        enemySpawner.update();
+        
         if (frame == 60){
             frame = 1;
         }
@@ -208,19 +211,19 @@ public class GamePanel extends JPanel implements Runnable {
         }
         
         ArrayList<Coordinate> waypoints = getWaypoints();
-Coordinate lastWaypoint = waypoints.get(waypoints.size() - 1);
+        Coordinate lastWaypoint = waypoints.get(waypoints.size() - 1);
 
-// Calculate the pixel position using TILESIZE (not TILESIZE - 1)
-int baseX = lastWaypoint.getX() * TILESIZE;
-int baseY = lastWaypoint.getY() * TILESIZE;
+        // Calculate the pixel position using TILESIZE (not TILESIZE - 1)
+        int baseX = lastWaypoint.getX() * TILESIZE;
+        int baseY = lastWaypoint.getY() * TILESIZE;
 
-// If your tavern image is larger than one tile (here it's drawn at 3*TILESIZE),
-// adjust the coordinates so it is centered over the final tile.
-int offset = (3 * TILESIZE - TILESIZE) / 2;
-int tavernX = baseX - offset;
-int tavernY = baseY - offset - TILESIZE;
+        // If your tavern image is larger than one tile (here it's drawn at 3*TILESIZE),
+        // adjust the coordinates so it is centered over the final tile.
+        int offset = (3 * TILESIZE - TILESIZE) / 2;
+        int tavernX = baseX - offset;
+        int tavernY = baseY - offset - TILESIZE;
 
-g2.drawImage(tavernImage, tavernX, tavernY, 3 * TILESIZE, 3 * TILESIZE, null);
+        g2.drawImage(tavernImage, tavernX, tavernY, 3 * TILESIZE, 3 * TILESIZE, null);
 
 
         g2.dispose();
@@ -235,7 +238,7 @@ g2.drawImage(tavernImage, tavernX, tavernY, 3 * TILESIZE, 3 * TILESIZE, null);
         return frame;
     }
     
-    public ArrayList getWaypoints(){
+    public ArrayList<Coordinate> getWaypoints(){
         return grid.getWaypoints();
     }
 }
