@@ -32,16 +32,16 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] == true){
+            if (e.getButton() == MouseEvent.BUTTON3) { // Right-click to place an enemy
+                Enemy newEnemy = new Enemy(
+                    tileCoordinate,
+                    4, 100, gp);
+                gp.enemies.add(newEnemy);
+                System.out.println("Enemy placed");
+            }
             return;
         }
         
-        if (e.getButton() == MouseEvent.BUTTON3) { // Right-click to place an enemy
-            Enemy newEnemy = new Enemy(
-                tileCoordinate,
-                4, 100, gp);
-            gp.enemies.add(newEnemy);
-            System.out.println("Enemy placed");
-        }
         // Left-click: fire a projectile if there is at least one enemy
         else if (e.getButton() == MouseEvent.BUTTON2) {
             if (!gp.enemies.isEmpty()) {

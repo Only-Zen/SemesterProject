@@ -1,6 +1,9 @@
 package entity;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import main.Coordinate;
 import main.GamePanel;
 
@@ -15,6 +18,7 @@ public class Enemy
     protected int health;
     protected int size;
     GamePanel gp;
+    private BufferedImage enemyImage;
     
     public Enemy(Coordinate position, int speed, int health, GamePanel gp){
         // Instantiate the coordinate with the given x and y values.
@@ -25,6 +29,11 @@ public class Enemy
         this.health     = health;
         this.gp         = gp;
         this.size       = gp.TILESIZE;
+        try {
+            enemyImage = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/rat.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     public void draw(Graphics2D g2)
@@ -34,9 +43,12 @@ public class Enemy
          * @param g2 Provides tools for drawing graphics.
          */
         
-        g2.setColor(Color.RED);
-        g2.fillRect(position.getX(), position.getY(), size, size);
+        //g2.setColor(Color.RED);
+        //g2.fillRect(position.getX(), position.getY(), size, size);
         // Draw the enemy as a red square
+        
+        g2.drawImage(enemyImage, position.getX(), position.getY(), 
+                                     gp.TILESIZE, gp.TILESIZE, null);
         
         // Draw health bar
         g2.setColor(Color.GREEN);
