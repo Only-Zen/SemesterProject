@@ -196,20 +196,6 @@ public class GamePanel extends JPanel implements Runnable {
         g.setColor(new Color(255, 0, 0, 80));
         g.fillRect(tileCoord.getX(), tileCoord.getY(), TILESIZE, TILESIZE);
         
-        
-        // Draw towers
-        for (Tower tower : towers) {
-            tower.draw(g2);
-        }
-        // Draw enemies
-        for (Enemy enemy : enemies) {
-            enemy.draw(g2);
-        }
-        // Draw projectiles
-        for (Projectile projectile : projectile) {
-            projectile.draw(g2);
-        }
-        
         ArrayList<Coordinate> waypoints = getWaypoints();
         Coordinate lastWaypoint = waypoints.get(waypoints.size() - 1);
 
@@ -224,7 +210,19 @@ public class GamePanel extends JPanel implements Runnable {
         int tavernY = baseY - offset - TILESIZE;
 
         g2.drawImage(tavernImage, tavernX, tavernY, 3 * TILESIZE, 3 * TILESIZE, null);
-
+        
+        // Draw towers
+        for (Tower tower : towers) {
+            tower.draw(g2);
+        }
+        // Draw enemies
+        for (Enemy enemy : enemies) {
+            enemy.draw(g2);
+        }
+        // Draw projectiles
+        for (Projectile projectile : projectile) {
+            projectile.draw(g2);
+        }
 
         g2.dispose();
     }
