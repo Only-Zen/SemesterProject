@@ -8,8 +8,15 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import entity.Enemy;
 import entity.Projectile;
+import java.awt.Cursor;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Random;
+import javax.imageio.ImageIO;
 import tile.Grid;
 import tower.Tower;
 
@@ -41,6 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
     // Use Coordinate to store the mouse's position
     private Coordinate mouseCoord;
     protected int frame = 1;
+    private BufferedImage mouseImage;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(SCREENWIDTH, SCREENHEIGHT));
@@ -55,6 +63,25 @@ public class GamePanel extends JPanel implements Runnable {
         mouseH = new MouseHandler(this);
         this.addMouseListener(mouseH);
         this.addMouseMotionListener(mouseH);
+        try {
+            // Load the image you want to use as the cursor
+            mouseImage = ImageIO.read(getClass().getResourceAsStream("/icons/shovel.png"));
+            
+            // Determine the new size (e.g., double the original width and height)
+            int newWidth = mouseImage.getWidth() * 2;
+            int newHeight = mouseImage.getHeight() * 2;
+            
+            // Scale the image
+            Image scaledMouseImage = mouseImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+            
+            // Create a custom cursor using the scaled image
+            // Adjust the hotspot as needed; here it remains at (0, 0)
+            Cursor customCursor = Toolkit.getDefaultToolkit()
+                    .createCustomCursor(scaledMouseImage, new Point(0, 0), "custom cursor");
+            this.setCursor(customCursor);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         playMusic(0);
     }
 
@@ -148,8 +175,10 @@ public class GamePanel extends JPanel implements Runnable {
         grid.draw(g2); // Draw tiles
 
         // Draw a small red circle at the mouse's current position
-        g2.setColor(Color.RED);
-        g2.fillOval(mouseCoord.getX() - 5, mouseCoord.getY() - 5, 10, 10);
+        // g2.setColor(Color.RED);
+        // g2.fillOval(mouseCoord.getX() - 5, mouseCoord.getY() - 5, 10, 10);
+        // g2.drawImage(mouseImage, mouseCoord.getX() - 5, mouseCoord.getY() - 5, 
+                                    // TILESIZE / 2, TILESIZE / 2, null);
         g2.setColor(Color.WHITE);
         g2.drawString("MouseX: " + mouseCoord.getX() + " MouseY: " + mouseCoord.getY(),
                 mouseCoord.getX() + 8, mouseCoord.getY() - 8);
@@ -161,7 +190,10 @@ public class GamePanel extends JPanel implements Runnable {
         g.fillRect(tileCoord.getX(), tileCoord.getY(), TILESIZE, TILESIZE);
         
         
-        
+        // Draw towers
+        for (Tower tower : towers) {
+            tower.draw(g2);
+        }
         // Draw enemies
         for (Enemy enemy : enemies) {
             enemy.draw(g2);
@@ -169,10 +201,6 @@ public class GamePanel extends JPanel implements Runnable {
         // Draw projectiles
         for (Projectile projectile : projectile) {
             projectile.draw(g2);
-        }
-        // Draw towers
-        for (Tower tower : towers) {
-            tower.draw(g2);
         }
 
         g2.dispose();

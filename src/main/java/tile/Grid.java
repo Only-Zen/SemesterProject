@@ -74,6 +74,9 @@ public class Grid {
             tile[22] = new Tile();
             tile[22].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass/2.png"));
             
+            tile[23] = new Tile();
+            tile[23].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass/3.png"));
+            
             tile[30] = new Tile();
             tile[30].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree/0.png"));
             tile[30].occupied = true;
@@ -85,6 +88,12 @@ public class Grid {
             tile[32] = new Tile();
             tile[32].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree/2.png"));
             tile[32].occupied = true;
+            
+            tile[40] = new Tile();
+            tile[40].image = ImageIO.read(getClass().getResourceAsStream("/tiles/rock/1.png"));
+            
+            tile[41] = new Tile();
+            tile[41].image = ImageIO.read(getClass().getResourceAsStream("/tiles/rock/2.png"));
             
             tile[50] = new Tile();
             tile[50].image = ImageIO.read(getClass().getResourceAsStream("/tiles/path/cross.png"));
@@ -143,12 +152,12 @@ public class Grid {
                     // If the map says '2', randomly pick one of the new grass variants
                     if (value == 1) {
                         int randomVariant = gp.random.nextInt(2); // 0..2
-                        value = 10 + randomVariant; // shift to tile index 20-23
+                        value = 10 + randomVariant; // shift to tile index 10-11
                         gp.occupiedTiles[col][row] = true;
                     }
                     
                     if (value == 2) {
-                        int randomVariant = gp.random.nextInt(3); // 0..2
+                        int randomVariant = gp.random.nextInt(4); // 0..3
                         value = 20 + randomVariant; // shift to tile index 20-23
                     }
                     
@@ -158,6 +167,8 @@ public class Grid {
                         gp.occupiedTiles[col][row] = true;
                     }
                     if (value == 4){
+                        int randomVariant = gp.random.nextInt(2); // 0..1
+                        value = 40 + randomVariant; // shift to tile index 40-41
                         gp.occupiedTiles[col][row] = true;
                     }
                     if (value == 5){
