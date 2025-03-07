@@ -212,7 +212,7 @@ public class GamePanel extends JPanel implements Runnable {
         g2.drawImage(tavernImage, tavernX, tavernY, 3 * TILESIZE, 3 * TILESIZE, null);
         
         // Draw towers
-        for (Tower tower : towers) {
+        for (Tower tower : new ArrayList<>(towers)) {
             tower.draw(g2);
         }
         // Draw enemies
