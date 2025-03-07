@@ -216,11 +216,11 @@ public class GamePanel extends JPanel implements Runnable {
             tower.draw(g2);
         }
         // Draw enemies
-        for (Enemy enemy : enemies) {
+        for (Enemy enemy : new ArrayList<>(enemies)) {
             enemy.draw(g2);
         }
         // Draw projectiles
-        for (Projectile projectile : projectile) {
+        for (Projectile projectile : new ArrayList<>(projectile)) {
             projectile.draw(g2);
         }
 
