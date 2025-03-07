@@ -28,6 +28,11 @@ public class Grid {
         getTileImage();
         loadMap("/maps/map.txt");
         boolean dummy = generatePath();
+        for (int i = -1; i<=1; i++){
+            for (int j = -2; j <= 0; j++){
+                gp.occupiedTiles[enemyWaypoints.get(enemyWaypoints.size() - 1).getX() + i][enemyWaypoints.get(enemyWaypoints.size() - 1).getY() + j] = true;
+            }
+        }
     }
 
     
@@ -58,13 +63,16 @@ public class Grid {
             
             tile[6] = new Tile();
             tile[6].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle.png"));
+            tile[6].occupied = true;
             
+            /*
             // New water variants for randomization
             tile[10] = new Tile();
             tile[10].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/0.png"));
             
             tile[11] = new Tile();
             tile[11].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/1.png"));
+            */
             
             // New grass variants for randomization
             tile[20] = new Tile();
@@ -120,6 +128,7 @@ public class Grid {
             
             tile[64] = new Tile();
             tile[64].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle/5.png"));
+            
 
 
         } catch(IOException e) {
@@ -153,8 +162,8 @@ public class Grid {
 
                     // If the map says '2', randomly pick one of the new grass variants
                     if (value == 1) {
-                        int randomVariant = gp.random.nextInt(2); // 0..2
-                        value = 10 + randomVariant; // shift to tile index 10-11
+                        //int randomVariant = gp.random.nextInt(2); // 0..2
+                        //value = 10 + randomVariant; // shift to tile index 10-11
                         gp.occupiedTiles[col][row] = true;
                     }
                     
@@ -176,12 +185,16 @@ public class Grid {
                     if (value == 5){
                         gp.occupiedTiles[col][row] = true;
                     }
+                    
+                    if (value == 6){
+                        gp.occupiedTiles[col][row] = true;
+                    }
 
                     // Store the final tile index in the map array
                     mapTileNum[row][col] = value;
                 }
             }
-
+            
             br.close();
             System.out.println("[PASS] Map loaded successfully!");
 
