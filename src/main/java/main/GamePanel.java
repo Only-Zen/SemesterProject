@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import entity.Enemy;
@@ -238,5 +240,30 @@ public class GamePanel extends JPanel implements Runnable {
     
     public ArrayList<Coordinate> getWaypoints(){
         return grid.getWaypoints();
+    }
+
+    public void writeToDisk (String filename) {
+        //  single type format: Header=data,/n
+        //multiple type format: Header,Title1=data1,Title2=data2,...,\n
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+
+            //Map Filename
+            writer.write("Filename=/maps/map.txt,\n"); //To be replaced with a getter function if multiple maps are supported
+            //Round
+            writer.write(enemySpawner.getRoundString()); //This may be the incorrect place to find this information when multi-wave is supported
+            //Score
+
+            //Currency
+
+            //Placed Towers
+            for (Tower tower : towers) {
+                writer.write(tower.getString());
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
