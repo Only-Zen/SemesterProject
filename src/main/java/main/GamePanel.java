@@ -4,8 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import entity.Enemy;
@@ -15,12 +14,13 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import tile.Grid;
 import tower.Tower;
+
+import static java.lang.Integer.valueOf;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -47,7 +47,8 @@ public class GamePanel extends JPanel implements Runnable {
     public ArrayList<Enemy> enemies = new ArrayList<>();
     public ArrayList<Projectile> projectile = new ArrayList<>();
     public ArrayList<Tower> towers = new ArrayList<>();
-
+    public String mapLocation = "/maps/map.txt";
+    public int round = 0;
     // Use Coordinate to store the mouse's position
     private Coordinate mouseCoord;
     protected int frame = 1;
@@ -249,7 +250,7 @@ public class GamePanel extends JPanel implements Runnable {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 
             //Map Filename
-            writer.write("Filename=/maps/map.txt,\n"); //To be replaced with a getter function if multiple maps are supported
+            writer.write("Filename,/maps/map.txt,\n"); //To be replaced with a getter function if multiple maps are supported
             //Round
             writer.write(enemySpawner.getRoundString()); //This may be the incorrect place to find this information when multi-wave is supported
             //Score
@@ -264,6 +265,77 @@ public class GamePanel extends JPanel implements Runnable {
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void readSavegame(String filename) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filename));
+            String line;
+            int towerCount = 0;
+            while((line = reader.readLine()) != null){
+                String[] fields = line.split(",", 2); //isolates the line header
+                if(fields.length > 1) { // valid lines have at least two substrings
+                    switch (fields[0]) {
+                        case "Filename":
+                            mapLocation = fields[1] ;
+                            break;
+                        case "Round":
+                            round = Integer.parseInt(fields[1]) ;
+                            break;
+                        case "Tower":
+
+                            break;
+                        default:
+
+
+                    }
+                }
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void parseTowerString(String data) {
+        int posX = 0;
+        int posY = 0;
+        int range = 0;
+        int damage = 0;
+        int firerate = 0;
+        boolean goodParse = true;
+
+
+        String[] fields = data.split(",");
+        for(int i = 0; i < data.length(); i++){
+            String[] subFields = fields[i].split("="); // separate title from values
+            switch (subFields[0]) {
+                case "PosX":
+                    posX = Integer.parseInt(subFields[1]);
+                    break;
+                case "PosY":
+                    posY = Integer.parseInt(subFields[1]);
+                    break;
+                case "Range":
+                    range = Integer.parseInt(subFields[1]);
+                    break;
+                case "Damage":
+                    damage = Integer.parseInt(subFields[1]);
+                    break;
+                case "Firerate":
+                    firerate = Integer.parseInt(subFields[1]);
+                    break;
+                default:
+                    goodParse = false;
+            }
+            if(goodParse) {
+                Tower newTower = new Tower(new Coordinate(posX, posY, this), range, damage, firerate, 0.0, this);
+                towers.add(newTower);
+            }
+            else
+                System.out.println("Tower failed to load!");
         }
     }
 }

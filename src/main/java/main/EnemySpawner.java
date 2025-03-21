@@ -98,7 +98,7 @@ public class EnemySpawner {
     }
 
     public String getRoundString() {
-        return "Round=" + String.valueOf(round) + ",\n";
+        return "Round," + String.valueOf(round) + ",\n";
     }
 
 }
