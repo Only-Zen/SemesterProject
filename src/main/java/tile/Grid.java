@@ -129,7 +129,8 @@ public class Grid {
             tile[64] = new Tile();
             tile[64].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle/5.png"));
             
-
+            tile[70] = new Tile();
+            tile[70].image = ImageIO.read(getClass().getResourceAsStream("/icons/pause.png"));
 
         } catch(IOException e) {
             e.printStackTrace();
@@ -159,6 +160,10 @@ public class Grid {
 
                 for (int col = 0; col < gp.MAXSCREENCOL; col++) {
                     int value = Integer.parseInt(numbers[col]);
+                    
+                    if (value == 0) { // Reserved for pause button
+                        value = 70;
+                    }
 
                     // If the map says '2', randomly pick one of the new grass variants
                     if (value == 1) {
@@ -514,5 +519,4 @@ public class Grid {
     public ArrayList<Coordinate> getWaypoints(){
         return enemyWaypoints;
     }
-
 }
