@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import entity.Enemy;
 import entity.Projectile;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -47,12 +48,14 @@ public class GamePanel extends JPanel implements Runnable {
     public ArrayList<Enemy> enemies = new ArrayList<>();
     public ArrayList<Projectile> projectile = new ArrayList<>();
     public ArrayList<Tower> towers = new ArrayList<>();
+    public GameInfo info;
 
     // Use Coordinate to store the mouse's position
     private Coordinate mouseCoord;
     protected int frame = 1;
     private BufferedImage mouseImage;
     private Image tavernImage;
+    
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(SCREENWIDTH, SCREENHEIGHT));
@@ -62,6 +65,9 @@ public class GamePanel extends JPanel implements Runnable {
         
         // Initialize the mouse coordinate (starts at 0,0)
         mouseCoord = new Coordinate(0, 0, this);
+        
+        //Initialize GameInfo
+        info = new GameInfo(this);
 
         // Create the MouseHandler and add it as a listener
         mouseH = new MouseHandler(this);
@@ -182,6 +188,8 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         grid.draw(g2); // Draw tiles
+        Font font = new Font("Dialog", Font.PLAIN, 12); //used to change fonts as needed
+        g2.setFont(font);
 
         // Draw a small red circle at the mouse's current position
         // g2.setColor(Color.RED);
@@ -225,6 +233,12 @@ public class GamePanel extends JPanel implements Runnable {
         for (Projectile projectile : new ArrayList<>(projectile)) {
             projectile.draw(g2);
         }
+        
+        //Draw game info overlay
+        g2.setColor(Color.BLACK);
+        font = new Font("Dialog", Font.PLAIN, 24);
+        g2.setFont(font);
+        info.draw(g2);
 
         g2.dispose();
     }
