@@ -22,6 +22,7 @@ public class MenuHandler implements ActionListener {
             case "Play":
                 System.out.println("Continue");
                 gp.isPaused = false;
+                gp.pause.showPauseMenu(false);
                 break;
             case "Save":
                 System.out.println("Save Game");
