@@ -221,16 +221,6 @@ public class GamePanel extends JPanel implements Runnable {
             
             grid.draw(g2); // Draw tiles
             
-            g2.setColor(Color.WHITE);
-            g2.drawString("MouseX: " + mouseCoord.getX() + " MouseY: " + mouseCoord.getY(),
-                mouseCoord.getX() + 8, mouseCoord.getY() - 8);
-            
-            // Highlight the tile currently hovered over by the mouse.
-            // (We use the tile coordinate from the MouseHandler and multiply by the tile size.)
-            Coordinate tileCoord = mouseH.getTileCoordinate();
-            g.setColor(new Color(255, 0, 0, 80));
-            g.fillRect(tileCoord.getX(), tileCoord.getY(), TILESIZE, TILESIZE);
-            
             ArrayList<Coordinate> waypoints = getWaypoints();
             Coordinate lastWaypoint = waypoints.get(waypoints.size() - 1);
 
@@ -258,6 +248,16 @@ public class GamePanel extends JPanel implements Runnable {
             for (Projectile projectile : new ArrayList<>(projectile)) {
                 projectile.draw(g2);
             }
+            
+            g2.setColor(Color.WHITE);
+            g2.drawString("MouseX: " + mouseCoord.getX() + " MouseY: " + mouseCoord.getY(),
+                mouseCoord.getX() + 8, mouseCoord.getY() - 8);
+            
+            // Highlight the tile currently hovered over by the mouse.
+            // (We use the tile coordinate from the MouseHandler and multiply by the tile size.)
+            Coordinate tileCoord = mouseH.getTileCoordinate();
+            g.setColor(new Color(255, 0, 0, 80));
+            g.fillRect(tileCoord.getX(), tileCoord.getY(), TILESIZE, TILESIZE);
             
             //Draw game info overlay
             g2.setColor(Color.BLACK);
