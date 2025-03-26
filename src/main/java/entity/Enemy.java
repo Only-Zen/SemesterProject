@@ -134,6 +134,14 @@ public class Enemy
          */
         
         isAlive = false;
+        
+        //Enemy uses onDeath for dying and reaching the end, so this checks which one
+        if(coordinateCounter >= waypoints.size() - 1){
+            gp.info.playerHealth -= 20;
+        }
+        else{
+            gp.info.playerMoney++;
+        }
     }
     
     public int getHealth()
