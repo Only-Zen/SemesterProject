@@ -20,7 +20,6 @@ import javax.imageio.ImageIO;
 import tile.Grid;
 import tower.Tower;
 
-import static java.lang.Integer.valueOf;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -32,11 +31,14 @@ public class GamePanel extends JPanel implements Runnable {
     public final int MAXSCREENROW = 16;
     public final int SCREENWIDTH = TILESIZE * MAXSCREENCOL;
     public final int SCREENHEIGHT = TILESIZE * MAXSCREENROW;
-    
 
+
+    public String mapLocation = "/maps/map.txt";
+    public int round = 0;
     public Random random = new Random();
     Sound sound = new Sound();
     public boolean[][] occupiedTiles = new boolean[MAXSCREENCOL][MAXSCREENROW];
+
     Grid grid = new Grid(this);
     
     public final int FPS = 60;
@@ -47,8 +49,7 @@ public class GamePanel extends JPanel implements Runnable {
     public ArrayList<Enemy> enemies = new ArrayList<>();
     public ArrayList<Projectile> projectile = new ArrayList<>();
     public ArrayList<Tower> towers = new ArrayList<>();
-    public String mapLocation = "/maps/map.txt";
-    public int round = 0;
+
     // Use Coordinate to store the mouse's position
     private Coordinate mouseCoord;
     protected int frame = 1;
@@ -60,7 +61,10 @@ public class GamePanel extends JPanel implements Runnable {
         this.setBackground(Color.GRAY);
         this.setDoubleBuffered(true);
         this.setFocusable(true);
-        
+
+        //this.grid = new Grid(this);
+
+
         // Initialize the mouse coordinate (starts at 0,0)
         mouseCoord = new Coordinate(0, 0, this);
 
