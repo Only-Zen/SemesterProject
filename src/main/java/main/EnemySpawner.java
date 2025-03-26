@@ -17,6 +17,7 @@ public class EnemySpawner {
         this.round = 0;
         this.cooldownTimer = SPEED;
         this.gp = gp;
+        
         loadSpawner(filePath);
     }
 
