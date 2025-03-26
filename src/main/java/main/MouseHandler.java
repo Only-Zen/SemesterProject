@@ -73,10 +73,13 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
                 else{
                     // Create a new Tower instance with desired parameters.
                     // (For example, here range = 100, damage = 10, firerate = 1, cooldownTimer = 0)
-                    Tower newTower = new Tower(tileCoordinate, 150, 20, 3, 0.0, gp);
-                    gp.towers.add(newTower);
-                    gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] = true;
-                    System.out.println("Tower placed!");
+                    if (gp.info.playerMoney >= 30){
+                        Tower newTower = new Tower(tileCoordinate, 150, 20, 3, 0.0, gp);
+                        gp.towers.add(newTower);
+                        gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] = true;
+                        System.out.println("Tower placed!");
+                        gp.info.playerMoney -= 30;
+                        }
                 }
             }
         }

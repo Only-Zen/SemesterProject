@@ -137,10 +137,10 @@ public class Enemy
         
         //Enemy uses onDeath for dying and reaching the end, so this checks which one
         if(coordinateCounter >= waypoints.size() - 1){
-            gp.info.playerHealth -= 20;
+            gp.info.playerHealth -= 5;
         }
         else{
-            gp.info.playerMoney++;
+            gp.info.playerMoney+=10;
         }
     }
     

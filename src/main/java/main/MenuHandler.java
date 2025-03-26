@@ -30,6 +30,7 @@ public class MenuHandler implements ActionListener {
                 break;
             case "Exit":
                 System.out.println("Exit");
+                System.exit(0);
                 //Exit game logic
                 break;
         }

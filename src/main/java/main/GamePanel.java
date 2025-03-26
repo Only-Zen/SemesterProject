@@ -120,14 +120,16 @@ public class GamePanel extends JPanel implements Runnable {
         while (gameThread != null) {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
-            if (delta >= 1) {
-                if (!isPaused) { //Check if paused. If so, do not update
+            lastTime = currentTime;
+            if (!isPaused) { //Check if paused. If so, do not update
+                if (delta >= 1) {
                     update();
                     repaint();
-                }
-                delta--;
+                    delta--;
+                } 
+            } else {
+                delta = 0;
             }
-            lastTime = currentTime;
         }
     }
     
@@ -264,6 +266,8 @@ public class GamePanel extends JPanel implements Runnable {
             info.draw(g2);
         }
         
+        
+
         g2.dispose();
     }
     

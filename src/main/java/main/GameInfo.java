@@ -14,7 +14,7 @@ public class GameInfo {
     GamePanel gp;
     
     public GameInfo(GamePanel gp){
-        playerMoney = 0;
+        playerMoney = 50;
         playerHealth = 100;
         round = 0;
         isRoundGoing = false;
