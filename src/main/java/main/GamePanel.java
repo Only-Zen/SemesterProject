@@ -325,7 +325,7 @@ public class GamePanel extends JPanel implements Runnable {
                             round = Integer.parseInt(fields[1]) ;
                             break;
                         case "Tower":
-
+                            parseTowerString(fields[1]);
                             break;
                         default:
 
