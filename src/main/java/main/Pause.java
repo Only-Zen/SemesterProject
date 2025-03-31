@@ -19,7 +19,7 @@ public class Pause extends JLayeredPane {
         
     GamePanel gp;
     
-    Font cambria_header, cambria_body;
+    Font cascadia_header, cascadia_body;
 
     JPanel buttonsPanel;
     JButton contButton, saveButton, exitButton;
@@ -35,15 +35,14 @@ public class Pause extends JLayeredPane {
         buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new GridLayout(3, 1, 10, 10));
         buttonsPanel.setBounds(gp.SCREENWIDTH/4, gp.SCREENHEIGHT/2, gp.SCREENWIDTH/2, gp.SCREENHEIGHT/3);
-        buttonsPanel.setBackground(Color.WHITE);
         
         //Without these, the pause menu will not show.
         setOpaque(true);
         buttonsPanel.setOpaque(false);
         
         //Create fonts
-        cambria_header = new Font ("Cambria", Font.BOLD, 60);
-        cambria_body = new Font ("Cambria", Font.PLAIN, 40);
+        cascadia_header = new Font ("Cascadia Code", Font.BOLD, 60);
+        cascadia_body = new Font ("Cascadia Code", Font.PLAIN, 40);
         
         //Create buttons
         contButton = new JButton("Continue");
@@ -51,9 +50,9 @@ public class Pause extends JLayeredPane {
         exitButton = new JButton("Exit");
         
         //Give buttons fonts
-        contButton.setFont(cambria_body);
-        saveButton.setFont(cambria_body);
-        exitButton.setFont(cambria_body);
+        contButton.setFont(cascadia_body);
+        saveButton.setFont(cascadia_body);
+        exitButton.setFont(cascadia_body);
         
         //Create an action listener
         MenuHandler handler = new MenuHandler(gp);
@@ -90,20 +89,21 @@ public class Pause extends JLayeredPane {
     
     public void drawPauseScreen(Graphics g) {
         //Draw dark gray rectangle over the entire screen as a backdrop to the menu
-        g.setColor(Color.LIGHT_GRAY);
+        g.setColor(new Color(125,112,113));
         g.fillRect(0, 0, gp.SCREENWIDTH, gp.SCREENHEIGHT);
       
         //Draw a smaller white rectangle over "Paused" text and buttonsPanel
-        g.setColor(Color.WHITE);
+        g.setColor(new Color(207,198,184));
         int x = (gp.SCREENWIDTH/3 * 2); int y = (gp.SCREENHEIGHT/3 * 2);
         g.fillRoundRect(gp.SCREENWIDTH/6, gp.SCREENHEIGHT/5, x, y, 10, 10);
         
         //Draw the text: "Paused"
+        String textToShow = "Paused";
         g.setColor(Color.BLACK);
-        g.setFont(cambria_header);
-        int textLength = (int)g.getFontMetrics().getStringBounds("Paused", g).getWidth(); //Used to draw text to the center of the screen
+        g.setFont(cascadia_header);
+        int textLength = (int)g.getFontMetrics().getStringBounds(textToShow, g).getWidth(); //Used to draw text to the center of the screen
         x = gp.SCREENWIDTH/2 - textLength/2; y = gp.SCREENHEIGHT/3;
-        g.drawString("Paused", x, y);
+        g.drawString(textToShow, x, y);
     }
     
      public void showPauseMenu(boolean show) {
