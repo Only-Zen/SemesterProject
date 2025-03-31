@@ -23,10 +23,10 @@ public class Grid {
         this.gp = gp;
         // Make sure the array is big enough for all variants
         tile = new Tile[100]; 
-        mapTileNum = new int[gp.MAXSCREENROW][gp.MAXSCREENCOL];
+        mapTileNum = new int[gp.MAXSCREENCOL][gp.MAXSCREENROW];
 
         getTileImage();
-        loadMap("/maps/map.txt");
+        loadMap(gp.mapLocation);
         boolean dummy = generatePath();
         for (int i = -1; i<=1; i++){
             for (int j = -2; j <= 0; j++){
@@ -196,7 +196,7 @@ public class Grid {
                     }
 
                     // Store the final tile index in the map array
-                    mapTileNum[row][col] = value;
+                    mapTileNum[col][row] = value;
                 }
             }
             
@@ -317,7 +317,7 @@ public class Grid {
            if(row >= gp.MAXSCREENROW - 1 || col >= gp.MAXSCREENCOL - 1) {
                isDestination = 1; //accept edge of map as destination
            }
-           else if(mapTileNum [nextRow][nextCol] == DESTINATION){
+           else if(mapTileNum [nextCol][nextRow] == DESTINATION){
                isDestination = 1;
            }
            
@@ -368,7 +368,7 @@ public class Grid {
             //System.out.print("Out Of Bounds"); System.out.print(row); System.out.print(", "); System.out.print(col);
             return false; //out of bounds tile cannot be path
         }
-        int intarigatedTile = mapTileNum[row][col];
+        int intarigatedTile = mapTileNum[col][row];
         //System.out.print(intarigatedTile);System.out.print(", ");
         if(intarigatedTile > 9){
             intarigatedTile = (intarigatedTile/10); //alows for path tile variations such as 50 or 45
@@ -390,7 +390,7 @@ public class Grid {
     public void draw(Graphics2D g2) {
         for (int row = 0; row < gp.MAXSCREENROW; row++) {
             for (int col = 0; col < gp.MAXSCREENCOL; col++) {
-                int tileNum = mapTileNum[row][col];
+                int tileNum = mapTileNum[col][row];
 
                 int screenX = col * gp.TILESIZE;
                 int screenY = row * gp.TILESIZE;
@@ -483,10 +483,10 @@ public class Grid {
 
     public PathVariant getPathVariant(int row, int col) {
         // Check neighbors. Ensure you don't go out-of-bounds:
-        boolean up = (row > 0 && mapTileNum[row - 1][col] == 5);
-        boolean down = (row < gp.MAXSCREENROW - 1 && mapTileNum[row + 1][col] == 5);
-        boolean left = (col > 0 && mapTileNum[row][col - 1] == 5);
-        boolean right = (col < gp.MAXSCREENCOL - 1 && mapTileNum[row][col + 1] == 5);
+        boolean up = (row > 0 && mapTileNum[col][row - 1] == 5);
+        boolean down = (row < gp.MAXSCREENROW - 1 && mapTileNum[col][row + 1] == 5);
+        boolean left = (col > 0 && mapTileNum[col - 1][row] == 5);
+        boolean right = (col < gp.MAXSCREENCOL - 1 && mapTileNum[col + 1][row] == 5);
 
         // Example logic:
         if (up && down && left && right) {
