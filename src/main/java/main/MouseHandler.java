@@ -7,17 +7,21 @@ import entity.Enemy;
 import entity.Projectile;
 import tower.Tower;
 
+import tile.Grid; //For identifying the pause button. If you know a more elegant way of doing this let me know.
+
 public class MouseHandler extends MouseAdapter implements MouseMotionListener {
 
     // Use Coordinate objects for the mouse's pixel location and its tile location
     private Coordinate mouseCoordinate;
     private Coordinate tileCoordinate;
     GamePanel gp;
-
+    private final Grid grid;
+    
     public MouseHandler(GamePanel gp) {
         this.gp = gp;
         mouseCoordinate = new Coordinate(0, 0, gp);
         tileCoordinate = mouseCoordinate.getGrid();
+        grid = new Grid(gp);
     }
 
     @Override
@@ -31,41 +35,53 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] == true){
-            if (e.getButton() == MouseEvent.BUTTON3) { // Right-click to place an enemy
-                Enemy newEnemy = new Enemy(
-                    tileCoordinate,
-                    4, 100, gp);
-                gp.enemies.add(newEnemy);
-                System.out.println("Enemy placed");
+        if (!gp.isPaused){
+            if (gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] == true){
+                if (e.getButton() == MouseEvent.BUTTON3) { // Right-click to place an enemy
+                    Enemy newEnemy = new Enemy(
+                        tileCoordinate,
+                        4, 100, gp);
+                    gp.enemies.add(newEnemy);
+                    System.out.println("Enemy placed");
+                }
+                return;
             }
-            return;
-        }
-        
-        // Left-click: fire a projectile if there is at least one enemy
-        else if (e.getButton() == MouseEvent.BUTTON2) {
-            if (!gp.enemies.isEmpty()) {
-                Projectile newProjectile = new Projectile(
-                    new Coordinate(e.getX(), e.getY(), gp),
-                    gp.enemies.get(0).getPosition(), // target from first enemy's position
-                    5,  // projectile speed
-                    25, // projectile damage
-                    gp
-                );
-                gp.projectile.add(newProjectile);
-                System.out.println("Projectile fired!");
-            } else {
-                System.out.println("No enemy available to target!");
+
+            // Middle-click: fire a projectile if there is at least one enemy
+            else if (e.getButton() == MouseEvent.BUTTON2) {
+                if (!gp.enemies.isEmpty()) {
+                    Projectile newProjectile = new Projectile(
+                        new Coordinate(e.getX(), e.getY(), gp),
+                        gp.enemies.get(0).getPosition(), // target from first enemy's position
+                        5,  // projectile speed
+                        25, // projectile damage
+                        gp
+                    );
+                    gp.projectile.add(newProjectile);
+                    System.out.println("Projectile fired!");
+                } else {
+                    System.out.println("No enemy available to target!");
+                }
             }
-        }
-        // Middle-click: place a tower
-        else if (e.getButton() == MouseEvent.BUTTON1) {
-            // Create a new Tower instance with desired parameters.
-            // (For example, here range = 100, damage = 10, firerate = 1, cooldownTimer = 0)
-            Tower newTower = new Tower(tileCoordinate, 150, 20, 3, 0.0, gp);
-            gp.towers.add(newTower);
-            gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] = true;
-            System.out.println("Tower placed!");
+            // Left-click: place a tower
+            else if (e.getButton() == MouseEvent.BUTTON1) {
+                //If pause button is clicked, then pause the game
+                if ((grid.mapTileNum[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE]) == 70){
+                    System.out.println("Pause button clicked.");
+                    gp.isPaused = true;
+                }
+                else{
+                    // Create a new Tower instance with desired parameters.
+                    // (For example, here range = 100, damage = 10, firerate = 1, cooldownTimer = 0)
+                    if (gp.info.playerMoney >= 30){
+                        Tower newTower = new Tower(tileCoordinate, 150, 20, 3, 0.0, gp);
+                        gp.towers.add(newTower);
+                        gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] = true;
+                        System.out.println("Tower placed!");
+                        gp.info.playerMoney -= 30;
+                        }
+                }
+            }
         }
     }
     
