@@ -192,6 +192,8 @@ public class GamePanel extends JPanel implements Runnable {
             else {
                 frame++;
             }
+            
+            info.update();
             //System.out.println(frame); //(debug)
     }
     

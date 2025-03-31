@@ -79,13 +79,14 @@ public class EnemySpawner {
 
     public void update() {
         //
+        round = gp.info.round;
         cooldownTimer--;
         spawnEnemy();
     }
 
     private void spawnEnemy() {
         // System.out.println("Spawning enemy: ");
-        if (enemyQueues != null && cooldownTimer <= 0) {
+        if (enemyQueues != null && cooldownTimer <= 0 && gp.info.isRoundGoing) {
             Queue<Enemy> currentQueue = enemyQueues.get(round);
             if (!currentQueue.isEmpty()) {
                 // Remove and return the head of the queue
