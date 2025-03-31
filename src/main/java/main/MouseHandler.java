@@ -44,7 +44,6 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
                     gp.enemies.add(newEnemy);
                     System.out.println("Enemy placed");
                 }
-                return;
             }
 
             // Middle-click: fire a projectile if there is at least one enemy
@@ -64,13 +63,21 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
                 }
             }
             // Left-click: place a tower
-            else if (e.getButton() == MouseEvent.BUTTON1) {
+            if (e.getButton() == MouseEvent.BUTTON1) {
                 //If pause button is clicked, then pause the game
+                System.out.println(mouseCoordinate);
                 if ((grid.mapTileNum[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE]) == 70){
                     System.out.println("Pause button clicked.");
                     gp.isPaused = true;
                 }
-                else{
+                else if(mouseCoordinate.getX() > gp.info.PLAY_BUTTON_X &&
+                        mouseCoordinate.getX() < gp.info.PLAY_BUTTON_X + gp.info.PLAY_BUTTON_WIDTH &&
+                        mouseCoordinate.getY() > gp.info.PLAY_BUTTON_Y &&
+                        mouseCoordinate.getY() < gp.info.PLAY_BUTTON_Y + gp.info.PLAY_BUTTON_HEIGHT){
+                    //
+                    gp.info.startRound();
+                }
+                else if(gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] == false){
                     // Create a new Tower instance with desired parameters.
                     // (For example, here range = 100, damage = 10, firerate = 1, cooldownTimer = 0)
                     if (gp.info.playerMoney >= 30){
@@ -81,6 +88,7 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
                         gp.info.playerMoney -= 30;
                         }
                 }
+                System.out.println(gp.info.isRoundGoing);
             }
         }
     }
