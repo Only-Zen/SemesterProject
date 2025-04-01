@@ -14,14 +14,13 @@ public class Main {
         window.setResizable(false);
         window.setTitle("The Last Pint");
         
-        GamePanel gamePanel = new GamePanel();
-        window.add(gamePanel);
+
+        TitleScreen title = new TitleScreen(window);
+        window.add(title);
         
         window.pack();
         
         window.setLocationRelativeTo(null);
         window.setVisible(true);
-        
-        gamePanel.startGameThread();
     }
 }

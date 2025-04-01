@@ -9,8 +9,19 @@ import java.awt.event.ActionEvent;
  */
 public class MenuHandler implements ActionListener {
     GamePanel gp;
+    TitleScreen title;
+
+    public boolean triggerReadFromDisk = false; //used to prompt loading of savegame elements inside the game loop
+
+    protected String mapFilepath = "maps/map.txt";
+    protected String saveFilepath = "save.txt";
+
+    public MenuHandler(TitleScreen title){
+        this.title = title;
+    }
     
     public MenuHandler(GamePanel gp) {
+        //Constructor for pause screen
         this.gp = gp;
     }
     
@@ -19,14 +30,29 @@ public class MenuHandler implements ActionListener {
         String action = event.getActionCommand();
         
         switch(action){
+            //Title screen actions
+            case "Start":
+                System.out.println("Start Game");
+                triggerReadFromDisk = false;
+                title.StartGame();
+
+                break;
+            case "Load":
+                System.out.println("Load Game");
+                //Load game logic
+                triggerReadFromDisk = true;
+                title.StartGame();
+                break;
+            
+            //Pause menu actions
             case "Play":
                 System.out.println("Continue");
                 gp.isPaused = false;
-                gp.pause.showPauseMenu(false);
                 break;
             case "Save":
                 System.out.println("Save Game");
                 // Save game logic
+                gp.writeToDisk(saveFilepath, mapFilepath);
                 break;
             case "Exit":
                 System.out.println("Exit");

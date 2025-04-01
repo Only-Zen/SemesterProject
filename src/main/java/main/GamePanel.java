@@ -33,7 +33,6 @@ public class GamePanel extends JPanel implements Runnable {
     public final int SCREENWIDTH = TILESIZE * MAXSCREENCOL;
     public final int SCREENHEIGHT = TILESIZE * MAXSCREENROW;
 
-
     public String mapLocation = "/maps/map.txt";
     public int round = 0;
     public Random random = new Random();
@@ -63,12 +62,14 @@ public class GamePanel extends JPanel implements Runnable {
     public Boolean isPaused = false;
     Pause pause = new Pause(this);
 
-    public GamePanel() {
+    MenuHandler mh;
+
+    public GamePanel(MenuHandler handler) {
         this.setPreferredSize(new Dimension(SCREENWIDTH, SCREENHEIGHT));
         this.setBackground(new Color(0,0,0,1));
         this.setDoubleBuffered(true);
         this.setFocusable(true);
-        
+        this.mh = handler;
         add(pause); //Initialize pause menu
         pause.setPreferredSize(new Dimension(SCREENWIDTH, SCREENHEIGHT));
         
@@ -139,6 +140,12 @@ public class GamePanel extends JPanel implements Runnable {
             mouseCoord.setX(newMouseCoord.getX());
             mouseCoord.setY(newMouseCoord.getY());
 
+            //Load Savegame if needed
+            if(mh.triggerReadFromDisk) {
+                readSavegame(mh.saveFilepath);
+                mh.triggerReadFromDisk = false;
+            }
+
             // Update all projectiles (so they move toward their targets)
             for (Tower tower : towers) {
                 tower.update();
@@ -192,6 +199,8 @@ public class GamePanel extends JPanel implements Runnable {
             else {
                 frame++;
             }
+            
+            info.update();
             //System.out.println(frame); //(debug)
     }
     
@@ -284,23 +293,24 @@ public class GamePanel extends JPanel implements Runnable {
         return grid.getWaypoints();
     }
 
-    public void writeToDisk (String filename) {
+    public void writeToDisk (String saveFilename, String mapFilename) {
         //  single type format: Header=data,/n
         //multiple type format: Header,Title1=data1,Title2=data2,...,\n
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(saveFilename));
 
             //Map Filename
-            writer.write("Filename,/maps/map.txt,\n"); //To be replaced with a getter function if multiple maps are supported
+            writer.write("Filename," + mapFilename +",\n");
             //Round
-            writer.write(enemySpawner.getRoundString()); //This may be the incorrect place to find this information when multi-wave is supported
-            //Score
-
-            //Currency
-
+            writer.write("Round," + info.round + ",\n");
+            //Health
+            writer.write("Health," + info.playerHealth + ",\n");
+            //Money
+            writer.write("Money," + info.playerMoney + ",\n");
             //Placed Towers
             for (Tower tower : towers) {
                 writer.write(tower.getString());
+                System.out.println("Tower Saved!");
             }
 
             writer.close();
@@ -313,30 +323,44 @@ public class GamePanel extends JPanel implements Runnable {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             String line;
-            int towerCount = 0;
             while((line = reader.readLine()) != null){
-                String[] fields = line.split(",", 2); //isolates the line header
-                if(fields.length > 1) { // valid lines have at least two substrings
-                    switch (fields[0]) {
-                        case "Filename":
-                            mapLocation = fields[1] ;
-                            break;
-                        case "Round":
-                            round = Integer.parseInt(fields[1]) ;
-                            break;
-                        case "Tower":
-
-                            break;
-                        default:
-
-
-                    }
-                }
+                parseLineString(line);
             }
 
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+    }
+    public void parseLineString(String line) {
+        String[] fields = line.split(",", 2); //isolates the line header
+        if(fields.length > 1) { // valid lines have at least two substrings
+            switch (fields[0]) {
+                case "Filename":
+                    //mapLocation = fields[1] ;
+                    break;
+                case "Round":
+                    String[] rData = line.split(",");
+                    info.round = Integer.parseInt(rData[1]) ;
+                    System.out.println("Round" + info.round + "!\n");
+
+                    break;
+                case "Health":
+                    String[] hData = line.split(",");
+                    info.playerHealth = Integer.parseInt(hData[1]) ;
+                    System.out.println("Round" + info.playerHealth + "!\n");
+                    break;
+                case "Money":
+                    String[] mData = line.split(",");
+                    info.playerMoney = Integer.parseInt(mData[1]) ;
+                    System.out.println("Money" + info.playerMoney + "!\n");
+                    break;
+                case "Tower":
+                    parseTowerString(fields[1]);
+                    break;
+                default:
+            }
         }
 
     }
@@ -348,35 +372,43 @@ public class GamePanel extends JPanel implements Runnable {
         int firerate = 0;
         boolean goodParse = true;
 
+        System.out.println(data);
+        String[] fields = data.split("[,\\=]");
+        System.out.println(fields[0]+ "... " + fields[1]);
+        for(int i = 0; i < (fields.length - 1); i = i+2){
 
-        String[] fields = data.split(",");
-        for(int i = 0; i < data.length(); i++){
-            String[] subFields = fields[i].split("="); // separate title from values
-            switch (subFields[0]) {
+
+            switch (fields[i]) {
                 case "PosX":
-                    posX = Integer.parseInt(subFields[1]);
+                    posX = Integer.parseInt(fields[i + 1]);
+                    System.out.print(posX + ", ");
                     break;
                 case "PosY":
-                    posY = Integer.parseInt(subFields[1]);
+                    posY = Integer.parseInt(fields[i + 1]);
+                    System.out.print(posY + ", ");
                     break;
                 case "Range":
-                    range = Integer.parseInt(subFields[1]);
+                    range = Integer.parseInt(fields[i + 1]);
+                    System.out.print(range + ", ");
                     break;
                 case "Damage":
-                    damage = Integer.parseInt(subFields[1]);
+                    damage = Integer.parseInt(fields[i + 1]);
+                    System.out.print(damage + ", ");
                     break;
                 case "Firerate":
-                    firerate = Integer.parseInt(subFields[1]);
+                    firerate = Integer.parseInt(fields[i + 1]);
+                    System.out.println(firerate);
                     break;
                 default:
                     goodParse = false;
             }
-            if(goodParse) {
-                Tower newTower = new Tower(new Coordinate(posX, posY, this), range, damage, firerate, 0.0, this);
-                towers.add(newTower);
-            }
-            else
-                System.out.println("Tower failed to load!");
+
         }
+        if(goodParse) {
+            Tower newTower = new Tower(new Coordinate(posX, posY, this), range, damage, firerate, 0.0, this);
+            towers.add(newTower);
+        }
+        else
+            System.out.println("Tower failed to load!");
     }
 }
