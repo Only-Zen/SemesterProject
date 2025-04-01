@@ -14,6 +14,7 @@ public class Main {
         window.setResizable(false);
         window.setTitle("The Last Pint");
         
+
         TitleScreen title = new TitleScreen(window);
         window.add(title);
         

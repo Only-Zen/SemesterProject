@@ -27,7 +27,7 @@ public class TitleScreen extends JLayeredPane {
     //Right now, it's just the size of GamePanel.
     private final int TITLEWIDTH = 1536;
     private final int TITLEHEIGHT = 768;
-    
+    MenuHandler handler;
     public TitleScreen(JFrame window) {
         this.window = window;
         
@@ -56,8 +56,8 @@ public class TitleScreen extends JLayeredPane {
         startButton.setFont(cascadia_body);
         loadButton.setFont(cascadia_body);
         
-        //Create an action listener
-        MenuHandler handler = new MenuHandler(this);
+        //Create an action listener ===========================================================
+        handler = new MenuHandler(this);
         
         //Add action listeners to buttons to detect clicks
         startButton.addActionListener(handler);
@@ -116,10 +116,13 @@ public class TitleScreen extends JLayeredPane {
         loadButton.setEnabled(false);
         
         //Create GamePanel
-        GamePanel gamePanel = new GamePanel();
+        GamePanel gamePanel = new GamePanel(handler);
         window.add(gamePanel);
         window.revalidate();
         window.repaint();
+        //Pass flag to load saveGame
+
+        //gamePanel.mapNeedsToBeLoaded = handler.
         //Start game
         gamePanel.startGameThread();
     }

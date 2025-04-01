@@ -128,7 +128,7 @@ public class Tower {
     }
     public String getString() {
         return "Tower"       +
-                ",Posx="     + String.valueOf(position.getX()) +
+                ",PosX="     + String.valueOf(position.getX()) +
                 ",PosY="     + String.valueOf(position.getY()) +
                 ",Range="    + String.valueOf(range)           +
                 ",Damage="   + String.valueOf(damage)          +
