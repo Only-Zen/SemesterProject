@@ -302,11 +302,11 @@ public class GamePanel extends JPanel implements Runnable {
             //Map Filename
             writer.write("Filename," + mapFilename +",\n");
             //Round
-            writer.write(enemySpawner.getRoundString()); //This may be the incorrect place to find this information when multi-wave is supported
-            //Score
-
-            //Currency
-
+            writer.write("Round," + info.round + ",\n");
+            //Health
+            writer.write("Health," + info.playerHealth + ",\n");
+            //Money
+            writer.write("Money," + info.playerMoney + ",\n");
             //Placed Towers
             for (Tower tower : towers) {
                 writer.write(tower.getString());
@@ -323,33 +323,44 @@ public class GamePanel extends JPanel implements Runnable {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             String line;
-            int towerCount = 0;
             while((line = reader.readLine()) != null){
-                String[] fields = line.split(",", 2); //isolates the line header
-                if(fields.length > 1) { // valid lines have at least two substrings
-                    switch (fields[0]) {
-                        case "Filename":
-                            //mapLocation = fields[1] ;
-                            break;
-                        case "Round":
-                            String[] data = line.split(",");
-                            round = Integer.parseInt(data[1]) ;
-                            System.out.println("Round" + round + "!\n");
-
-                            break;
-                        case "Tower":
-                            parseTowerString(fields[1]);
-                            break;
-                        default:
-
-
-                    }
-                }
+                parseLineString(line);
             }
 
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+    }
+    public void parseLineString(String line) {
+        String[] fields = line.split(",", 2); //isolates the line header
+        if(fields.length > 1) { // valid lines have at least two substrings
+            switch (fields[0]) {
+                case "Filename":
+                    //mapLocation = fields[1] ;
+                    break;
+                case "Round":
+                    String[] rData = line.split(",");
+                    info.round = Integer.parseInt(rData[1]) ;
+                    System.out.println("Round" + info.round + "!\n");
+
+                    break;
+                case "Health":
+                    String[] hData = line.split(",");
+                    info.playerHealth = Integer.parseInt(hData[1]) ;
+                    System.out.println("Round" + info.playerHealth + "!\n");
+                    break;
+                case "Money":
+                    String[] mData = line.split(",");
+                    info.playerMoney = Integer.parseInt(mData[1]) ;
+                    System.out.println("Money" + info.playerMoney + "!\n");
+                    break;
+                case "Tower":
+                    parseTowerString(fields[1]);
+                    break;
+                default:
+            }
         }
 
     }
