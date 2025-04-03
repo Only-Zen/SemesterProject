@@ -141,7 +141,7 @@ public class Enemy
             gp.info.playerHealth -= 5;
         }
         else{
-            gp.info.playerMoney+=10;
+            gp.info.playerMoney+=5;
         }
     }
     

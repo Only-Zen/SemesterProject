@@ -149,7 +149,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
             // Update all projectiles (so they move toward their targets)
-            for (Tower tower : towers) {
+            for (Tower tower : new ArrayList<>(towers)) {
                 tower.update();
             }
 
@@ -170,7 +170,7 @@ public class GamePanel extends JPanel implements Runnable {
                 continue;
             }
 
-                for (Enemy enemy : enemies) {
+                for (Enemy enemy : new ArrayList<>(enemies)) {
 
                     // Calculate deltaX and deltaY
                     int deltaX = enemy.getPosition().getX()+(enemy.getSize()/2) - curProjectile.getPosition().getX();
