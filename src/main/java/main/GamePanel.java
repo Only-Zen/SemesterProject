@@ -103,7 +103,9 @@ public class GamePanel extends JPanel implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        playMusic(0);
+        
+        playMusic(0, 45);
+        sound.loop();
     }
 
     public void startGameThread() {
@@ -280,9 +282,10 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
     }
     
-    public void playMusic(int i){
+    public void playMusic(int i, int volume){
         sound.setFile(i);
         sound.play();
+        sound.setVolume(volume);
     }
     
     public int getFrame(){
