@@ -79,6 +79,7 @@ public class Tower {
                 isCharging = true;
                 shootFrameIndex = 0;
                 shootAnimationCounter = 0;
+                gp.playMusic(3, 63);
             }
         }
         
