@@ -15,6 +15,9 @@ public class Sound {
         soundURL[1] = getClass().getResource("/music/01 Once Upon a Time.wav");
         soundURL[2] = getClass().getResource("/entities/enemy/sounds/die.wav");
         soundURL[3] = getClass().getResource("/tower/sounds/shoot.wav");
+        soundURL[4] = getClass().getResource("/tower/sounds/tackShoot.wav");
+        soundURL[5] = getClass().getResource("/miscSounds/lostHealth.wav");
+        soundURL[6] = getClass().getResource("/tower/sounds/charging.wav");
         
     }
     public void setFile(int i){

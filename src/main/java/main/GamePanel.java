@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import tile.Grid;
-import tower.Tower;
+import tower.*;
 
 
 public class GamePanel extends JPanel implements Runnable {
@@ -360,7 +360,7 @@ public class GamePanel extends JPanel implements Runnable {
                     System.out.println("Money" + info.playerMoney + "!\n");
                     break;
                 case "Tower":
-                    parseTowerString(fields[1]);
+                    parseTowerString(line);//fields[1]);
                     break;
                 default:
             }
@@ -378,7 +378,9 @@ public class GamePanel extends JPanel implements Runnable {
         System.out.println(data);
         String[] fields = data.split("[,\\=]");
         System.out.println(fields[0]+ "... " + fields[1]);
-        for(int i = 0; i < (fields.length - 1); i = i+2){
+        for(int i = 2; i < (fields.length - 1); i = i+2){
+            
+            
 
 
             switch (fields[i]) {
@@ -408,7 +410,25 @@ public class GamePanel extends JPanel implements Runnable {
 
         }
         if(goodParse) {
-            Tower newTower = new Tower(new Coordinate(posX, posY, this), range, damage, firerate, 0.0, this);
+            
+            
+            Tower newTower;
+            
+            switch(fields[1]){
+                case "Tower":
+                    newTower = new BasicTower(new Coordinate(posX, posY, this),this);
+                    break;
+                case "Basic Tower":
+                    newTower = new BasicTower(new Coordinate(posX, posY, this),this);
+                    break;
+                case "Bomber Tower":
+                    newTower = new BomberTower(new Coordinate(posX, posY, this),this);
+                    break;
+                default:
+                    newTower = new BasicTower(new Coordinate(posX, posY, this),this);
+            }
+            
+            
             towers.add(newTower);
         }
         else
