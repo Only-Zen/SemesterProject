@@ -26,10 +26,10 @@ public class GameInfo {
         playerMoney = 250;
         playerHealth = 100;
         round = 0;
-        towerInHand = 0;
+        towerInHand = 1;
         isRoundGoing = false;
         isGameOver = false;
-        startButton = new StartButton(10, 126, 144, 50);
+        startButton = new StartButton(10, 126, 144, 48);
         pauseButton = new PauseButton(1474,10,48,48);
         basicTowerButton = new TowerButton(164, 10, 50, 50, 1);
         bomberTowerButton = new TowerButton(224, 10, 50, 50, 2);
@@ -51,7 +51,9 @@ public class GameInfo {
         g2.drawString(playerMoney + "",60,48);
         g2.drawString(playerHealth + "",60,91);
         
+        
         startButton.draw(g2,isRoundGoing);
+        g2.drawString("Wave: " + (round+1), 40,160);
         pauseButton.draw(g2);
         basicTowerButton.draw(g2,towerInHand);
         bomberTowerButton.draw(g2,towerInHand);

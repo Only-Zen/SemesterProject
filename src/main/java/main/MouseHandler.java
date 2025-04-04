@@ -90,7 +90,7 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
                     Tower newTower = new BasicTower(tileCoordinate,gp);
                     switch (gp.info.towerInHand){
                         case 0:
-                            //
+                            newTower = new BasicTower(tileCoordinate,gp);
                             break;
                         case 2:
                             newTower = new BomberTower(tileCoordinate,gp);
