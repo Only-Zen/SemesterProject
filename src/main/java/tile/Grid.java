@@ -22,7 +22,7 @@ public class Grid {
     public Grid(GamePanel gp){
         this.gp = gp;
         // Make sure the array is big enough for all variants
-        tile = new Tile[100]; 
+        tile = new Tile[200]; 
         mapTileNum = new int[gp.MAXSCREENCOL][gp.MAXSCREENROW];
 
         getTileImage();
@@ -64,15 +64,6 @@ public class Grid {
             tile[6] = new Tile();
             tile[6].image = ImageIO.read(getClass().getResourceAsStream("/tiles/puddle.png"));
             tile[6].occupied = true;
-            
-            /*
-            // New water variants for randomization
-            tile[10] = new Tile();
-            tile[10].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/0.png"));
-            
-            tile[11] = new Tile();
-            tile[11].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/1.png"));
-            */
             
             // New grass variants for randomization
             tile[20] = new Tile();
@@ -131,6 +122,54 @@ public class Grid {
             
             tile[70] = new Tile();
             tile[70].image = ImageIO.read(getClass().getResourceAsStream("/icons/pause.png"));
+            
+            tile[100] = new Tile();
+            tile[100].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/1.png"));
+            tile[100].occupied = true;
+            
+            tile[101] = new Tile();
+            tile[101].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/2.png"));
+            tile[101].occupied = true;
+            
+            tile[102] = new Tile();
+            tile[102].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/3.png"));
+            tile[102].occupied = true;
+            
+            tile[103] = new Tile();
+            tile[103].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/4.png"));
+            tile[103].occupied = true;
+            
+            tile[104] = new Tile();
+            tile[104].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/5.png"));
+            tile[104].occupied = true;
+            
+            tile[105] = new Tile();
+            tile[105].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/6.png"));
+            tile[105].occupied = true;
+            
+            tile[110] = new Tile();
+            tile[110].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/variant/1.png"));
+            tile[110].occupied = true;
+            
+            tile[111] = new Tile();
+            tile[111].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/variant/2.png"));
+            tile[111].occupied = true;
+            
+            tile[112] = new Tile();
+            tile[112].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/variant/3.png"));
+            tile[112].occupied = true;
+            
+            tile[113] = new Tile();
+            tile[113].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/variant/4.png"));
+            tile[113].occupied = true;
+            
+            tile[114] = new Tile();
+            tile[114].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/variant/5.png"));
+            tile[114].occupied = true;
+            
+            tile[115] = new Tile();
+            tile[115].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water/variant/6.png"));
+            tile[115].occupied = true;
 
         } catch(IOException e) {
             e.printStackTrace();
@@ -165,10 +204,9 @@ public class Grid {
                         value = 70;
                     }
 
-                    // If the map says '2', randomly pick one of the new grass variants
                     if (value == 1) {
-                        //int randomVariant = gp.random.nextInt(2); // 0..2
-                        //value = 10 + randomVariant; // shift to tile index 10-11
+                        int randomVariant = gp.random.nextInt(2); // 0..2
+                        value = (10 + randomVariant) * 10; // shift to tile index 100-110
                         gp.occupiedTiles[col][row] = true;
                     }
                     
@@ -429,6 +467,25 @@ public class Grid {
                         }
                         //System.out.println(60+animatedFrame);
                         g2.drawImage(tile[60 + animatedFrame].image, screenX, screenY, 
+                                     gp.TILESIZE, gp.TILESIZE, null);
+                    }
+                    
+                    if (tileNum == 100){
+                        int animatedFrame = Math.floorDiv(gp.getFrame(), 12);
+                        if (animatedFrame == 6){
+                            animatedFrame = 5;
+                        }
+                        //System.out.println(60+animatedFrame);
+                        g2.drawImage(tile[100 + animatedFrame].image, screenX, screenY, 
+                                     gp.TILESIZE, gp.TILESIZE, null);
+                    }
+                    if (tileNum == 110){
+                        int animatedFrame = Math.floorDiv(gp.getFrame(), 12);
+                        if (animatedFrame == 6){
+                            animatedFrame = 5;
+                        }
+                        //System.out.println(60+animatedFrame);
+                        g2.drawImage(tile[110 + animatedFrame].image, screenX, screenY, 
                                      gp.TILESIZE, gp.TILESIZE, null);
                     }
                 }
