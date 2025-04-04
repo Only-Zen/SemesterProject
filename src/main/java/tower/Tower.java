@@ -9,13 +9,15 @@ import javax.imageio.ImageIO;
 import main.Coordinate;
 import main.GamePanel;
 
-public class Tower {
-    private Coordinate position;
-    private int range;
-    private int damage;
-    private int firerate;
-    private double cooldownTimer;
-    private GamePanel gp;
+public abstract class Tower {
+    protected Coordinate position;
+    protected int range;
+    protected int damage;
+    protected int firerate;
+    protected double cooldownTimer;
+    protected int cost;
+    protected String name;
+    protected GamePanel gp;
     
     // Images for idle state and shooting animation
     private BufferedImage idleImage;
@@ -27,24 +29,33 @@ public class Tower {
     private int shootAnimationCounter = 0;
     private boolean isCharging = false;
     
-    public Tower(Coordinate position, int range, int damage, int firerate, double cooldownTimer, GamePanel gp) {
+    public Tower(){
+        //
+    }
+    
+    public Tower(Coordinate position, GamePanel gp){
+        this("",position,120,3,3,30,gp);
+    }
+    
+    public Tower(String name, Coordinate position, int range, int damage, int firerate, int cost, GamePanel gp) {
         this.position = position;
         this.range = range;
         this.damage = damage;
         this.firerate = firerate;
         this.cooldownTimer = 0; // Start ready to shoot.
+        this.cost = cost;
         this.gp = gp;
         try {
             // Load the idle tower image.
-            idleImage = ImageIO.read(getClass().getResourceAsStream("/tower/proto.png"));
+            idleImage = ImageIO.read(getClass().getResourceAsStream("/tower/" + name + "/idle.png"));
             
             // Load the shoot animation frames.
-            shootFrames = new BufferedImage[5];
-            shootFrames[0] = ImageIO.read(getClass().getResourceAsStream("/tower/shoot/shoot1.png"));
-            shootFrames[1] = ImageIO.read(getClass().getResourceAsStream("/tower/shoot/shoot2.png"));
-            shootFrames[2] = ImageIO.read(getClass().getResourceAsStream("/tower/shoot/shoot3.png"));
-            shootFrames[3] = ImageIO.read(getClass().getResourceAsStream("/tower/shoot/shoot4.png"));
-            shootFrames[4] = ImageIO.read(getClass().getResourceAsStream("/tower/shoot/shoot5.png"));
+            shootFrames = new BufferedImage[6];
+            shootFrames[0] = ImageIO.read(getClass().getResourceAsStream("/tower/" + name + "/shoot1.png"));
+            shootFrames[1] = ImageIO.read(getClass().getResourceAsStream("/tower/" + name + "/shoot2.png"));
+            shootFrames[2] = ImageIO.read(getClass().getResourceAsStream("/tower/" + name + "/shoot3.png"));
+            shootFrames[3] = ImageIO.read(getClass().getResourceAsStream("/tower/" + name + "/shoot4.png"));
+            shootFrames[4] = ImageIO.read(getClass().getResourceAsStream("/tower/" + name + "/shoot5.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,6 +74,7 @@ public class Tower {
     
     public void update() {
         // Decrement cooldown if still cooling down.
+        
         if (cooldownTimer > 0) {
             cooldownTimer--;
         } else {
@@ -79,7 +91,7 @@ public class Tower {
                 isCharging = true;
                 shootFrameIndex = 0;
                 shootAnimationCounter = 0;
-                gp.playMusic(3, 63);
+                gp.playMusic(6, 20);
             }
         }
         
@@ -90,7 +102,7 @@ public class Tower {
                 shootAnimationCounter = 0;
                 shootFrameIndex++;
                 // When we've reached the last frame, fire a projectile.
-                if (shootFrameIndex >= shootFrames.length) {
+                if (shootFrameIndex >= shootFrames.length-1) {
                     // For simplicity, shoot at the first enemy found in range.
                     for (Enemy enemy : gp.enemies) {
                         if (isEnemyInRange(enemy)) {
@@ -109,9 +121,10 @@ public class Tower {
     
     public void shoot(Coordinate target) {
         // Create a projectile starting from the center of the tower.
+        gp.playMusic(3, 63);
         Coordinate projPos = new Coordinate(position.getX() + gp.TILESIZE / 2, 
                                               position.getY() + gp.TILESIZE / 2, gp);
-        gp.projectile.add(new Projectile(projPos, target, 6, damage, gp));
+        gp.projectile.add(new Projectile(projPos, target, 6, damage, gp.TILESIZE / 2, gp));
     }
     
     public void place(Coordinate mouseCoordinate) {
@@ -127,8 +140,13 @@ public class Tower {
         double yDiff = enemy.getPosition().getY() - this.position.getY();
         return Math.hypot(xDiff, yDiff) <= this.range;
     }
+    
+    public int getCost(){
+        return cost;
+    }
+    
     public String getString() {
-        return "Tower"       +
+        return "Tower,Tower"       +
                 ",PosX="     + String.valueOf(position.getX()) +
                 ",PosY="     + String.valueOf(position.getY()) +
                 ",Range="    + String.valueOf(range)           +

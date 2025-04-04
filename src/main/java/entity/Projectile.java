@@ -20,14 +20,16 @@ public class Projectile {
     private Coordinate target;
     private int speed;
     private int damage;
+    private int targetOffset;
     GamePanel gp;
     
     // Primary constructorsodefnm
-    public Projectile(Coordinate position, Coordinate target, int speed, int damage, GamePanel gp) {
+    public Projectile(Coordinate position, Coordinate target, int speed, int damage, int targetOffset, GamePanel gp) {
         this.speed       = speed;
         this.damage      = damage;
         this.position    = position;
         this.target      = target;
+        this.targetOffset= targetOffset;
         this.gp          = gp;
     }
   
@@ -43,8 +45,8 @@ public class Projectile {
     
     public void update() {
         // find the distance to the target along the x and y axis
-        int dx = target.getX() - position.getX() + gp.TILESIZE/2;
-        int dy = target.getY() - position.getY() + gp.TILESIZE/2;
+        int dx = target.getX() - position.getX() + targetOffset;//gp.TILESIZE/2;
+        int dy = target.getY() - position.getY() + targetOffset;//gp.TILESIZE/2;
         
         // Calculate the straight line distance
         double distance = Math.sqrt(dx * dx + dy * dy);
@@ -73,8 +75,8 @@ public class Projectile {
     }
     
     public boolean hasReachedTarget() {
-        int dx = target.getX() - position.getX() + gp.TILESIZE/2;
-        int dy = target.getY() - position.getY() + gp.TILESIZE/2;
+        int dx = target.getX() - position.getX() + targetOffset;
+        int dy = target.getY() - position.getY() + targetOffset;
         double distance = Math.sqrt(dx * dx + dy * dy);
         return distance < speed;
     }

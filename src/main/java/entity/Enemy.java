@@ -134,14 +134,15 @@ public class Enemy
          */
         
         isAlive = false;
-        gp.playMusic(2, 38);
         
         //Enemy uses onDeath for dying and reaching the end, so this checks which one
         if(coordinateCounter >= waypoints.size() - 1){
             gp.info.playerHealth -= 5;
+            gp.playMusic(5, 43);
         }
         else{
             gp.info.playerMoney+=5;
+            gp.playMusic(2, 38);
         }
     }
     
