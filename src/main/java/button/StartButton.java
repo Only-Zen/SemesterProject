@@ -36,7 +36,6 @@ public class StartButton extends Button {
                                      buttonWidth, buttonHeight);
         }
         else{
-            
             g2.drawImage(playImage, buttonX, buttonY, 
                                      buttonWidth, buttonHeight, null);
         }

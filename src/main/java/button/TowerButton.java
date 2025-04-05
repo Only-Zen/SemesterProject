@@ -31,7 +31,7 @@ public class TowerButton extends Button {
                 towerIcon = "/icons/bomberTowerIcon.png";
                 break;
             case 3:
-                towerIcon = "/icons/basicTowerIcon.png";
+                towerIcon = "/icons/rapidTowerIcon.png";
                 break;
         }
         

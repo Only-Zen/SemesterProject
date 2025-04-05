@@ -6,16 +6,16 @@ import java.util.Queue;
 import entity.Enemy;
 
 public class EnemySpawner {
-    private List<Queue<Enemy>> enemyQueues;
+    public List<Queue<Enemy>> enemyQueues;
     private int round;
     private int cooldownTimer;
-    private final int SPEED = 60; //lower number = faster. based on frames of cooldown
+    public int speed = 60; //lower number = faster. based on frames of cooldown
     GamePanel gp;
 
     public EnemySpawner(String filePath, GamePanel gp) {
         this.enemyQueues = new ArrayList<>();
         this.round = 0;
-        this.cooldownTimer = SPEED;
+        this.cooldownTimer = speed;
         this.gp = gp;
         
         loadSpawner(filePath);
@@ -95,7 +95,7 @@ public class EnemySpawner {
                     gp.enemies.add(enemyToSpawn);
                 }
             }
-            cooldownTimer = SPEED;
+            cooldownTimer = speed;
         } 
     }
 

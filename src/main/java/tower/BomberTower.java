@@ -1,15 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package tower;
 
-import java.awt.Graphics2D;
-import entity.Enemy;
 import entity.Projectile;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import main.Coordinate;
 import main.GamePanel;
 
@@ -20,7 +11,7 @@ import main.GamePanel;
 public class BomberTower extends Tower {
     
     public BomberTower(Coordinate position, GamePanel gp){
-        this("basic_tower",
+        this("bomber_tower",
                 position, 
                 75, //range
                 50, //damage
@@ -38,9 +29,6 @@ public class BomberTower extends Tower {
         gp.playMusic(4, 35);
         Coordinate projPos = new Coordinate(position.getX() + gp.TILESIZE / 2, 
                                               position.getY() + gp.TILESIZE / 2, gp);
-        
-        int projPosX = projPos.getX();
-        int projPosY = projPos.getY();
         
         Coordinate[] multishot = {  new Coordinate(projPos.getX() + range, projPos.getY(),         gp),
                                     new Coordinate(projPos.getX() + range, projPos.getY() + range, gp),

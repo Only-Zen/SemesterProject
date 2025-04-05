@@ -36,33 +36,6 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (!gp.isPaused){
-            if (gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] == true){
-                if (e.getButton() == MouseEvent.BUTTON3) { // Right-click to place an enemy
-                    Enemy newEnemy = new Enemy(
-                        tileCoordinate,
-                        4, 100, gp);
-                    gp.enemies.add(newEnemy);
-                    System.out.println("Enemy placed");
-                }
-            }
-
-            // Middle-click: fire a projectile if there is at least one enemy
-            else if (e.getButton() == MouseEvent.BUTTON2) {
-                if (!gp.enemies.isEmpty()) {
-                    Projectile newProjectile = new Projectile(
-                        new Coordinate(e.getX(), e.getY(), gp),
-                        gp.enemies.get(0).getPosition(), // target from first enemy's position
-                        5,  // projectile speed
-                        25, // projectile damage
-                        0,
-                        gp
-                    );
-                    gp.projectile.add(newProjectile);
-                    System.out.println("Projectile fired!");
-                } else {
-                    System.out.println("No enemy available to target!");
-                }
-            }
             // Left-click: place a tower
             if (e.getButton() == MouseEvent.BUTTON1) {
                 //If pause button is clicked, then pause the game

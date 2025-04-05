@@ -1,6 +1,5 @@
 package button;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -27,9 +26,6 @@ public class PauseButton extends Button {
         //
         g2.drawImage(pauseImage, buttonX, buttonY, 
                                      buttonWidth, buttonHeight, null);
-        
-        //g2.setColor(Color.RED);
-        //g2.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
     }
     
     public void update(){

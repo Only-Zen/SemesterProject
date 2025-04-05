@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import java.awt.GridLayout;
-import javax.swing.BorderFactory;
 
 import main.MenuHandler;
 
@@ -89,9 +88,6 @@ public class Pause extends JLayeredPane {
     }
     
     public void drawPauseScreen(Graphics g) {
-        //Draw dark gray rectangle over the entire screen as a backdrop to the menu
-        g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(0, 0, gp.SCREENWIDTH, gp.SCREENHEIGHT);
       
         //Draw a smaller white rectangle over "Paused" text and buttonsPanel
         g.setColor(Color.WHITE);

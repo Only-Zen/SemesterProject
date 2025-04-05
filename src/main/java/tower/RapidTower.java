@@ -1,22 +1,12 @@
 package tower;
 
-import java.awt.Graphics2D;
-import entity.Enemy;
-import entity.Projectile;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import main.Coordinate;
 import main.GamePanel;
 
-/**
- *
- * @author mrsch
- */
 public class RapidTower extends Tower {
     
     public RapidTower(Coordinate position, GamePanel gp){
-        this("basic_tower",
+        this("rapid_tower",
                 position, 
                 75, //range
                 20, //damage

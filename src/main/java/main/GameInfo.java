@@ -68,8 +68,11 @@ public class GameInfo {
             //dead
             isGameOver = true;
         }
-        else if(gp.enemies.isEmpty() && isRoundGoing){
+        else if(gp.enemies.isEmpty() && isRoundGoing && gp.enemySpawner.enemyQueues.get(round).isEmpty()){
             this.endRound();
+                if (round % 2 == 0){
+                    gp.enemySpawner.speed -= 5;
+                }
         }
     }
     
