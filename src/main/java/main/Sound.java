@@ -5,6 +5,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 
 public class Sound {
     Clip clip;
@@ -25,6 +27,18 @@ public class Sound {
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
             clip = AudioSystem.getClip();
             clip.open(ais);
+            
+            // Add a LineListener to auto-close the clip when done playing
+            clip.addLineListener(new LineListener() {
+                @Override
+                public void update(LineEvent event) {
+                    // Check if the clip has stopped playing
+                    if (event.getType() == LineEvent.Type.STOP) {
+                        // Close the clip to release system resources
+                        clip.close();
+                    }
+                }
+            });
         }catch(Exception e){
             
         }
@@ -42,6 +56,7 @@ public class Sound {
     }
     public void stop(){
         clip.stop();
+        clip.close();
     }
     
     public void setVolume(int volumePercentage) {
