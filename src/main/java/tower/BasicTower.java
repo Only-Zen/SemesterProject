@@ -12,7 +12,7 @@ public class BasicTower extends Tower {
     public BasicTower(Coordinate position, GamePanel gp){
         this("basic_tower",
                 position, 
-                150, //range
+                192, //range
                 20, //damage
                 4,   //firerate
                 75,  //cost

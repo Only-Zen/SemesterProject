@@ -18,6 +18,7 @@ public class Enemy
     protected int coordinateCounter = 0;
     protected int speed;
     protected int health;
+    private int maxHealth;
     protected int size;
     public boolean isAlive = true;
     protected ArrayList<Coordinate> waypoints;
@@ -37,6 +38,7 @@ public class Enemy
         this.nextCoord  = new Coordinate(waypoints.get(0).getX() * gp.TILESIZE, waypoints.get(0).getY() * gp.TILESIZE, gp);
         this.speed      = speed;
         this.health     = health;
+        this.maxHealth  = health;
         this.gp         = gp;
         this.size       = gp.TILESIZE;
         try {
@@ -66,7 +68,7 @@ public class Enemy
         
         // Draw health bar
         g2.setColor(Color.GREEN);
-        g2.fillRect(position.getX(), position.getY() - 10, (int) ((health / 100.0) * size), 5);
+        g2.fillRect(position.getX(), position.getY() - 10, (int) (health * size / maxHealth), 5);
     }
     
     public void update() {

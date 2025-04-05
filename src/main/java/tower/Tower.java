@@ -124,7 +124,7 @@ public abstract class Tower {
         gp.playMusic(3, 63);
         Coordinate projPos = new Coordinate(position.getX() + gp.TILESIZE / 2, 
                                               position.getY() + gp.TILESIZE / 2, gp);
-        gp.projectile.add(new Projectile(projPos, target, 6, damage, gp.TILESIZE / 2, gp));
+        gp.projectile.add(new Projectile(projPos, target, 8, damage, gp.TILESIZE / 2, gp));
     }
     
     public void place(Coordinate mouseCoordinate) {

@@ -13,7 +13,7 @@ public class BomberTower extends Tower {
     public BomberTower(Coordinate position, GamePanel gp){
         this("bomber_tower",
                 position, 
-                75, //range
+                96, //range
                 50, //damage
                 1,   //firerate
                 125,  //cost
@@ -48,7 +48,7 @@ public class BomberTower extends Tower {
             Coordinate targetCoord = new Coordinate(targetX, targetY, gp);
             Coordinate startCoord = new Coordinate(projPos.getX(), projPos.getY(), gp);
             //gp.projectile.add(new Projectile(new Coordinate(projPos.getX() , projPos.getY(), gp), multishot[i], 4, damage, gp));
-            gp.projectile.add(new Projectile(startCoord, targetCoord, 6, damage, 0, gp));
+            gp.projectile.add(new Projectile(startCoord, targetCoord, 10, damage, 0, gp));
         }     
     }
     

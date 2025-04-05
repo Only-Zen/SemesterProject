@@ -8,7 +8,7 @@ public class RapidTower extends Tower {
     public RapidTower(Coordinate position, GamePanel gp){
         this("rapid_tower",
                 position, 
-                75, //range
+                144, //range
                 20, //damage
                 10,   //firerate
                 100,  //cost
