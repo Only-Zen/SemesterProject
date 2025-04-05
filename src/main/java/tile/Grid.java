@@ -90,6 +90,10 @@ public class Grid {
             tile[32].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree/2.png"));
             tile[32].occupied = true;
             
+            tile[33] = new Tile();
+            tile[33].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree/proto_tree.png"));
+            tile[33].occupied = true;
+            
             tile[40] = new Tile();
             tile[40].image = ImageIO.read(getClass().getResourceAsStream("/tiles/rock/1.png"));
             
@@ -216,7 +220,7 @@ public class Grid {
                     }
                     
                     if (value == 3) {
-                        int randomVariant = gp.random.nextInt(3); // 0..2
+                        int randomVariant = gp.random.nextInt(4); // 0..2
                         value = 30 + randomVariant; // shift to tile index 30-32
                         gp.occupiedTiles[col][row] = true;
                     }

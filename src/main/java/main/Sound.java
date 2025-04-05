@@ -43,6 +43,56 @@ public class Sound {
             
         }
     }
+    
+    public void playSound(int index, int volume) {
+        try {
+        AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[index]);
+        Clip newClip = AudioSystem.getClip();
+        newClip.open(ais);
+        
+        // Set volume if supported
+        if (newClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+            FloatControl gainControl = (FloatControl) newClip.getControl(FloatControl.Type.MASTER_GAIN);
+            // Clamp volume percentage to [1, 100]
+            if (volume < 1) volume = 1;
+            if (volume > 100) volume = 100;
+            
+            float min = gainControl.getMinimum(); // e.g., around -80 dB
+            float max = gainControl.getMaximum(); // e.g., around +6 dB
+            float dB;
+            
+            if (volume == 50) {
+                dB = 0f; // default volume
+            } else if (volume < 50) {
+                // Map [1, 50] to [min, 0]
+                float fraction = (volume - 1) / 49.0f;
+                dB = min + fraction * (0 - min);
+            } else {
+                // Map [50, 100] to [0, max]
+                float fraction = (volume - 50) / 50.0f;
+                dB = 0 + fraction * (max - 0);
+            }
+            
+            gainControl.setValue(dB);
+        }
+        
+        // Add a listener to automatically close the clip when done
+        newClip.addLineListener(new LineListener() {
+            @Override
+            public void update(LineEvent event) {
+                if (event.getType() == LineEvent.Type.STOP) {
+                    newClip.close();
+                }
+            }
+        });
+        
+        newClip.start();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }
+
+    
     public void play(){
         clip.start();
     }
@@ -87,9 +137,9 @@ public class Sound {
                 }
                 
                 gainControl.setValue(dB);
-            } else {
-                System.out.println("Volume control not supported for this clip.");
-            }
+                } else {
+                    System.out.println("Volume control not supported for this clip.");
+                }
         }
     }
 }
