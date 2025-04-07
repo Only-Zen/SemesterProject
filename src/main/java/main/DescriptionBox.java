@@ -43,7 +43,7 @@ public class DescriptionBox {
     
     public void draw(Graphics2D g2){
         //
-        g2.setColor(new Color(0, 0, 0, 230));
+        g2.setColor(new Color(0, 0, 0, 200));
         g2.fillRect(boxCoord.getX(), boxCoord.getY(), 150, 100);
         
         g2.setFont(priceFont);

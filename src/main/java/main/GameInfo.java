@@ -73,6 +73,7 @@ public class GameInfo {
         if(towerHoveredOver != 0){
             descriptions[towerHoveredOver -1 ].draw(g2);
         }
+        
     }
     
     public void update(){
