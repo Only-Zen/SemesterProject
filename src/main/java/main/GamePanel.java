@@ -260,9 +260,9 @@ public class GamePanel extends JPanel implements Runnable {
                 projectile.draw(g2);
             }
             
-            g2.setColor(Color.WHITE);
-            g2.drawString("MouseX: " + mouseCoord.getX() + " MouseY: " + mouseCoord.getY(),
-                mouseCoord.getX() + 8, mouseCoord.getY() - 8);
+            // g2.setColor(Color.WHITE);
+            // g2.drawString("MouseX: " + mouseCoord.getX() + " MouseY: " + mouseCoord.getY(),
+                // mouseCoord.getX() + 8, mouseCoord.getY() - 8);
             
             // Highlight the tile currently hovered over by the mouse.
             // (We use the tile coordinate from the MouseHandler and multiply by the tile size.)
