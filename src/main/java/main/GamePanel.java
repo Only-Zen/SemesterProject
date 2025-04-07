@@ -58,20 +58,28 @@ public class GamePanel extends JPanel implements Runnable {
     protected int frame = 1;
     private Image tavernImage;
 
+    Dimension preferredsize = new Dimension(SCREENWIDTH, SCREENHEIGHT);
     // Manage game state
     public Boolean isPaused = false;
     Pause pause = new Pause(this);
+    
+    GameEndMenu gameover = new GameEndMenu(this);
 
     MenuHandler mh;
 
     public GamePanel(MenuHandler handler) {
-        this.setPreferredSize(new Dimension(SCREENWIDTH, SCREENHEIGHT));
+        this.setPreferredSize(preferredsize);
         this.setBackground(new Color(0,0,0,1));
         this.setDoubleBuffered(true);
         this.setFocusable(true);
         this.mh = handler;
         add(pause); //Initialize pause menu
-        pause.setPreferredSize(new Dimension(SCREENWIDTH, SCREENHEIGHT));
+        pause.setPreferredSize(preferredsize);
+        pause.showPauseMenu(false);
+        
+        add(gameover); //Initialize game end menu
+        gameover.setPreferredSize(preferredsize);
+        gameover.showMenu(false);
         
         // Initialize the mouse coordinate (starts at 0,0)
         mouseCoord = new Coordinate(0, 0, this);
@@ -124,7 +132,7 @@ public class GamePanel extends JPanel implements Runnable {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
-            if (!isPaused) { //Check if paused. If so, do not update
+            if (!(isPaused || info.isGameOver)) { //Check if paused or game is ended. If so, do not update
                 if (delta >= 1) {
                     update();
                     repaint();
@@ -224,7 +232,10 @@ public class GamePanel extends JPanel implements Runnable {
         if (isPaused) {
             pause.drawPauseScreen(g);
             pause.showPauseMenu(true);
-            pause.repaint();
+        }
+        else if (info.isGameOver) {
+            gameover.drawMenu(g);
+            gameover.showMenu(true);
         }
         
         else {

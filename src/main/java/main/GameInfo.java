@@ -18,6 +18,7 @@ public class GameInfo {
     public int towerHoveredOver;
     public boolean isRoundGoing; //variable to see if the current round is still going.
     public boolean isGameOver;
+    public boolean isGameWon;
     public StartButton startButton;
     public PauseButton pauseButton;
     public TowerButton basicTowerButton;
@@ -27,6 +28,7 @@ public class GameInfo {
     private DescriptionBox desc1;
     private BufferedImage infoOverlay;
     GamePanel gp;
+    GameEndMenu gameover;
     
     public GameInfo(GamePanel gp){
         playerMoney = 250;
@@ -36,6 +38,7 @@ public class GameInfo {
         towerHoveredOver = 0;
         isRoundGoing = false;
         isGameOver = false;
+        isGameWon = false;
         startButton = new StartButton(10, 126, 144, 48);
         pauseButton = new PauseButton(1474,10,48,48);
         basicTowerButton = new TowerButton(164, 10, 50, 50, 1);
@@ -47,6 +50,7 @@ public class GameInfo {
         
         
         this.gp = gp;
+        
         try {
             // Load the item overlay
             infoOverlay = ImageIO.read(getClass().getResourceAsStream("/icons/Info2up.png"));
@@ -77,8 +81,7 @@ public class GameInfo {
     }
     
     public void update(){
-        //
-        if(playerHealth <= 0){
+        if (playerHealth <= 0){
             //dead
             isGameOver = true;
         }
@@ -135,6 +138,10 @@ public class GameInfo {
     public void endRound(){
         isRoundGoing = false;
         round++;
+        
+        if (round >= 20) {
+            isGameWon = true;
+            isGameOver = true;
+        }
     }
-    
 }
