@@ -7,8 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import java.awt.GridLayout;
-
-import main.MenuHandler;
+import javax.swing.BorderFactory;
 
 /**
  *
@@ -35,6 +34,7 @@ public class Pause extends JLayeredPane {
         buttonsPanel.setLayout(new GridLayout(3, 1, 10, 10));
         buttonsPanel.setBounds(gp.SCREENWIDTH/4, gp.SCREENHEIGHT/2, gp.SCREENWIDTH/2, gp.SCREENHEIGHT/3);
         buttonsPanel.setBackground(Color.WHITE);
+      //  buttonsPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
         
         //Without these, the pause menu will not show.
         setOpaque(true);
@@ -88,18 +88,18 @@ public class Pause extends JLayeredPane {
     }
     
     public void drawPauseScreen(Graphics g) {
-      
         //Draw a smaller white rectangle over "Paused" text and buttonsPanel
         g.setColor(Color.WHITE);
         int x = (gp.SCREENWIDTH/3 * 2); int y = (gp.SCREENHEIGHT/3 * 2);
         g.fillRoundRect(gp.SCREENWIDTH/6, gp.SCREENHEIGHT/5, x, y, 10, 10);
         
         //Draw the text: "Paused"
+        String textToShow = "Paused";
         g.setColor(Color.BLACK);
         g.setFont(cambria_header);
-        int textLength = (int)g.getFontMetrics().getStringBounds("Paused", g).getWidth(); //Used to draw text to the center of the screen
+        int textLength = (int)g.getFontMetrics().getStringBounds(textToShow, g).getWidth(); //Used to draw text to the center of the screen
         x = gp.SCREENWIDTH/2 - textLength/2; y = gp.SCREENHEIGHT/3;
-        g.drawString("Paused", x, y);
+        g.drawString(textToShow, x, y);
     }
     
      public void showPauseMenu(boolean show) {

@@ -17,6 +17,7 @@ public class Enemy
     protected Coordinate nextCoord;
     protected int coordinateCounter = 0;
     protected int speed;
+    private int initialSpeed;
     protected int health;
     private int maxHealth;
     protected int size;
@@ -37,6 +38,7 @@ public class Enemy
         this.waypoints = gp.getWaypoints();
         this.nextCoord  = new Coordinate(waypoints.get(0).getX() * gp.TILESIZE, waypoints.get(0).getY() * gp.TILESIZE, gp);
         this.speed      = speed;
+        this.initialSpeed = speed;
         this.health     = health;
         this.maxHealth  = health;
         this.gp         = gp;
@@ -86,7 +88,9 @@ public class Enemy
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        if (health < 25){
+            speed = initialSpeed + 1;
+        }
         if (distance >= speed) {
             double unitX = dx / distance;
             double unitY = dy / distance;

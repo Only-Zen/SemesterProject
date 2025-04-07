@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 
+import javax.swing.BorderFactory;
+
 /**
  *
  * @author lmm0060
@@ -37,6 +39,7 @@ public class TitleScreen extends JLayeredPane {
     
     
     public TitleScreen(JFrame window) {
+        //Set up title screen background image
         try {
             menuImage = ImageIO.read(getClass().getResourceAsStream("/icons/menu.png"));
         } catch (IOException e) {
@@ -53,7 +56,8 @@ public class TitleScreen extends JLayeredPane {
         buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new GridLayout(2, 1, 10, 10));
         buttonsPanel.setBounds(TITLEWIDTH/4, TITLEHEIGHT/2, TITLEWIDTH/2, TITLEHEIGHT/3);
-      
+     //   buttonsPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
+        
         setOpaque(true);
         buttonsPanel.setOpaque(false);
         
@@ -92,6 +96,8 @@ public class TitleScreen extends JLayeredPane {
         buttonsPanel.setVisible(true);
         revalidate();
         repaint();
+        
+        //Play title screen music
         playMusic(1, 45);
     }
     
@@ -102,7 +108,7 @@ public class TitleScreen extends JLayeredPane {
     }
     
     public void drawTitleScreen(Graphics g) {
-        //Draw dark gray rectangle over the entire screen as a backdrop to the menu
+        //Draw background image
         g.drawImage(menuImage, 0, 0, TITLEWIDTH, TITLEHEIGHT, null);
       
         //Draw the game's name

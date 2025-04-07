@@ -31,6 +31,19 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
         mouseCoordinate.setY(e.getY());
         // Calculate the tile coordinate based on the current mouse position and tile size
         tileCoordinate = mouseCoordinate.getGrid();
+        
+        if(gp.info.basicTowerButton.isClicked(mouseCoordinate)){
+            gp.info.towerHoveredOver = 1;
+        }
+        else if(gp.info.bomberTowerButton.isClicked(mouseCoordinate)){
+            gp.info.towerHoveredOver = 2;
+        }
+        else if(gp.info.rapidTowerButton.isClicked(mouseCoordinate)){
+            gp.info.towerHoveredOver = 3;
+        }
+        else{
+            gp.info.towerHoveredOver = 0;
+        }
     }
 
     @Override
