@@ -14,9 +14,9 @@ public class BomberTower extends Tower {
         this("bomber_tower",
                 position, 
                 96, //range
-                50, //damage
-                1,   //firerate
-                125,  //cost
+                35, //damage
+                2,   //firerate
+                250,  //cost
                 gp);
     }
     

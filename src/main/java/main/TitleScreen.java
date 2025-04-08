@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -13,8 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
-
-import javax.swing.BorderFactory;
 
 /**
  *
@@ -30,6 +27,7 @@ public class TitleScreen extends JLayeredPane {
     JButton startButton, loadButton;
     Sound sound = new Sound();
     private BufferedImage menuImage;
+    public String mapToLoad;
     
     //TitleScreen can be a different size if desired.
     //Right now, it's just the size of GamePanel.
@@ -39,6 +37,7 @@ public class TitleScreen extends JLayeredPane {
     
     
     public TitleScreen(JFrame window) {
+        mapToLoad = "/maps/map.txt";
         //Set up title screen background image
         try {
             menuImage = ImageIO.read(getClass().getResourceAsStream("/icons/menu.png"));
@@ -56,9 +55,6 @@ public class TitleScreen extends JLayeredPane {
         buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new GridLayout(2, 1, 10, 10));
         buttonsPanel.setBounds(TITLEWIDTH/4, TITLEHEIGHT/2, TITLEWIDTH/2, TITLEHEIGHT/3);
-     //   buttonsPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
-        
-        setOpaque(true);
         buttonsPanel.setOpaque(false);
         
         //Create font
@@ -132,7 +128,7 @@ public class TitleScreen extends JLayeredPane {
         loadButton.setEnabled(false);
         
         //Create GamePanel
-        GamePanel gamePanel = new GamePanel(handler);
+        GamePanel gamePanel = new GamePanel(handler, mapToLoad);
         window.add(gamePanel);
         window.revalidate();
         window.repaint();

@@ -26,13 +26,6 @@ public class Grid {
         mapTileNum = new int[gp.MAXSCREENCOL][gp.MAXSCREENROW];
 
         getTileImage();
-        loadMap(gp.mapLocation);
-        boolean dummy = generatePath();
-        for (int i = -1; i<=1; i++){
-            for (int j = -2; j <= 0; j++){
-                gp.occupiedTiles[enemyWaypoints.get(enemyWaypoints.size() - 1).getX() + i][enemyWaypoints.get(enemyWaypoints.size() - 1).getY() + j] = true;
-            }
-        }
     }
 
     

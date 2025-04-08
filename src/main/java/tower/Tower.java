@@ -50,7 +50,7 @@ public abstract class Tower {
             idleImage = ImageIO.read(getClass().getResourceAsStream("/tower/" + name + "/idle.png"));
             
             // Load the shoot animation frames.
-            shootFrames = new BufferedImage[6];
+            shootFrames = new BufferedImage[5];
             shootFrames[0] = ImageIO.read(getClass().getResourceAsStream("/tower/" + name + "/shoot1.png"));
             shootFrames[1] = ImageIO.read(getClass().getResourceAsStream("/tower/" + name + "/shoot2.png"));
             shootFrames[2] = ImageIO.read(getClass().getResourceAsStream("/tower/" + name + "/shoot3.png"));
@@ -102,7 +102,8 @@ public abstract class Tower {
                 shootAnimationCounter = 0;
                 shootFrameIndex++;
                 // When we've reached the last frame, fire a projectile.
-                if (shootFrameIndex >= shootFrames.length-1) {
+                if (shootFrameIndex >= shootFrames.length) {
+                    shootFrameIndex = shootFrames.length -1;
                     // For simplicity, shoot at the first enemy found in range.
                     for (Enemy enemy : gp.enemies) {
                         if (isEnemyInRange(enemy)) {
