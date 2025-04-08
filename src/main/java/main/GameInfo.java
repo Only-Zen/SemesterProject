@@ -31,7 +31,7 @@ public class GameInfo {
     GameEndMenu gameover;
     
     public GameInfo(GamePanel gp){
-        playerMoney = 250;
+        playerMoney = 200;
         playerHealth = 100;
         round = 0;
         towerInHand = 1;

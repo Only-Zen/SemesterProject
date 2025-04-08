@@ -70,7 +70,7 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
                 else if(gp.info.rapidTowerButton.isClicked(mouseCoordinate)){
                     gp.info.towerInHand = 3;
                 }
-                else if(gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] == false){
+                else if(checkIfOccupied() == false){
                     // Create a new Tower instance with desired parameters.
                     // (For example, here range = 100, damage = 10, firerate = 1, cooldownTimer = 0)
                     Tower newTower = new BasicTower(tileCoordinate,gp);
@@ -109,5 +109,12 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
 
     public Coordinate getTileCoordinate() {
         return tileCoordinate;
+    }
+    public boolean checkIfOccupied(){
+        if(gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] == true){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

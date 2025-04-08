@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -13,8 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
-
-import javax.swing.BorderFactory;
 
 /**
  *
@@ -99,6 +96,7 @@ public class TitleScreen extends JLayeredPane {
         
         //Play title screen music
         playMusic(1, 45);
+        sound.loop();
     }
     
     @Override

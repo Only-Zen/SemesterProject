@@ -59,6 +59,15 @@ public class MenuHandler implements ActionListener {
                 System.exit(0);
                 //Exit game logic
                 break;
+            case "map1":
+                System.out.println("Selected Map 1.");
+                break;
+            case "map2":
+                System.out.println("Selected Map 2.");
+                break;
+            case "map3":
+                System.out.println("Selected Map 3.");
+                break;
         }
     }
 }

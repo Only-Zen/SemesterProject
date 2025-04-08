@@ -15,8 +15,8 @@ public class BomberTower extends Tower {
                 position, 
                 96, //range
                 50, //damage
-                1,   //firerate
-                125,  //cost
+                2,   //firerate
+                250,  //cost
                 gp);
     }
     

@@ -15,7 +15,7 @@ public class BasicTower extends Tower {
                 192, //range
                 20, //damage
                 4,   //firerate
-                75,  //cost
+                80,  //cost
                 gp);
     }
     
