@@ -99,6 +99,7 @@ public class TitleScreen extends JLayeredPane {
         
         //Play title screen music
         playMusic(1, 45);
+        sound.loop();
     }
     
     @Override

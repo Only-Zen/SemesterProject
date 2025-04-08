@@ -278,7 +278,12 @@ public class GamePanel extends JPanel implements Runnable {
             // Highlight the tile currently hovered over by the mouse.
             // (We use the tile coordinate from the MouseHandler and multiply by the tile size.)
             Coordinate tileCoord = mouseH.getTileCoordinate();
-            g.setColor(new Color(255, 0, 0, 80));
+            if (mouseH.checkIsOccupied() == true){
+                g.setColor(new Color(255, 0, 0, 80));
+            } else {
+                g.setColor(new Color(0, 90, 255, 80));
+            }
+            
             g.fillRect(tileCoord.getX(), tileCoord.getY(), TILESIZE, TILESIZE);
             
             //Draw game info overlay
