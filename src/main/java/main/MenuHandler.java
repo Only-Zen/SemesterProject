@@ -2,6 +2,11 @@ package main;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -32,17 +37,27 @@ public class MenuHandler implements ActionListener {
         switch(action){
             //Title screen actions
             case "Start":
-                System.out.println("Start Game");
-                triggerReadFromDisk = false;
-                title.StartGame();
-
+                System.out.println("Start Game - opening Level Select screen");
+                // Create a new LevelSelect panel using the same window from the current TitleScreen.
+                LevelSelect levelSelect = new LevelSelect(title.window);
+                // Remove the current title screen from its parent container.
+                title.getParent().remove(title);
+                // Add the level select screen to the window.
+                title.window.add(levelSelect);
+                title.window.revalidate();
+                title.window.repaint();
                 break;
             case "Load":
                 System.out.println("Load Game");
-                //Load game logic
+                // Use the readMapLocation function to get the map location from the save file
+                String loadedMapLocation = readMapLocation(saveFilepath);
+                System.out.println("Loaded Map Location: " + loadedMapLocation);
+                // Set the title's map location (mapToLoad) before starting the game:
+                title.mapToLoad = loadedMapLocation.isEmpty() ? "/maps/map.txt" : loadedMapLocation;
                 triggerReadFromDisk = true;
                 title.StartGame();
                 break;
+
             
             //Pause menu actions
             case "Play":
@@ -52,22 +67,53 @@ public class MenuHandler implements ActionListener {
             case "Save":
                 System.out.println("Save Game");
                 // Save game logic
-                gp.writeToDisk(saveFilepath, mapFilepath);
+                gp.writeToDisk(saveFilepath, gp.mapLocation);
                 break;
             case "Exit":
                 System.out.println("Exit");
                 System.exit(0);
                 //Exit game logic
                 break;
-            case "map1":
+            case "Map1":
                 System.out.println("Selected Map 1.");
+                title.mapToLoad = "/maps/map.txt";
+                triggerReadFromDisk = false;
+                title.StartGame();
                 break;
-            case "map2":
+            case "Map2":
                 System.out.println("Selected Map 2.");
+                title.mapToLoad = "/maps/map2.txt";
+                triggerReadFromDisk = false;
+                title.StartGame();
                 break;
-            case "map3":
+            case "Map3":
                 System.out.println("Selected Map 3.");
+                title.mapToLoad = "/maps/map.txt";
+                triggerReadFromDisk = false;
+                title.StartGame();
                 break;
         }
     }
+    public String readMapLocation(String filename) {
+        String mapLocation = "";
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Check if the line starts with "Filename,"
+                if (line.startsWith("Filename,")) {
+                    String[] fields = line.split(",");
+                    if (fields.length > 1) {
+                        // fields[1] contains the map location; assign it to mapLocation
+                        mapLocation = fields[1].trim();
+                    }
+                    break; // Exit once the map location is found
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return mapLocation;
+    }
+
+
 }

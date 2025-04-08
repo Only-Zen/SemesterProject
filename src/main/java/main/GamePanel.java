@@ -33,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int SCREENWIDTH = TILESIZE * MAXSCREENCOL;
     public final int SCREENHEIGHT = TILESIZE * MAXSCREENROW;
 
-    public String mapLocation = "/maps/map.txt";
+    public String mapLocation;
     public int round = 0;
     public Random random = new Random();
     Sound sound = new Sound();
@@ -44,7 +44,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int FPS = 60;
     Thread gameThread;
     MouseHandler mouseH;
-    EnemySpawner enemySpawner = new EnemySpawner(("/entities/enemy/enemyWaves.txt"), this);
+    EnemySpawner enemySpawner;
 
     public ArrayList<Enemy> enemies = new ArrayList<>();
     public ArrayList<Projectile> projectile = new ArrayList<>();
@@ -67,12 +67,13 @@ public class GamePanel extends JPanel implements Runnable {
 
     MenuHandler mh;
 
-    public GamePanel(MenuHandler handler) {
+    public GamePanel(MenuHandler handler,String mapLocation ) {
         this.setPreferredSize(preferredsize);
         this.setBackground(new Color(0,0,0,1));
         this.setDoubleBuffered(true);
         this.setFocusable(true);
         this.mh = handler;
+        this.mapLocation = mapLocation;
         add(pause); //Initialize pause menu
         pause.setPreferredSize(preferredsize);
         pause.showPauseMenu(false);
@@ -111,7 +112,14 @@ public class GamePanel extends JPanel implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+        grid.loadMap(mapLocation);
+        boolean dummy = grid.generatePath();
+        for (int i = -1; i<=1; i++){
+            for (int j = -2; j <= 0; j++){
+                occupiedTiles[grid.enemyWaypoints.get(grid.enemyWaypoints.size() - 1).getX() + i][grid.enemyWaypoints.get(grid.enemyWaypoints.size() - 1).getY() + j] = true;
+            }
+        }
+        enemySpawner = new EnemySpawner(("/entities/enemy/enemyWaves.txt"), this);
         playMusic(0, 45);
         sound.loop();
     }

@@ -49,7 +49,7 @@ public class EnemySpawner {
                     int value = Integer.parseInt(numbers[col]);
 
                     if (value == 1) {
-                        enemyQueues.get(row).add(new Enemy(new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),2,100,gp));
+                        enemyQueues.get(row).add(new Enemy(new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),3,100,gp));
                     } //ask about coordinate and default enemy settings
                     
                     if (value == 2) {
