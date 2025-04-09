@@ -123,6 +123,8 @@ public class TitleScreen extends JLayeredPane {
         this.setVisible(false);
         sound.stop();
         
+        System.out.println("stoppeth");
+        
         //Disable buttons, for good measure
         startButton.setEnabled(false);
         loadButton.setEnabled(false);
