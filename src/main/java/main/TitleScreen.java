@@ -35,6 +35,10 @@ public class TitleScreen extends JLayeredPane {
     private final int TITLEHEIGHT = 768;
     MenuHandler handler;
     
+    //Colors for making things (buttons, etc) prettier 
+    final Color beige = new Color(244,204,161);
+    final Color lightbrown = new Color(160,91,83);
+    final Color darkbrown = new Color(122,68,74);
     
     public TitleScreen(JFrame window) {
         mapToLoad = "/maps/map.txt";
@@ -49,7 +53,7 @@ public class TitleScreen extends JLayeredPane {
         //Instantiate title screen
         setLayout(null);
         this.setPreferredSize(new Dimension(TITLEWIDTH,TITLEHEIGHT));
-        this.setBackground(new Color(207,198,184));
+        this.setBackground(beige);
         
         //Create buttonsPanel and instantiate
         buttonsPanel = new JPanel();
@@ -68,6 +72,11 @@ public class TitleScreen extends JLayeredPane {
         //Give buttons fonts
         startButton.setFont(cascadia_body);
         loadButton.setFont(cascadia_body);
+        //Make buttons prettier
+        startButton.setBackground(lightbrown);
+        startButton.setForeground(beige);
+        loadButton.setBackground(darkbrown);
+        loadButton.setForeground(beige);
         
         //Create an action listener ===========================================================
         handler = new MenuHandler(this);

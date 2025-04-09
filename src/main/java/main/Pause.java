@@ -21,6 +21,11 @@ public class Pause extends JLayeredPane {
     JPanel buttonsPanel;
     JButton contButton, saveButton, exitButton;
     
+    //Colors for making things (buttons, etc) prettier
+    final Color beige = new Color(244,204,161);
+    final Color lightbrown = new Color(160,91,83);
+    final Color darkbrown = new Color(122,68,74);
+    
     public Pause(GamePanel gp) {
         this.gp = gp;
         
@@ -52,6 +57,13 @@ public class Pause extends JLayeredPane {
         contButton.setFont(cambria_body);
         saveButton.setFont(cambria_body);
         exitButton.setFont(cambria_body);
+        //Make buttons prettier
+        contButton.setBackground(lightbrown);
+        contButton.setForeground(beige);
+        saveButton.setBackground(lightbrown);
+        saveButton.setForeground(beige);
+        exitButton.setBackground(darkbrown);
+        exitButton.setForeground(beige);
         
         //Create an action listener
         MenuHandler handler = new MenuHandler(gp);
@@ -88,13 +100,13 @@ public class Pause extends JLayeredPane {
     
     public void drawPauseScreen(Graphics g) {
         //Draw a smaller white rectangle over "Paused" text and buttonsPanel
-        g.setColor(Color.WHITE);
+        g.setColor(beige);
         int x = (gp.SCREENWIDTH/3 * 2); int y = (gp.SCREENHEIGHT/3 * 2);
         g.fillRoundRect(gp.SCREENWIDTH/6, gp.SCREENHEIGHT/5, x, y, 10, 10);
         
         //Draw the text: "Paused"
         String textToShow = "Paused";
-        g.setColor(Color.BLACK);
+        g.setColor(darkbrown);
         g.setFont(cambria_header);
         int textLength = (int)g.getFontMetrics().getStringBounds(textToShow, g).getWidth(); //Used to draw text to the center of the screen
         x = gp.SCREENWIDTH/2 - textLength/2; y = gp.SCREENHEIGHT/3;

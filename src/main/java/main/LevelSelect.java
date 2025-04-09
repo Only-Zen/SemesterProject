@@ -32,6 +32,10 @@ public class LevelSelect extends JPanel {
     private Font cascadia_header = new Font("Cascadia Code", Font.BOLD, 70);
     private Font cascadia_body = new Font("Cascadia Code", Font.PLAIN, 40);
     
+    //Colors for making things (buttons, etc) prettier 
+    final Color beige = new Color(244,204,161);
+    final Color lightbrown = new Color(160,91,83);
+    
     // Field to hold the map location chosen
     private String mapToLoad;
     
@@ -58,7 +62,7 @@ public class LevelSelect extends JPanel {
         // Set up the panel
         setLayout(null);
         setPreferredSize(new Dimension(TITLEWIDTH, TITLEHEIGHT));
-        setBackground(new Color(207, 198, 184));
+        setBackground(beige);
         
         // Create and configure the level select panel
         levelSelectPanel = new JPanel();
@@ -75,6 +79,13 @@ public class LevelSelect extends JPanel {
         map1Button.setFont(cascadia_body);
         map2Button.setFont(cascadia_body);
         map3Button.setFont(cascadia_body);
+        //Make buttons prettier
+        map1Button.setBackground(lightbrown);
+        map1Button.setForeground(beige);
+        map2Button.setBackground(lightbrown);
+        map2Button.setForeground(beige);
+        map3Button.setBackground(lightbrown);
+        map3Button.setForeground(beige);
         
         // Instantiate the MenuHandler with this LevelSelect instance.
         handler = new MenuHandler(this);
