@@ -67,9 +67,9 @@ public class LevelSelect extends JPanel {
         levelSelectPanel.setOpaque(false);
         
         // Create level selection buttons
-        map1Button = new JButton("Map 1");
-        map2Button = new JButton("Map 2");
-        map3Button = new JButton("Map 3");
+        map1Button = new JButton("A New Beginning");
+        map2Button = new JButton("A Drink Worth Having");
+        map3Button = new JButton("The Final Hope");
         
         // Set button fonts
         map1Button.setFont(cascadia_body);
