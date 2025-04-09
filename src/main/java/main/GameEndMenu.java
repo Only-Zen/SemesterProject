@@ -8,8 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import java.awt.GridLayout;
 
-import javax.swing.BorderFactory;
-
 /**
  *
  * @author lmm0060

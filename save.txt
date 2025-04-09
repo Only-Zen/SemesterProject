@@ -1,4 +1,4 @@
-Filename,/maps/map3.txt,
+Filename,/maps/map.txt,
 Round,0,
 Health,100,
-Money,20000,
+Money,200,

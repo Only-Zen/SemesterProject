@@ -1,7 +1,6 @@
 package main;
 
 import button.*;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -19,7 +18,9 @@ public class GameInfo {
     public boolean isRoundGoing; //variable to see if the current round is still going.
     public boolean isGameOver;
     public boolean isGameWon;
+    public boolean autoPlay;
     public StartButton startButton;
+    public AutoStartButton autoStartButton;
     public PauseButton pauseButton;
     public TowerButton basicTowerButton;
     public TowerButton bomberTowerButton;
@@ -39,7 +40,9 @@ public class GameInfo {
         isRoundGoing = false;
         isGameOver = false;
         isGameWon = false;
+        autoPlay = false;
         startButton = new StartButton(10, 126, 144, 48);
+        autoStartButton = new AutoStartButton(1474, 68, 48, 48);
         pauseButton = new PauseButton(1474,10,48,48);
         basicTowerButton = new TowerButton(164, 10, 50, 50, 1);
         bomberTowerButton = new TowerButton(224, 10, 50, 50, 2);
@@ -67,6 +70,7 @@ public class GameInfo {
         g2.drawString(playerHealth + "",60,91);
         
         startButton.draw(g2,isRoundGoing);
+        autoStartButton.draw(g2, autoPlay);
         g2.drawString("Wave: " + (round+1), 45,158);
         pauseButton.draw(g2);
         basicTowerButton.draw(g2,towerInHand);
@@ -76,8 +80,7 @@ public class GameInfo {
         //desc1.draw(g2);
         if(towerHoveredOver != 0){
             descriptions[towerHoveredOver -1 ].draw(g2);
-        }
-        
+        } 
     }
     
     public void update(){
@@ -90,9 +93,10 @@ public class GameInfo {
                 if (round % 2 == 0){
                     gp.enemySpawner.speed -= 5;
                 }
-        }
-        
-        
+            if (autoPlay == true){
+                gp.info.startRound();
+            }
+        }   
     }
     
     public void loadDescriptions(String filePath){

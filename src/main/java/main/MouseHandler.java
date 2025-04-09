@@ -3,8 +3,6 @@ package main;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import entity.Enemy;
-import entity.Projectile;
 import tower.*;
 
 import tile.Grid; //For identifying the pause button. If you know a more elegant way of doing this let me know.
@@ -69,6 +67,8 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
                 }
                 else if(gp.info.rapidTowerButton.isClicked(mouseCoordinate)){
                     gp.info.towerInHand = 3;
+                } else if(gp.info.autoStartButton.isClicked(mouseCoordinate)){
+                    gp.info.autoPlay = !gp.info.autoPlay;
                 }
                 else if(checkIfOccupied() == false){
                     // Create a new Tower instance with desired parameters.
