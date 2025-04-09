@@ -23,6 +23,11 @@ public class GameEndMenu extends JLayeredPane {
     
     String textToShow = "Not set";
     
+    //Colors to make things (buttons, etc) prettier
+    final Color beige = new Color(244,204,161);
+    final Color lightbrown = new Color(160,91,83);
+    final Color darkbrown = new Color(122,68,74);
+    
     public GameEndMenu(GamePanel gp) {
         this.gp = gp;
         
@@ -47,6 +52,9 @@ public class GameEndMenu extends JLayeredPane {
         
         //Give button font
         exitButton.setFont(cambria_body);
+        //Make button prettier
+        exitButton.setBackground(darkbrown);
+        exitButton.setForeground(beige);
         
         //Create an action listener
         handler = new MenuHandler(gp);
@@ -75,7 +83,7 @@ public class GameEndMenu extends JLayeredPane {
     
     public void drawMenu(Graphics g) {
         //Draw a small white rectangle below buttonsPanel
-        g.setColor(Color.WHITE);
+        g.setColor(beige);
         int x = (gp.SCREENWIDTH/3 * 2); int y = (gp.SCREENHEIGHT/3 * 2);
         g.fillRoundRect(gp.SCREENWIDTH/6, gp.SCREENHEIGHT/5, x, y, 10, 10);
         
@@ -85,7 +93,7 @@ public class GameEndMenu extends JLayeredPane {
             textToShow = "The rats have seized the tavern!"; }
         
         //Draw the text as set above
-        g.setColor(Color.BLACK);
+        g.setColor(lightbrown);
         g.setFont(cambria_header);
         int textLength = (int)g.getFontMetrics().getStringBounds(textToShow, g).getWidth(); //Used to draw text to the center of the screen
         x = gp.SCREENWIDTH/2 - textLength/2; y = gp.SCREENHEIGHT/3;
