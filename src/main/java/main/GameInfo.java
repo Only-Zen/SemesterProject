@@ -67,7 +67,7 @@ public class GameInfo {
         g2.drawString(playerHealth + "",60,91);
         
         startButton.draw(g2,isRoundGoing);
-        g2.drawString("Wave: " + (round+1), 40,160);
+        g2.drawString("Wave: " + (round+1), 45,158);
         pauseButton.draw(g2);
         basicTowerButton.draw(g2,towerInHand);
         bomberTowerButton.draw(g2,towerInHand);
