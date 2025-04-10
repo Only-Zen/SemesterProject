@@ -21,6 +21,8 @@ public class GameInfo {
     public boolean autoPlay;
     public StartButton startButton;
     public AutoStartButton autoStartButton;
+    public SpeedUpButton speedUpButton;
+    public boolean speedUp;
     public PauseButton pauseButton;
     public TowerButton basicTowerButton;
     public TowerButton bomberTowerButton;
@@ -41,12 +43,14 @@ public class GameInfo {
         isGameOver = false;
         isGameWon = false;
         autoPlay = false;
+        speedUp = false;
         startButton = new StartButton(10, 126, 144, 48);
         autoStartButton = new AutoStartButton(1474, 68, 48, 48);
         pauseButton = new PauseButton(1474,10,48,48);
         basicTowerButton = new TowerButton(164, 10, 50, 50, 1);
         bomberTowerButton = new TowerButton(224, 10, 50, 50, 2);
         rapidTowerButton = new TowerButton(284, 10, 50, 50, 3);
+        speedUpButton = new SpeedUpButton(1474, 126, 48, 48);
         
         desc1 = new DescriptionBox(new Coordinate(164,70,gp),"","","");
         loadDescriptions(("/descriptions/descriptions.txt"));
@@ -76,6 +80,7 @@ public class GameInfo {
         basicTowerButton.draw(g2,towerInHand);
         bomberTowerButton.draw(g2,towerInHand);
         rapidTowerButton.draw(g2,towerInHand);
+        speedUpButton.draw(g2, speedUp);
         
         //desc1.draw(g2);
         if(towerHoveredOver != 0){
@@ -96,7 +101,14 @@ public class GameInfo {
             if (autoPlay == true){
                 gp.info.startRound();
             }
-        }   
+        }
+        if (speedUp == true){
+            gp.FPS = 90;
+            //System.out.println("Speed up");
+        } else {
+            gp.FPS = 60;
+            //System.out.println("Don't Speed up");
+        }
     }
     
     public void loadDescriptions(String filePath){

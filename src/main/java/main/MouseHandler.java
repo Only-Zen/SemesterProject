@@ -69,6 +69,8 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
                     gp.info.towerInHand = 3;
                 } else if(gp.info.autoStartButton.isClicked(mouseCoordinate)){
                     gp.info.autoPlay = !gp.info.autoPlay;
+                } else if(gp.info.speedUpButton.isClicked(mouseCoordinate)){
+                    gp.info.speedUp = !gp.info.speedUp;
                 }
                 else if(checkIfOccupied() == false){
                     // Create a new Tower instance with desired parameters.
