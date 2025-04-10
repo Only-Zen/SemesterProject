@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import tile.Grid;
-import tower.Tower;
+import tower.*;
 
 
 public class GamePanel extends JPanel implements Runnable {
@@ -33,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int SCREENWIDTH = TILESIZE * MAXSCREENCOL;
     public final int SCREENHEIGHT = TILESIZE * MAXSCREENROW;
 
-    public String mapLocation = "/maps/map.txt";
+    public String mapLocation;
     public int round = 0;
     public Random random = new Random();
     Sound sound = new Sound();
@@ -44,7 +44,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int FPS = 60;
     Thread gameThread;
     MouseHandler mouseH;
-    EnemySpawner enemySpawner = new EnemySpawner(("/entities/enemy/enemyWaves.txt"), this);
+    EnemySpawner enemySpawner;
 
     public ArrayList<Enemy> enemies = new ArrayList<>();
     public ArrayList<Projectile> projectile = new ArrayList<>();
@@ -58,20 +58,29 @@ public class GamePanel extends JPanel implements Runnable {
     protected int frame = 1;
     private Image tavernImage;
 
+    Dimension preferredsize = new Dimension(SCREENWIDTH, SCREENHEIGHT);
     // Manage game state
     public Boolean isPaused = false;
     Pause pause = new Pause(this);
+    
+    GameEndMenu gameover = new GameEndMenu(this);
 
     MenuHandler mh;
 
-    public GamePanel(MenuHandler handler) {
-        this.setPreferredSize(new Dimension(SCREENWIDTH, SCREENHEIGHT));
+    public GamePanel(MenuHandler handler,String mapLocation ) {
+        this.setPreferredSize(preferredsize);
         this.setBackground(new Color(0,0,0,1));
         this.setDoubleBuffered(true);
         this.setFocusable(true);
         this.mh = handler;
+        this.mapLocation = mapLocation;
         add(pause); //Initialize pause menu
-        pause.setPreferredSize(new Dimension(SCREENWIDTH, SCREENHEIGHT));
+        pause.setPreferredSize(preferredsize);
+        pause.showPauseMenu(false);
+        
+        add(gameover); //Initialize game end menu
+        gameover.setPreferredSize(preferredsize);
+        gameover.showMenu(false);
         
         // Initialize the mouse coordinate (starts at 0,0)
         mouseCoord = new Coordinate(0, 0, this);
@@ -103,7 +112,16 @@ public class GamePanel extends JPanel implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        playMusic(0);
+        grid.loadMap(mapLocation);
+        boolean dummy = grid.generatePath();
+        for (int i = -1; i<=1; i++){
+            for (int j = -2; j <= 0; j++){
+                occupiedTiles[grid.enemyWaypoints.get(grid.enemyWaypoints.size() - 1).getX() + i][grid.enemyWaypoints.get(grid.enemyWaypoints.size() - 1).getY() + j] = true;
+            }
+        }
+        enemySpawner = new EnemySpawner(("/entities/enemy/enemyWaves.txt"), this);
+        playMusic(0, 45);
+        sound.loop();
     }
 
     public void startGameThread() {
@@ -122,7 +140,7 @@ public class GamePanel extends JPanel implements Runnable {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
-            if (!isPaused) { //Check if paused. If so, do not update
+            if (!(isPaused || info.isGameOver)) { //Check if paused or game is ended. If so, do not update
                 if (delta >= 1) {
                     update();
                     repaint();
@@ -147,7 +165,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
             // Update all projectiles (so they move toward their targets)
-            for (Tower tower : towers) {
+            for (Tower tower : new ArrayList<>(towers)) {
                 tower.update();
             }
 
@@ -168,7 +186,7 @@ public class GamePanel extends JPanel implements Runnable {
                 continue;
             }
 
-                for (Enemy enemy : enemies) {
+                for (Enemy enemy : new ArrayList<>(enemies)) {
 
                     // Calculate deltaX and deltaY
                     int deltaX = enemy.getPosition().getX()+(enemy.getSize()/2) - curProjectile.getPosition().getX();
@@ -222,7 +240,10 @@ public class GamePanel extends JPanel implements Runnable {
         if (isPaused) {
             pause.drawPauseScreen(g);
             pause.showPauseMenu(true);
-            pause.repaint();
+        }
+        else if (info.isGameOver) {
+            gameover.drawMenu(g);
+            gameover.showMenu(true);
         }
         
         else {
@@ -258,14 +279,18 @@ public class GamePanel extends JPanel implements Runnable {
                 projectile.draw(g2);
             }
             
-            g2.setColor(Color.WHITE);
-            g2.drawString("MouseX: " + mouseCoord.getX() + " MouseY: " + mouseCoord.getY(),
-                mouseCoord.getX() + 8, mouseCoord.getY() - 8);
+            // g2.setColor(Color.WHITE);
+            // g2.drawString("MouseX: " + mouseCoord.getX() + " MouseY: " + mouseCoord.getY(),
+                // mouseCoord.getX() + 8, mouseCoord.getY() - 8);
             
             // Highlight the tile currently hovered over by the mouse.
             // (We use the tile coordinate from the MouseHandler and multiply by the tile size.)
             Coordinate tileCoord = mouseH.getTileCoordinate();
-            g.setColor(new Color(255, 0, 0, 80));
+            if (mouseH.checkIfOccupied() == true){
+                g.setColor(new Color(255, 0, 0, 80));
+            } else {
+                g.setColor(new Color(0, 45, 255, 80));
+            }
             g.fillRect(tileCoord.getX(), tileCoord.getY(), TILESIZE, TILESIZE);
             
             //Draw game info overlay
@@ -280,9 +305,8 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
     }
     
-    public void playMusic(int i){
-        sound.setFile(i);
-        sound.play();
+    public void playMusic(int i, int volume){
+        sound.playSound(i, volume);
     }
     
     public int getFrame(){
@@ -338,7 +362,8 @@ public class GamePanel extends JPanel implements Runnable {
         if(fields.length > 1) { // valid lines have at least two substrings
             switch (fields[0]) {
                 case "Filename":
-                    //mapLocation = fields[1] ;
+                    mapLocation = fields[1] ;
+                    System.out.println("The map is: " + mapLocation + "!\n");
                     break;
                 case "Round":
                     String[] rData = line.split(",");
@@ -357,7 +382,7 @@ public class GamePanel extends JPanel implements Runnable {
                     System.out.println("Money" + info.playerMoney + "!\n");
                     break;
                 case "Tower":
-                    parseTowerString(fields[1]);
+                    parseTowerString(line);//fields[1]);
                     break;
                 default:
             }
@@ -375,7 +400,9 @@ public class GamePanel extends JPanel implements Runnable {
         System.out.println(data);
         String[] fields = data.split("[,\\=]");
         System.out.println(fields[0]+ "... " + fields[1]);
-        for(int i = 0; i < (fields.length - 1); i = i+2){
+        for(int i = 2; i < (fields.length - 1); i = i+2){
+            
+            
 
 
             switch (fields[i]) {
@@ -405,7 +432,25 @@ public class GamePanel extends JPanel implements Runnable {
 
         }
         if(goodParse) {
-            Tower newTower = new Tower(new Coordinate(posX, posY, this), range, damage, firerate, 0.0, this);
+            
+            
+            Tower newTower;
+            
+            switch(fields[1]){
+                case "Tower":
+                    newTower = new BasicTower(new Coordinate(posX, posY, this),this);
+                    break;
+                case "Basic Tower":
+                    newTower = new BasicTower(new Coordinate(posX, posY, this),this);
+                    break;
+                case "Bomber Tower":
+                    newTower = new BomberTower(new Coordinate(posX, posY, this),this);
+                    break;
+                default:
+                    newTower = new BasicTower(new Coordinate(posX, posY, this),this);
+            }
+            
+            
             towers.add(newTower);
         }
         else

@@ -17,7 +17,9 @@ public class Enemy
     protected Coordinate nextCoord;
     protected int coordinateCounter = 0;
     protected int speed;
+    private int initialSpeed;
     protected int health;
+    private int maxHealth;
     protected int size;
     public boolean isAlive = true;
     protected ArrayList<Coordinate> waypoints;
@@ -36,7 +38,9 @@ public class Enemy
         this.waypoints = gp.getWaypoints();
         this.nextCoord  = new Coordinate(waypoints.get(0).getX() * gp.TILESIZE, waypoints.get(0).getY() * gp.TILESIZE, gp);
         this.speed      = speed;
+        this.initialSpeed = speed;
         this.health     = health;
+        this.maxHealth  = health;
         this.gp         = gp;
         this.size       = gp.TILESIZE;
         try {
@@ -66,7 +70,7 @@ public class Enemy
         
         // Draw health bar
         g2.setColor(Color.GREEN);
-        g2.fillRect(position.getX(), position.getY() - 10, (int) ((health / 100.0) * size), 5);
+        g2.fillRect(position.getX(), position.getY() - 10, (int) (health * size / maxHealth), 5);
     }
     
     public void update() {
@@ -84,7 +88,9 @@ public class Enemy
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        if (health < 25){
+            speed = initialSpeed + 1;
+        }
         if (distance >= speed) {
             double unitX = dx / distance;
             double unitY = dy / distance;
@@ -138,9 +144,11 @@ public class Enemy
         //Enemy uses onDeath for dying and reaching the end, so this checks which one
         if(coordinateCounter >= waypoints.size() - 1){
             gp.info.playerHealth -= 5;
+            gp.playMusic(5, 43);
         }
         else{
-            gp.info.playerMoney+=10;
+            gp.info.playerMoney+=5;
+            gp.playMusic(2, 38);
         }
     }
     
