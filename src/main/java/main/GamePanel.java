@@ -15,6 +15,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Random;
 import javax.imageio.ImageIO;
@@ -157,6 +158,12 @@ public class GamePanel extends JPanel implements Runnable {
             Coordinate newMouseCoord = mouseH.getMouseCoordinate();
             mouseCoord.setX(newMouseCoord.getX());
             mouseCoord.setY(newMouseCoord.getY());
+            // Sort the enemies based on distance before towers target them
+            
+            // Sort enemies in descending order
+            enemies.sort(Comparator.comparingInt(Enemy::getDistance).reversed());
+
+
 
             //Load Savegame if needed
             if(mh.triggerReadFromDisk) {

@@ -30,10 +30,13 @@ public abstract class Enemy
     private BufferedImage enemyLeft;
     private BufferedImage enemyRight;
     private String direction = "/entities/enemy/Right.png";
+    public int distance = 0;
+    public int damage;
+    public int value;
 
-    public Enemy(Coordinate position, GamePanel gp) {this ("", position, 10, 10, gp);}
+    public Enemy(Coordinate position, GamePanel gp) {this ("", position, 10, 10, 10, 10, gp);}
 
-    public Enemy(String name, Coordinate position, int speed, int health, GamePanel gp){
+    public Enemy(String name, Coordinate position, int speed, int health, int damage, int value, GamePanel gp){
         // Instantiate the coordinate with the given x and y values.
         this.position   = position;
         // Optionally, if you need nextCoord for pathfinding or movement, initialize it:
@@ -45,6 +48,8 @@ public abstract class Enemy
         this.maxHealth  = health;
         this.gp         = gp;
         this.size       = gp.TILESIZE;
+        this.damage     = damage;
+        this.value      = value;
         try {
             enemyImage = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Right.png/"));
             enemyUp = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Up.png/"));
@@ -84,7 +89,8 @@ public abstract class Enemy
         }   else if (dy > 0) { enemyImage = enemyDown;
         }   else if (dy < 0) { enemyImage = enemyUp;
         }
-
+        
+        this.distance += speed;
 
         if (health < 25){
             speed = initialSpeed + 1;
@@ -141,11 +147,11 @@ public abstract class Enemy
         
         //Enemy uses onDeath for dying and reaching the end, so this checks which one
         if(coordinateCounter >= waypoints.size() - 1){
-            gp.info.playerHealth -= 5;
+            gp.info.playerHealth -= this.damage;
             gp.playMusic(5, 43);
         }
         else{
-            gp.info.playerMoney+=5;
+            gp.info.playerMoney += this.value;
             gp.playMusic(2, 38);
         }
     }
@@ -177,5 +183,9 @@ public abstract class Enemy
          */
         
         return size;
+    }
+    
+    public int getDistance(){
+        return distance;
     }
 }

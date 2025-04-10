@@ -53,22 +53,22 @@ public class EnemySpawner {
                     int value = Integer.parseInt(numbers[col]);
 
                     if (value == 1) {
-                        enemyQueues.get(row).add(new BasicEnemy("basic_enemy",
+                        enemyQueues.get(row).add(new BasicEnemy(
                                 new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),
-                                3,100,gp));
+                                gp));
                     } //ask about coordinate and default enemy settings
                     
                     if (value == 2) {
-                        enemyQueues.get(row).add(new SpeedyEnemy("speedy_enemy",
+                        enemyQueues.get(row).add(new SpeedyEnemy(
                                 new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),
-                                5,90,gp));
+                                gp));
 
                     }
                     
                     if (value == 3) {
-                        enemyQueues.get(row).add(new TankEnemy("tank_enemy",
+                        enemyQueues.get(row).add(new TankEnemy(
                                 new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),
-                                2,300,gp));
+                                gp));
                     }
                     if (value == 4){
                         //for enemy type 4
