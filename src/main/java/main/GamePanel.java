@@ -444,14 +444,14 @@ public class GamePanel extends JPanel implements Runnable {
             Tower newTower;
             
             switch(fields[1]){
-                case "Tower":
-                    newTower = new BasicTower(new Coordinate(posX, posY, this),this);
-                    break;
                 case "Basic Tower":
                     newTower = new BasicTower(new Coordinate(posX, posY, this),this);
                     break;
                 case "Bomber Tower":
                     newTower = new BomberTower(new Coordinate(posX, posY, this),this);
+                    break;
+                case "Rapid Tower":
+                    newTower = new RapidTower(new Coordinate(posX, posY, this),this);
                     break;
                 default:
                     newTower = new BasicTower(new Coordinate(posX, posY, this),this);
