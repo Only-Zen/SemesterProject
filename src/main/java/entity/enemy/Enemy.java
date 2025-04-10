@@ -51,11 +51,11 @@ public abstract class Enemy
         this.damage     = damage;
         this.value      = value;
         try {
-            enemyImage = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Right.png/"));
-            enemyUp = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Up.png/"));
-            enemyDown = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Down.png/"));
-            enemyLeft = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Left.png/"));
-            enemyRight = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Right.png/"));
+            enemyImage = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Right.png"));
+            enemyUp = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Up.png"));
+            enemyDown = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Down.png"));
+            enemyLeft = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Left.png"));
+            enemyRight = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Right.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
