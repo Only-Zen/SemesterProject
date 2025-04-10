@@ -3,7 +3,11 @@ package main;
 import java.io.*;
 import java.util.*;
 import java.util.Queue;
-import entity.Enemy;
+
+import entity.enemy.BasicEnemy;
+import entity.enemy.Enemy;
+import entity.enemy.SpeedyEnemy;
+import entity.enemy.TankEnemy;
 
 public class EnemySpawner {
     public List<Queue<Enemy>> enemyQueues;
@@ -49,15 +53,22 @@ public class EnemySpawner {
                     int value = Integer.parseInt(numbers[col]);
 
                     if (value == 1) {
-                        enemyQueues.get(row).add(new Enemy(new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),3,100,gp));
+                        enemyQueues.get(row).add(new BasicEnemy("basic_enemy",
+                                new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),
+                                3,100,gp));
                     } //ask about coordinate and default enemy settings
                     
                     if (value == 2) {
-                        //for enemy type 2
+                        enemyQueues.get(row).add(new SpeedyEnemy("speedy_enemy",
+                                new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),
+                                5,90,gp));
+
                     }
                     
                     if (value == 3) {
-                        //for enemy type 3
+                        enemyQueues.get(row).add(new TankEnemy("tank_enemy",
+                                new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),
+                                2,300,gp));
                     }
                     if (value == 4){
                         //for enemy type 4

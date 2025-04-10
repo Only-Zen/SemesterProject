@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 import java.io.*;
 import java.util.ArrayList;
 import javax.swing.JPanel;
-import entity.Enemy;
+import entity.enemy.Enemy;
 import entity.Projectile;
 import java.awt.Cursor;
 import java.awt.Font;

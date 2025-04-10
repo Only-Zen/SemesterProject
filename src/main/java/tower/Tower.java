@@ -1,7 +1,7 @@
 package tower;
 
 import java.awt.Graphics2D;
-import entity.Enemy;
+import entity.enemy.Enemy;
 import entity.Projectile;
 import java.awt.image.BufferedImage;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package entity;
+package entity.enemy;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 import main.Coordinate;
 import main.GamePanel;
 
-public class Enemy
+public abstract class Enemy
 {
     /**
      * The abstract class for a general enemy.
@@ -25,13 +25,15 @@ public class Enemy
     protected ArrayList<Coordinate> waypoints;
     GamePanel gp;
     private BufferedImage enemyImage;
-    private String enemyUp;
-    private String enemyDown;
-    private String enemyLeft;
-    private String enemyRight;
+    private BufferedImage enemyUp;
+    private BufferedImage enemyDown;
+    private BufferedImage enemyLeft;
+    private BufferedImage enemyRight;
     private String direction = "/entities/enemy/Right.png";
-    
-    public Enemy(Coordinate position, int speed, int health, GamePanel gp){
+
+    public Enemy(Coordinate position, GamePanel gp) {this ("", position, 10, 10, gp);}
+
+    public Enemy(String name, Coordinate position, int speed, int health, GamePanel gp){
         // Instantiate the coordinate with the given x and y values.
         this.position   = position;
         // Optionally, if you need nextCoord for pathfinding or movement, initialize it:
@@ -44,11 +46,11 @@ public class Enemy
         this.gp         = gp;
         this.size       = gp.TILESIZE;
         try {
-            enemyImage = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/rat.png"));
-            enemyUp = "/entities/enemy/Up.png";
-            enemyDown = "/entities/enemy/Down.png";
-            enemyLeft = "/entities/enemy/Left.png";
-            enemyRight = "/entities/enemy/Right.png";
+            enemyImage = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Right.png/"));
+            enemyUp = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Up.png/"));
+            enemyDown = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Down.png/"));
+            enemyLeft = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Left.png/"));
+            enemyRight = ImageIO.read(getClass().getResourceAsStream("/entities/enemy/"+ name + "/Right.png/"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,17 +79,13 @@ public class Enemy
         int dx = nextCoord.getX() - position.getX();
         int dy = nextCoord.getY() - position.getY();
         double distance = Math.sqrt(dx * dx + dy * dy);
-        if (dx > 0){ direction = enemyRight;
-        }   else if (dx < 0) { direction = enemyLeft;
-        }   else if (dy > 0) { direction = enemyDown;
-        }   else if (dy < 0) { direction = enemyUp;
+        if (dx > 0){ enemyImage = enemyRight;
+        }   else if (dx < 0) { enemyImage = enemyLeft;
+        }   else if (dy > 0) { enemyImage = enemyDown;
+        }   else if (dy < 0) { enemyImage = enemyUp;
         }
-        
-        try {
-            enemyImage = ImageIO.read(getClass().getResourceAsStream(direction));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+
         if (health < 25){
             speed = initialSpeed + 1;
         }
