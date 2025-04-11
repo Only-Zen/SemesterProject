@@ -239,11 +239,6 @@ public class GamePanel extends JPanel implements Runnable {
         Font font = new Font("Dialog", Font.PLAIN, 12); //used to change fonts as needed
         g2.setFont(font);
         
-        // Draw a small red circle at the mouse's current position
-        // g2.setColor(Color.RED);
-        // g2.fillOval(mouseCoord.getX() - 5, mouseCoord.getY() - 5, 10, 10);
-        // g2.drawImage(mouseImage, mouseCoord.getX() - 5, mouseCoord.getY() - 5, 
-                                    // TILESIZE / 2, TILESIZE / 2, null);
         if (isPaused) {
             pause.drawPauseScreen(g);
             pause.showPauseMenu(true);
@@ -299,6 +294,22 @@ public class GamePanel extends JPanel implements Runnable {
                 g.setColor(new Color(0, 45, 255, 80));
             }
             g.fillRect(tileCoord.getX(), tileCoord.getY(), TILESIZE, TILESIZE);
+            
+            
+            g2.setColor(new Color(0, 0, 0, 30));
+            int tempRange = 0;
+            switch (info.towerInHand){
+                case 1:
+                    tempRange = 192;
+                    break;
+                case 2:
+                    tempRange = 96;
+                    break;
+                case 3:
+                    tempRange = 144;
+                    break;
+            }
+            g2.fillOval(tileCoord.getX() + TILESIZE/2 - tempRange/2, tileCoord.getY() + TILESIZE/2 - tempRange/2, tempRange, tempRange);
             
             //Draw game info overlay
             g2.setColor(Color.BLACK);
