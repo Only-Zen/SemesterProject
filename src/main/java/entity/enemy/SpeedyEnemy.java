@@ -6,7 +6,7 @@ import main.GamePanel;
 public class SpeedyEnemy extends Enemy {
 
     public SpeedyEnemy(Coordinate position, GamePanel gp) {
-        this("Speedy", position, 4, 70, 5, 5, gp);
+        this("Speedy", position, 5, 150, 10, 15, gp);
     }
 
     public SpeedyEnemy(String name, Coordinate position, int speed, int health, int damage, int value, GamePanel gp){
