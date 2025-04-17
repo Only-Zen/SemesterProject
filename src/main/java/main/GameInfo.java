@@ -34,7 +34,7 @@ public class GameInfo {
     GameEndMenu gameover;
     
     public GameInfo(GamePanel gp){
-        playerMoney = 200;
+        playerMoney = 250;
         playerHealth = 100;
         round = 0;
         towerInHand = 1;
@@ -96,6 +96,9 @@ public class GameInfo {
         else if(gp.enemies.isEmpty() && isRoundGoing && gp.enemySpawner.enemyQueues.get(round).isEmpty()){
             this.endRound();
                 if (round % 2 == 0){
+                    if (round % 5 == 0){
+                        gp.enemySpawner.speed -= 5;
+                    }
                     gp.enemySpawner.speed -= 5;
                 }
             if (autoPlay == true){
@@ -153,6 +156,11 @@ public class GameInfo {
     
     public void endRound(){
         isRoundGoing = false;
+        if ((round + 1) > 10){
+            playerMoney += 100;
+        } else {
+            playerMoney += (round + 1) * 10;
+        }
         round++;
         
         if (round >= 20) {
