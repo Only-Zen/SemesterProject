@@ -9,7 +9,7 @@ import javax.swing.JLayeredPane;
 import java.awt.GridLayout;
 
 /**
- *
+ * Class that handles the graphics of the pause menu.
  * @author lmm0060
  */
 public class Pause extends JLayeredPane {
@@ -27,6 +27,11 @@ public class Pause extends JLayeredPane {
     final Color darkbrown = new Color(122,68,74);
     
     public Pause(GamePanel gp) {
+        /**
+         * Constructs the pause menu object and its buttons.
+         * @param gp Uses GamePanel to get the size of the window and sync game data with the menu handler.
+         */
+        
         this.gp = gp;
         
         //Instantiate pause menu
@@ -99,7 +104,12 @@ public class Pause extends JLayeredPane {
     }
     
     public void drawPauseScreen(Graphics g) {
-        //Draw a smaller white rectangle over "Paused" text and buttonsPanel
+        /**
+         * Draws the background and text of the pause menu.
+         * @param g The graphics component used to draw.
+         */
+        
+        //Draw a smaller rectangle over "Paused" text and buttonsPanel
         g.setColor(beige);
         int x = (gp.SCREENWIDTH/3 * 2); int y = (gp.SCREENHEIGHT/3 * 2);
         g.fillRoundRect(gp.SCREENWIDTH/6, gp.SCREENHEIGHT/5, x, y, 10, 10);
@@ -114,6 +124,11 @@ public class Pause extends JLayeredPane {
     }
     
      public void showPauseMenu(boolean show) {
+         /**
+          * Toggles the visibility of the pause menu.
+          * @param show A Boolean that determines the whether the pause screen should be toggled visible (true) or invisible (false).
+          */
+         
          //Toggles pause menu
         setVisible(show);
         buttonsPanel.setVisible(show);
