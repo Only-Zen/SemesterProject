@@ -8,11 +8,33 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 
+/**
+ * Handles loading and playing sound effects and music clips for the game.
+ * <p>
+ * Maintains an array of resource URLs for various audio files, allows
+ * loading a specific clip, playing sounds once at a given volume, looping
+ * background music, and stopping playback.
+ * </p>
+ */
 public class Sound {
-    Clip clip;
-    URL soundURL[] = new URL[30];
-    
-    public Sound(){
+    /**
+     * The currently loaded clip (for {@link #play()}, {@link #loop()}, etc.).
+     */
+    private Clip clip;
+
+    /**
+     * An array of URLs pointing to audio resources packaged with the application.
+     */
+    private final URL[] soundURL = new URL[30];
+
+    /**
+     * Initializes the sound system by preloading the URLs of supported audio files.
+     * <p>
+     * The indices 0–6 are reserved for specific music and effect files;
+     * additional indices can be populated as needed.
+     * </p>
+     */
+    public Sound() {
         soundURL[0] = getClass().getResource("/music/451 Hiraeth.wav");
         soundURL[1] = getClass().getResource("/music/01 Once Upon a Time.wav");
         soundURL[2] = getClass().getResource("/entities/enemy/sounds/die.wav");
@@ -20,126 +42,152 @@ public class Sound {
         soundURL[4] = getClass().getResource("/tower/sounds/tackShoot.wav");
         soundURL[5] = getClass().getResource("/miscSounds/lostHealth.wav");
         soundURL[6] = getClass().getResource("/tower/sounds/charging.wav");
-        
     }
-    public void setFile(int i){
-        try{
+
+    /**
+     * Loads the clip at the specified index into memory and prepares it for playback.
+     * <p>
+     * Automatically closes the clip when playback completes to free system resources.
+     * </p>
+     *
+     * @param i the index of the sound in {@link #soundURL} to load
+     */
+    public void setFile(int i) {
+        try {
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
             clip = AudioSystem.getClip();
             clip.open(ais);
-            
-            // Add a LineListener to auto-close the clip when done playing
             clip.addLineListener(new LineListener() {
                 @Override
                 public void update(LineEvent event) {
-                    // Check if the clip has stopped playing
                     if (event.getType() == LineEvent.Type.STOP) {
-                        // Close the clip to release system resources
                         clip.close();
                     }
                 }
             });
-        }catch(Exception e){
-            
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
-    
-    public void playSound(int index, int volume) {
-        try {
-        AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[index]);
-        Clip newClip = AudioSystem.getClip();
-        newClip.open(ais);
-        
-        // Set volume if supported
-        if (newClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-            FloatControl gainControl = (FloatControl) newClip.getControl(FloatControl.Type.MASTER_GAIN);
-            // Clamp volume percentage to [1, 100]
-            if (volume < 1) volume = 1;
-            if (volume > 100) volume = 100;
-            
-            float min = gainControl.getMinimum(); // e.g., around -80 dB
-            float max = gainControl.getMaximum(); // e.g., around +6 dB
-            float dB;
-            
-            if (volume == 50) {
-                dB = 0f; // default volume
-            } else if (volume < 50) {
-                // Map [1, 50] to [min, 0]
-                float fraction = (volume - 1) / 49.0f;
-                dB = min + fraction * (0 - min);
-            } else {
-                // Map [50, 100] to [0, max]
-                float fraction = (volume - 50) / 50.0f;
-                dB = 0 + fraction * (max - 0);
-            }
-            
-            gainControl.setValue(dB);
-        }
-        
-        // Add a listener to automatically close the clip when done
-        newClip.addLineListener(new LineListener() {
-            @Override
-            public void update(LineEvent event) {
-                if (event.getType() == LineEvent.Type.STOP) {
-                    newClip.close();
-                }
-            }
-        });
-        
-        newClip.start();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
     }
 
-    
-    public void play(){
-        clip.start();
+    /**
+     * Plays the sound at the given index exactly once at the specified volume.
+     * <p>
+     * Creates a new {@link Clip} instance for each invocation, allowing multiple
+     * sounds to overlap. Closes the clip automatically when playback finishes.
+     * </p>
+     *
+     * @param index            the index of the sound in {@link #soundURL} to play
+     * @param volumePercentage desired volume, from 1 (quietest) to 100 (loudest)
+     */
+    public void playSound(int index, int volumePercentage) {
+        try {
+            AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[index]);
+            Clip newClip = AudioSystem.getClip();
+            newClip.open(ais);
+
+            if (newClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                FloatControl gainControl = (FloatControl) newClip.getControl(FloatControl.Type.MASTER_GAIN);
+
+                // Clamp volume percentage to [1, 100]
+                volumePercentage = Math.max(1, Math.min(volumePercentage, 100));
+
+                float min = gainControl.getMinimum();
+                float max = gainControl.getMaximum();
+                float dB;
+
+                if (volumePercentage == 50) {
+                    dB = 0f;
+                } else if (volumePercentage < 50) {
+                    float fraction = (volumePercentage - 1) / 49f;
+                    dB = min + fraction * (0 - min);
+                } else {
+                    float fraction = (volumePercentage - 50) / 50f;
+                    dB = fraction * max;
+                }
+
+                gainControl.setValue(dB);
+            }
+
+            newClip.addLineListener(new LineListener() {
+                @Override
+                public void update(LineEvent event) {
+                    if (event.getType() == LineEvent.Type.STOP) {
+                        newClip.close();
+                    }
+                }
+            });
+
+            newClip.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    public void loop(){
-        if (clip != null && clip.isOpen()){
-            // Reset to the beginning of the clip
+
+    /**
+     * Starts playback of the currently loaded clip once from its current position.
+     * <p>
+     * {@link #setFile(int)} must have been called beforehand.
+     * </p>
+     */
+    public void play() {
+        if (clip != null) {
+            clip.start();
+        }
+    }
+
+    /**
+     * Continuously loops the currently loaded clip from the beginning.
+     * <p>
+     * Resets the frame position and sets infinite looping.
+     * </p>
+     */
+    public void loop() {
+        if (clip != null && clip.isOpen()) {
             clip.setFramePosition(0);
-            // Loop continuously
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
-    public void stop(){
-        clip.stop();
-        clip.close();
+
+    /**
+     * Stops playback of the currently loaded clip and releases its resources.
+     */
+    public void stop() {
+        if (clip != null) {
+            clip.stop();
+            clip.close();
+        }
     }
-    
+
+    /**
+     * Adjusts the volume of the currently loaded clip without restarting it.
+     * <p>
+     * Clamps the percentage to the range [1, 100] and maps it linearly to the
+     * clip's supported gain range.
+     * </p>
+     *
+     * @param volumePercentage desired volume, from 1 (quietest) to 100 (loudest)
+     */
     public void setVolume(int volumePercentage) {
-        if (clip != null && clip.isOpen()) {
-            if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-                FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                
-                // Clamp the percentage between 1 and 100
-                if(volumePercentage < 1) volumePercentage = 1;
-                if(volumePercentage > 100) volumePercentage = 100;
-                
-                float min = gainControl.getMinimum(); // e.g., around -80.0 dB
-                float max = gainControl.getMaximum(); // e.g., around +6.0 dB
-                float dB = 0f;
-                
-                if (volumePercentage == 50) {
-                    // Default volume (no change)
-                    dB = 0f;
-                } else if (volumePercentage < 50) {
-                    // Map volume from [1, 50] to [min, 0]
-                    // Calculate the fraction (subtracting 1 to ensure 1 maps exactly to min)
-                    float fraction = (volumePercentage - 1) / 49.0f;
-                    dB = min + fraction * (0 - min);
-                } else {
-                    // Map volume from [50, 100] to [0, max]
-                    float fraction = (volumePercentage - 50) / 50.0f;
-                    dB = 0 + fraction * (max - 0);
-                }
-                
-                gainControl.setValue(dB);
-                } else {
-                    System.out.println("Volume control not supported for this clip.");
-                }
+        if (clip != null && clip.isOpen() && clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            volumePercentage = Math.max(1, Math.min(volumePercentage, 100));
+
+            float min = gainControl.getMinimum();
+            float max = gainControl.getMaximum();
+            float dB;
+
+            if (volumePercentage == 50) {
+                dB = 0f;
+            } else if (volumePercentage < 50) {
+                float fraction = (volumePercentage - 1) / 49f;
+                dB = min + fraction * (0 - min);
+            } else {
+                float fraction = (volumePercentage - 50) / 50f;
+                dB = fraction * max;
+            }
+
+            gainControl.setValue(dB);
         }
     }
 }

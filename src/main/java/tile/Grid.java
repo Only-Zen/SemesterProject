@@ -12,23 +12,43 @@ import javax.imageio.ImageIO;
 import main.Coordinate;
 import main.GamePanel;
 
+/**
+ * Manages the grid of tiles, loading tile images, the map layout,
+ * pathfinding waypoints for enemies, and rendering tiles.
+ */
 public class Grid {
-    GamePanel gp;
+    /** Reference to the main game panel for dimensions and state. */
+    private final GamePanel gp;
+
+    /** Array of all possible tile types (indexed by tile code). */
     public Tile[] tile;
-    public int mapTileNum[][];
-    public LinkedList enemyRoute = new LinkedList();
+
+    /** 2D array storing the tile code for each grid cell. */
+    public int[][] mapTileNum;
+
+    /** Sequence of integers encoding the generated path waypoints. */
+    public LinkedList<Integer> enemyRoute = new LinkedList<>();
+
+    /** List of actual pixel coordinates for each waypoint on the enemy path. */
     public ArrayList<Coordinate> enemyWaypoints = new ArrayList<>();
 
-    public Grid(GamePanel gp){
+    /**
+     * Constructs a new Grid tied to the given {@link GamePanel}.
+     * Initializes the tile array size and map array, then loads tile images.
+     *
+     * @param gp the {@link GamePanel} providing max rows, cols, and tile size
+     */
+    public Grid(GamePanel gp) {
         this.gp = gp;
-        // Make sure the array is big enough for all variants
-        tile = new Tile[200]; 
-        mapTileNum = new int[gp.MAXSCREENCOL][gp.MAXSCREENROW];
-
+        this.tile = new Tile[200];
+        this.mapTileNum = new int[gp.MAXSCREENCOL][gp.MAXSCREENROW];
         getTileImage();
     }
 
-    
+    /**
+     * Loads all tile images from resources and sets their occupied flags
+     * for impassable tiles (water, trees, etc.).
+     */
     public void getTileImage(){
         try {
             // Existing tiles
@@ -181,6 +201,13 @@ public class Grid {
         }
     }
 
+    /**
+    * Loads a map layout from a text file, parsing each row and column
+    * into {@link #mapTileNum}, randomizing variants when specified,
+    * and marking occupied tiles.
+    *
+    * @param filePath the resource path to the map file (e.g. "/maps/map01.txt")
+    */
     public void loadMap(String filePath){
         try {
             InputStream is = getClass().getResourceAsStream(filePath);
@@ -429,7 +456,12 @@ public class Grid {
         }
     }
     
-        
+    /**
+     * Draws all tiles onto the provided {@link Graphics2D} context,
+     * including animated and rotated path variants.
+     *
+     * @param g2 the graphics context to draw on
+     */    
     public void draw(Graphics2D g2) {
         for (int row = 0; row < gp.MAXSCREENROW; row++) {
             for (int col = 0; col < gp.MAXSCREENCOL; col++) {
