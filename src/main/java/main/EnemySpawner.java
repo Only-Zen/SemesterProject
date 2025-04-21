@@ -11,13 +11,31 @@ import entity.enemy.LateEnemy;
 import entity.enemy.SpeedyEnemy;
 import entity.enemy.TankEnemy;
 
+/**
+ * The {@code EnemySpawner} class is responsible for loading and managing enemy waves (or rounds) in the game.
+ * It reads enemy data from a file and spawns enemies onto the game panel during active rounds based on a cooldown timer.
+ * 
+ * @author mrsch
+ */
 public class EnemySpawner {
+    /** A list of queues where each queue represents a wave (round) of enemies. */
     public List<Queue<Enemy>> enemyQueues;
+    
+    /** The cooldown speed for spawning enemies. Lower value means faster spawn rate. */
+    public int speed = 60;
+    
     private int round;
     private int cooldownTimer;
-    public int speed = 60; //lower number = faster. based on frames of cooldown
+    
+    /** Reference to the game panel where enemies are spawned. */
     GamePanel gp;
 
+    /**
+     * Constructs a new {@code EnemySpawner} and loads enemy wave data from a specified file.
+     *
+     * @param filePath the path to the enemy wave file
+     * @param gp       the game panel reference
+     */
     public EnemySpawner(String filePath, GamePanel gp) {
         this.enemyQueues = new ArrayList<>();
         this.round = 0;
@@ -27,6 +45,20 @@ public class EnemySpawner {
         loadSpawner(filePath);
     }
 
+    /**
+     * Loads enemy wave data from the specified file.
+     * Each line in the file corresponds to a wave and contains space-separated numbers.
+     * Each number corresponds to a specific enemy type:
+     * <ul>
+     *     <li>1 - BasicEnemy</li>
+     *     <li>2 - SpeedyEnemy</li>
+     *     <li>3 - TankEnemy</li>
+     *     <li>4 - LateEnemy</li>
+     *     <li>5 - KingEnemy</li>
+     * </ul>
+     *
+     * @param filePath the path to the wave file resource
+     */
     public void loadSpawner(String filePath){
         try {
             InputStream is = getClass().getResourceAsStream(filePath);
@@ -94,6 +126,10 @@ public class EnemySpawner {
         }
     }
 
+    /**
+     * Updates the enemy spawner each frame.
+     * Decrements the cooldown timer and attempts to spawn the next enemy if conditions are met.
+     */
     public void update() {
         //
         round = gp.info.getRound();
@@ -101,8 +137,10 @@ public class EnemySpawner {
         spawnEnemy();
     }
 
+    /**
+     * Spawns an enemy from the current round's queue if the cooldown timer has expired and the round is active.
+     */
     private void spawnEnemy() {
-        // System.out.println("Spawning enemy: ");
         if (enemyQueues != null && cooldownTimer <= 0 && gp.info.isRoundGoing()) {
             Queue<Enemy> currentQueue = enemyQueues.get(round);
             if (!currentQueue.isEmpty()) {
