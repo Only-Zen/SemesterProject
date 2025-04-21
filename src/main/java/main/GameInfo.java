@@ -1,7 +1,6 @@
 package main;
 
 import button.*;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -18,7 +17,12 @@ public class GameInfo {
     public int towerHoveredOver;
     public boolean isRoundGoing; //variable to see if the current round is still going.
     public boolean isGameOver;
+    public boolean isGameWon;
+    public boolean autoPlay;
     public StartButton startButton;
+    public AutoStartButton autoStartButton;
+    public SpeedUpButton speedUpButton;
+    public boolean speedUp;
     public PauseButton pauseButton;
     public TowerButton basicTowerButton;
     public TowerButton bomberTowerButton;
@@ -27,6 +31,7 @@ public class GameInfo {
     private DescriptionBox desc1;
     private BufferedImage infoOverlay;
     GamePanel gp;
+    GameEndMenu gameover;
     
     public GameInfo(GamePanel gp){
         playerMoney = 250;
@@ -36,17 +41,23 @@ public class GameInfo {
         towerHoveredOver = 0;
         isRoundGoing = false;
         isGameOver = false;
+        isGameWon = false;
+        autoPlay = false;
+        speedUp = false;
         startButton = new StartButton(10, 126, 144, 48);
+        autoStartButton = new AutoStartButton(1474, 68, 48, 48);
         pauseButton = new PauseButton(1474,10,48,48);
         basicTowerButton = new TowerButton(164, 10, 50, 50, 1);
         bomberTowerButton = new TowerButton(224, 10, 50, 50, 2);
         rapidTowerButton = new TowerButton(284, 10, 50, 50, 3);
+        speedUpButton = new SpeedUpButton(1474, 126, 48, 48);
         
         desc1 = new DescriptionBox(new Coordinate(164,70,gp),"","","");
         loadDescriptions(("/descriptions/descriptions.txt"));
         
         
         this.gp = gp;
+        
         try {
             // Load the item overlay
             infoOverlay = ImageIO.read(getClass().getResourceAsStream("/icons/Info2up.png"));
@@ -63,33 +74,44 @@ public class GameInfo {
         g2.drawString(playerHealth + "",60,91);
         
         startButton.draw(g2,isRoundGoing);
-        g2.drawString("Wave: " + (round+1), 40,160);
+        autoStartButton.draw(g2, autoPlay);
+        g2.drawString("Wave: " + (round+1), 45,158);
         pauseButton.draw(g2);
         basicTowerButton.draw(g2,towerInHand);
         bomberTowerButton.draw(g2,towerInHand);
         rapidTowerButton.draw(g2,towerInHand);
+        speedUpButton.draw(g2, speedUp);
         
         //desc1.draw(g2);
         if(towerHoveredOver != 0){
             descriptions[towerHoveredOver -1 ].draw(g2);
-        }
-        
+        } 
     }
     
     public void update(){
-        //
-        if(playerHealth <= 0){
+        if (playerHealth <= 0){
             //dead
             isGameOver = true;
         }
         else if(gp.enemies.isEmpty() && isRoundGoing && gp.enemySpawner.enemyQueues.get(round).isEmpty()){
             this.endRound();
                 if (round % 2 == 0){
+                    if (round % 5 == 0){
+                        gp.enemySpawner.speed -= 5;
+                    }
                     gp.enemySpawner.speed -= 5;
                 }
+            if (autoPlay == true){
+                gp.info.startRound();
+            }
         }
-        
-        
+        if (speedUp == true){
+            gp.FPS = 90;
+            //System.out.println("Speed up");
+        } else {
+            gp.FPS = 60;
+            //System.out.println("Don't Speed up");
+        }
     }
     
     public void loadDescriptions(String filePath){
@@ -134,7 +156,16 @@ public class GameInfo {
     
     public void endRound(){
         isRoundGoing = false;
+        if ((round + 1) > 10){
+            playerMoney += 100;
+        } else {
+            playerMoney += (round + 1) * 10;
+        }
         round++;
+        
+        if (round >= 20) {
+            isGameWon = true;
+            isGameOver = true;
+        }
     }
-    
 }
