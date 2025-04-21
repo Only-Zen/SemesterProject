@@ -15,6 +15,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Random;
 import javax.imageio.ImageIO;
@@ -41,7 +42,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     Grid grid = new Grid(this);
     
-    public final int FPS = 60;
+    public int FPS = 60;
     Thread gameThread;
     MouseHandler mouseH;
     EnemySpawner enemySpawner;
@@ -131,12 +132,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        double drawInterval = 1_000_000_000.0 / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
 
         while (gameThread != null) {
+            double drawInterval = 1_000_000_000.0 / FPS;
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
@@ -157,6 +158,12 @@ public class GamePanel extends JPanel implements Runnable {
             Coordinate newMouseCoord = mouseH.getMouseCoordinate();
             mouseCoord.setX(newMouseCoord.getX());
             mouseCoord.setY(newMouseCoord.getY());
+            // Sort the enemies based on distance before towers target them
+            
+            // Sort enemies in descending order
+            enemies.sort(Comparator.comparingInt(Enemy::getDistance).reversed());
+
+
 
             //Load Savegame if needed
             if(mh.triggerReadFromDisk) {
@@ -232,11 +239,6 @@ public class GamePanel extends JPanel implements Runnable {
         Font font = new Font("Dialog", Font.PLAIN, 12); //used to change fonts as needed
         g2.setFont(font);
         
-        // Draw a small red circle at the mouse's current position
-        // g2.setColor(Color.RED);
-        // g2.fillOval(mouseCoord.getX() - 5, mouseCoord.getY() - 5, 10, 10);
-        // g2.drawImage(mouseImage, mouseCoord.getX() - 5, mouseCoord.getY() - 5, 
-                                    // TILESIZE / 2, TILESIZE / 2, null);
         if (isPaused) {
             pause.drawPauseScreen(g);
             pause.showPauseMenu(true);
@@ -292,6 +294,22 @@ public class GamePanel extends JPanel implements Runnable {
                 g.setColor(new Color(0, 45, 255, 80));
             }
             g.fillRect(tileCoord.getX(), tileCoord.getY(), TILESIZE, TILESIZE);
+            
+            
+            g2.setColor(new Color(0, 0, 0, 30));
+            int tempRange = 0;
+            switch (info.towerInHand){
+                case 1:
+                    tempRange = 192;
+                    break;
+                case 2:
+                    tempRange = 96;
+                    break;
+                case 3:
+                    tempRange = 144;
+                    break;
+            }
+            g2.fillOval(tileCoord.getX() + TILESIZE/2 - tempRange/2, tileCoord.getY() + TILESIZE/2 - tempRange/2, tempRange, tempRange);
             
             //Draw game info overlay
             g2.setColor(Color.BLACK);
@@ -437,14 +455,14 @@ public class GamePanel extends JPanel implements Runnable {
             Tower newTower;
             
             switch(fields[1]){
-                case "Tower":
-                    newTower = new BasicTower(new Coordinate(posX, posY, this),this);
-                    break;
                 case "Basic Tower":
                     newTower = new BasicTower(new Coordinate(posX, posY, this),this);
                     break;
                 case "Bomber Tower":
                     newTower = new BomberTower(new Coordinate(posX, posY, this),this);
+                    break;
+                case "Rapid Tower":
+                    newTower = new RapidTower(new Coordinate(posX, posY, this),this);
                     break;
                 default:
                     newTower = new BasicTower(new Coordinate(posX, posY, this),this);

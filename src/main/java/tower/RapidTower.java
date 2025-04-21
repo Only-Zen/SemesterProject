@@ -9,9 +9,9 @@ public class RapidTower extends Tower {
         this("rapid_tower",
                 position, 
                 144, //range
-                25, //damage
+                40, //damage
                 10,   //firerate
-                150,  //cost
+                200,  //cost
                 gp);
     }
     

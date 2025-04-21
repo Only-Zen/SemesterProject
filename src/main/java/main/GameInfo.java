@@ -21,6 +21,8 @@ public class GameInfo {
     public boolean autoPlay;
     public StartButton startButton;
     public AutoStartButton autoStartButton;
+    public SpeedUpButton speedUpButton;
+    public boolean speedUp;
     public PauseButton pauseButton;
     public TowerButton basicTowerButton;
     public TowerButton bomberTowerButton;
@@ -32,7 +34,7 @@ public class GameInfo {
     GameEndMenu gameover;
     
     public GameInfo(GamePanel gp){
-        playerMoney = 200;
+        playerMoney = 250;
         playerHealth = 100;
         round = 0;
         towerInHand = 1;
@@ -41,12 +43,14 @@ public class GameInfo {
         isGameOver = false;
         isGameWon = false;
         autoPlay = false;
+        speedUp = false;
         startButton = new StartButton(10, 126, 144, 48);
         autoStartButton = new AutoStartButton(1474, 68, 48, 48);
         pauseButton = new PauseButton(1474,10,48,48);
         basicTowerButton = new TowerButton(164, 10, 50, 50, 1);
         bomberTowerButton = new TowerButton(224, 10, 50, 50, 2);
         rapidTowerButton = new TowerButton(284, 10, 50, 50, 3);
+        speedUpButton = new SpeedUpButton(1474, 126, 48, 48);
         
         desc1 = new DescriptionBox(new Coordinate(164,70,gp),"","","");
         loadDescriptions(("/descriptions/descriptions.txt"));
@@ -76,6 +80,7 @@ public class GameInfo {
         basicTowerButton.draw(g2,towerInHand);
         bomberTowerButton.draw(g2,towerInHand);
         rapidTowerButton.draw(g2,towerInHand);
+        speedUpButton.draw(g2, speedUp);
         
         //desc1.draw(g2);
         if(towerHoveredOver != 0){
@@ -91,12 +96,22 @@ public class GameInfo {
         else if(gp.enemies.isEmpty() && isRoundGoing && gp.enemySpawner.enemyQueues.get(round).isEmpty()){
             this.endRound();
                 if (round % 2 == 0){
+                    if (round % 5 == 0){
+                        gp.enemySpawner.speed -= 5;
+                    }
                     gp.enemySpawner.speed -= 5;
                 }
             if (autoPlay == true){
                 gp.info.startRound();
             }
-        }   
+        }
+        if (speedUp == true){
+            gp.FPS = 90;
+            //System.out.println("Speed up");
+        } else {
+            gp.FPS = 60;
+            //System.out.println("Don't Speed up");
+        }
     }
     
     public void loadDescriptions(String filePath){
@@ -141,6 +156,11 @@ public class GameInfo {
     
     public void endRound(){
         isRoundGoing = false;
+        if ((round + 1) > 10){
+            playerMoney += 100;
+        } else {
+            playerMoney += (round + 1) * 10;
+        }
         round++;
         
         if (round >= 20) {

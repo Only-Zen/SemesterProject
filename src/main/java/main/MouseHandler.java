@@ -69,13 +69,15 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
                     gp.info.towerInHand = 3;
                 } else if(gp.info.autoStartButton.isClicked(mouseCoordinate)){
                     gp.info.autoPlay = !gp.info.autoPlay;
+                } else if(gp.info.speedUpButton.isClicked(mouseCoordinate)){
+                    gp.info.speedUp = !gp.info.speedUp;
                 }
                 else if(checkIfOccupied() == false){
                     // Create a new Tower instance with desired parameters.
                     // (For example, here range = 100, damage = 10, firerate = 1, cooldownTimer = 0)
                     Tower newTower = new BasicTower(tileCoordinate,gp);
                     switch (gp.info.towerInHand){
-                        case 0:
+                        case 1:
                             newTower = new BasicTower(tileCoordinate,gp);
                             break;
                         case 2:

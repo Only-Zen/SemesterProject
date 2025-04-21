@@ -1,12 +1,12 @@
 3
 Basic Tower
-80
+100
 This flower shoots little pellets at foes
 
 Bomber Tower
-250
+300
 This flower shoots 8 pellets outward and packs a bigger punch.
 
 Rapid Tower
-150
+200
 Your basic tower is now super speedy. Shoots 2.5x faster.
