@@ -5,6 +5,10 @@ import main.GamePanel;
 
 public class BasicEnemy extends Enemy {
 
+    /**
+     * Derived class of Enemy.
+     * This is the first rat the player encounters it's stats make it easily defeatable
+     */
     public BasicEnemy(Coordinate position, GamePanel gp){
         this ("Basic", position, 3, 120, 10, 5, gp);
     }

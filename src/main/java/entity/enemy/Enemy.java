@@ -12,15 +12,16 @@ public abstract class Enemy
 {
     /**
      * The abstract class for a general enemy.
+     * There is high degree of commonality between the derived classes, with only the arguments and images differing.
      */
     protected Coordinate position;
     protected Coordinate nextCoord;
     protected int coordinateCounter = 0;
     protected int speed;
-    private int initialSpeed;
+    private int initialSpeed; // base speed at which the Enemy advances along the path. modified by rat desperation system
     protected int health;
     private int maxHealth;
-    protected int size;
+    protected int size; //sets a radius used to determine if a Projectile has hit
     public boolean isAlive = true;
     protected ArrayList<Coordinate> waypoints;
     GamePanel gp;
@@ -155,17 +156,7 @@ public abstract class Enemy
             gp.playMusic(2, 38);
         }
     }
-    
-    public int getHealth()
-    {
-        /**
-         * Getter that returns current health value of an enemy.
-         * @return the health value as an int
-         */
-        
-        return health;
-    }
-    
+
     public Coordinate getPosition(){
         /**
          * Getter that returns the position of an enemy.

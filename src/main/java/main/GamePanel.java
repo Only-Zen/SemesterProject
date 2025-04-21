@@ -331,13 +331,22 @@ public class GamePanel extends JPanel implements Runnable {
         return frame;
     }
     
+    /**
+     * Retrieves the waypoints from the grid. Waypoints represent a list of
+     * coordinates that are used for  movement by Enemies within the game.
+
+     */
     public ArrayList<Coordinate> getWaypoints(){
         return grid.getWaypoints();
     }
 
     public void writeToDisk (String saveFilename, String mapFilename) {
-        //  single type format: Header=data,/n
-        //multiple type format: Header,Title1=data1,Title2=data2,...,\n
+        /**
+         * Writes the save-file. Data is pulled mostly directly from GamePanel, but Towers make use of a ToString method.
+         * The format of each line is as follows:
+         * single type format: Header,data,/n
+         * multiple type format: Header,Title1=data1,Title2=data2,...,\n
+         */
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(saveFilename));
 
@@ -361,7 +370,13 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void readSavegame(String filename) {
+    private void readSavegame(String filename) {
+        /**
+         *The readSavegame method is the outermost of three nested-methods that comprise the code that loads from a savefile
+         *They are: readSavegame -> ParseLineString -> Parse TowerString
+         * This is fully functional, but is a great opportunity for refactoring
+         * This complexity is due to the splitting of strings into arrays, which need to be reinitialized for later lines
+         */
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             String line;
@@ -375,7 +390,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
     }
-    public void parseLineString(String line) {
+    private void parseLineString(String line) {
         String[] fields = line.split(",", 2); //isolates the line header
         if(fields.length > 1) { // valid lines have at least two substrings
             switch (fields[0]) {
@@ -407,7 +422,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
     }
-    public void parseTowerString(String data) {
+    private void parseTowerString(String data) {
         int posX = 0;
         int posY = 0;
         int range = 0;

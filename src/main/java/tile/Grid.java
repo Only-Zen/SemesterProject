@@ -254,12 +254,17 @@ public class Grid {
 
     public boolean generatePath(){ // builds a set of waypoints that enemies can navagate
         /**
-        * There are some requirements for this program to work:
-        *   The algorithm assumes there is only a single possible and correct path
-        *   Except for the start, the path must not reach the edge
-        *   The path must have no dead-ends
-        *   The path might get stuck in cycles, although loop-de-loops should work
-        */
+         * This method builds the route that the Enemies traverse from the left edge of the Grid to some endpoint
+         * The method uses path tiles as allowable tiles to build the path over, but not all path tiles need to be on the route
+         * The route is saved as a linked-list of single integers, which represent the new value of the changed axis
+         * Because the path always starts horizontally, the list will always be of the form: y,x,y,x,y,x etc
+         * To add slightly more clarity, x values are signed negative
+         * There are some map-file requirements for this program to work:
+         *   The algorithm assumes there is only a single possible and correct path
+         *   Except for the start, the path must not reach the edge
+         *   The path must have no dead-ends
+         *   The path might get stuck in cycles, although loop-de-loops should work
+         */
         final int NORTH = 1;
         final int EAST  = 2;
         final int SOUTH = 3;
@@ -401,7 +406,7 @@ public class Grid {
         return true;    
     }
       
-    public boolean isPath (int row, int col){
+    private boolean isPath (int row, int col){
         //all tile codes repersenting paths
         final int PATH_SAND  = -1;
         final int PATH_GRASS = 5;
@@ -578,6 +583,11 @@ public class Grid {
         return new PathVariant(5, 0);
     }
     
+    /**
+     * Retrieves a list of waypoints used for navigation in the grid.
+     *
+     * @return An ArrayList of Coordinate objects representing the enemy waypoints.
+     */
     public ArrayList<Coordinate> getWaypoints(){
         return enemyWaypoints;
     }
