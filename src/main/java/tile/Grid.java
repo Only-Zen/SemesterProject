@@ -26,13 +26,6 @@ public class Grid {
         mapTileNum = new int[gp.MAXSCREENCOL][gp.MAXSCREENROW];
 
         getTileImage();
-        loadMap(gp.mapLocation);
-        boolean dummy = generatePath();
-        for (int i = -1; i<=1; i++){
-            for (int j = -2; j <= 0; j++){
-                gp.occupiedTiles[enemyWaypoints.get(enemyWaypoints.size() - 1).getX() + i][enemyWaypoints.get(enemyWaypoints.size() - 1).getY() + j] = true;
-            }
-        }
     }
 
     
@@ -91,8 +84,16 @@ public class Grid {
             tile[32].occupied = true;
             
             tile[33] = new Tile();
-            tile[33].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree/proto_tree.png"));
+            tile[33].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree/Sakura/0.png"));
             tile[33].occupied = true;
+            
+            tile[34] = new Tile();
+            tile[34].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree/Sakura/1.png"));
+            tile[34].occupied = true;
+            
+            tile[35] = new Tile();
+            tile[35].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree/3.png"));
+            tile[35].occupied = true;
             
             tile[40] = new Tile();
             tile[40].image = ImageIO.read(getClass().getResourceAsStream("/tiles/rock/1.png"));
@@ -220,7 +221,7 @@ public class Grid {
                     }
                     
                     if (value == 3) {
-                        int randomVariant = gp.random.nextInt(4); // 0..2
+                        int randomVariant = (gp.random.nextInt(6*6)) % 6; // 0..2
                         value = 30 + randomVariant; // shift to tile index 30-32
                         gp.occupiedTiles[col][row] = true;
                     }

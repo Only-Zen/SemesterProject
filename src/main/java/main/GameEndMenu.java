@@ -12,21 +12,23 @@ import java.awt.GridLayout;
  *
  * @author lmm0060
  */
-public class Pause extends JLayeredPane {
-        
+public class GameEndMenu extends JLayeredPane {
     GamePanel gp;
+    MenuHandler handler;
     
-    Font cambria_header, cambria_body;
-
     JPanel buttonsPanel;
-    JButton contButton, saveButton, exitButton;
+    JButton exitButton;
     
-    //Colors for making things (buttons, etc) prettier
+    Font cambria_header, cambria_body; 
+    
+    String textToShow = "Not set";
+    
+    //Colors to make things (buttons, etc) prettier
     final Color beige = new Color(244,204,161);
     final Color lightbrown = new Color(160,91,83);
     final Color darkbrown = new Color(122,68,74);
     
-    public Pause(GamePanel gp) {
+    public GameEndMenu(GamePanel gp) {
         this.gp = gp;
         
         //Instantiate pause menu
@@ -35,12 +37,9 @@ public class Pause extends JLayeredPane {
         
         //Create buttonsPanel and instantiate
         buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new GridLayout(3, 1, 10, 10));
-        buttonsPanel.setBounds(gp.SCREENWIDTH/4, gp.SCREENHEIGHT/2, gp.SCREENWIDTH/2, gp.SCREENHEIGHT/3);
-        buttonsPanel.setBackground(Color.WHITE);
-      //  buttonsPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
+        buttonsPanel.setLayout(new GridLayout(1, 1, 10, 10));
+        buttonsPanel.setBounds(gp.SCREENWIDTH/4, gp.SCREENHEIGHT/2, gp.SCREENWIDTH/2, gp.SCREENHEIGHT/5);
         
-        //Without these, the pause menu will not show.
         setOpaque(true);
         buttonsPanel.setOpaque(false);
         
@@ -48,75 +47,64 @@ public class Pause extends JLayeredPane {
         cambria_header = new Font ("Cambria", Font.BOLD, 60);
         cambria_body = new Font ("Cambria", Font.PLAIN, 40);
         
-        //Create buttons
-        contButton = new JButton("Continue");
-        saveButton = new JButton("Save Game");
-        exitButton = new JButton("Exit");
+        //Create button
+        exitButton = new JButton("Close Game");
         
-        //Give buttons fonts
-        contButton.setFont(cambria_body);
-        saveButton.setFont(cambria_body);
+        //Give button font
         exitButton.setFont(cambria_body);
-        //Make buttons prettier
-        contButton.setBackground(lightbrown);
-        contButton.setForeground(beige);
-        saveButton.setBackground(lightbrown);
-        saveButton.setForeground(beige);
+        //Make button prettier
         exitButton.setBackground(darkbrown);
         exitButton.setForeground(beige);
         
         //Create an action listener
-        MenuHandler handler = new MenuHandler(gp);
+        handler = new MenuHandler(gp);
         
-        //Add action listeners to buttons to detect clicks
-        contButton.addActionListener(handler);
-        saveButton.addActionListener(handler);
+        //Add action listeners to button to detect clicks
         exitButton.addActionListener(handler);
         
         //Set action commands for actionListener to detect
-        contButton.setActionCommand("Play");
-        saveButton.setActionCommand("Save");
         exitButton.setActionCommand("Exit");
         
-        //Add buttons to buttonsPanel
-        buttonsPanel.add(contButton);
-        buttonsPanel.add(saveButton);
+        //Add button to buttonsPanel
         buttonsPanel.add(exitButton);
 
         //Add buttonsPanel to frame
         add(buttonsPanel);
-
-        //Make pause menu visible
-        setVisible(true);
-        buttonsPanel.setVisible(true);
+        
         revalidate();
         repaint();
     }
     
-    @Override
+        @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        drawMenu(g);
     }
     
-    public void drawPauseScreen(Graphics g) {
-        //Draw a smaller white rectangle over "Paused" text and buttonsPanel
+    public void drawMenu(Graphics g) {
+        //Draw a small white rectangle below buttonsPanel
         g.setColor(beige);
         int x = (gp.SCREENWIDTH/3 * 2); int y = (gp.SCREENHEIGHT/3 * 2);
         g.fillRoundRect(gp.SCREENWIDTH/6, gp.SCREENHEIGHT/5, x, y, 10, 10);
         
-        //Draw the text: "Paused"
-        String textToShow = "Paused";
-        g.setColor(darkbrown);
+        if (gp.info.isGameWon() == true) {
+            textToShow = "The tavern is safe! Congratulations!"; }
+        else {
+            textToShow = "The rats have seized the tavern!"; }
+        
+        //Draw the text as set above
+        g.setColor(lightbrown);
         g.setFont(cambria_header);
         int textLength = (int)g.getFontMetrics().getStringBounds(textToShow, g).getWidth(); //Used to draw text to the center of the screen
         x = gp.SCREENWIDTH/2 - textLength/2; y = gp.SCREENHEIGHT/3;
         g.drawString(textToShow, x, y);
     }
     
-     public void showPauseMenu(boolean show) {
+    public void showMenu(boolean show) {
          //Toggles pause menu
         setVisible(show);
         buttonsPanel.setVisible(show);
+        exitButton.setVisible(show);
         revalidate();
         repaint();
     }

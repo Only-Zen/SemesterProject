@@ -3,8 +3,6 @@ package main;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import entity.Enemy;
-import entity.Projectile;
 import tower.*;
 
 import tile.Grid; //For identifying the pause button. If you know a more elegant way of doing this let me know.
@@ -33,16 +31,17 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
         tileCoordinate = mouseCoordinate.getGrid();
         
         if(gp.info.basicTowerButton.isClicked(mouseCoordinate)){
-            gp.info.towerHoveredOver = 1;
+            //gp.info.towerHoveredOver = 1;
+            gp.info.setTowerHoveredOver(1);
         }
         else if(gp.info.bomberTowerButton.isClicked(mouseCoordinate)){
-            gp.info.towerHoveredOver = 2;
+            gp.info.setTowerHoveredOver(2);
         }
         else if(gp.info.rapidTowerButton.isClicked(mouseCoordinate)){
-            gp.info.towerHoveredOver = 3;
+            gp.info.setTowerHoveredOver(3);
         }
         else{
-            gp.info.towerHoveredOver = 0;
+            gp.info.setTowerHoveredOver(0);
         }
     }
 
@@ -62,20 +61,24 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
                     gp.info.startRound();
                 }
                 else if(gp.info.basicTowerButton.isClicked(mouseCoordinate)){
-                    gp.info.towerInHand = 1;
+                    gp.info.setTowerInHand(1);
                 }
                 else if(gp.info.bomberTowerButton.isClicked(mouseCoordinate)){
-                    gp.info.towerInHand = 2;
+                    gp.info.setTowerInHand(2);
                 }
                 else if(gp.info.rapidTowerButton.isClicked(mouseCoordinate)){
-                    gp.info.towerInHand = 3;
+                    gp.info.setTowerInHand(3);
+                } else if(gp.info.autoStartButton.isClicked(mouseCoordinate)){
+                    gp.info.toggleAutoPlay();
+                } else if(gp.info.speedUpButton.isClicked(mouseCoordinate)){
+                    gp.info.toggleSpeedUp();
                 }
-                else if(gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] == false){
+                else if(checkIfOccupied() == false){
                     // Create a new Tower instance with desired parameters.
                     // (For example, here range = 100, damage = 10, firerate = 1, cooldownTimer = 0)
                     Tower newTower = new BasicTower(tileCoordinate,gp);
-                    switch (gp.info.towerInHand){
-                        case 0:
+                    switch (gp.info.getTowerInHand()){
+                        case 1:
                             newTower = new BasicTower(tileCoordinate,gp);
                             break;
                         case 2:
@@ -85,14 +88,14 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
                             newTower = new RapidTower(tileCoordinate,gp);
                             break;
                     }
-                    if (gp.info.playerMoney >= newTower.getCost()){
+                    if (gp.info.getPlayerMoney() >= newTower.getCost()){
                         gp.towers.add(newTower);
                         gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] = true;
                         System.out.println("Tower placed!");
-                        gp.info.playerMoney -= newTower.getCost();
+                        gp.info.spendMoney(newTower.getCost());
                     }
                 }
-                System.out.println(gp.info.isRoundGoing);
+                System.out.println(gp.info.isRoundGoing());
             }
         }
     }
@@ -109,5 +112,12 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
 
     public Coordinate getTileCoordinate() {
         return tileCoordinate;
+    }
+    public boolean checkIfOccupied(){
+        if(gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] == true){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -3,7 +3,13 @@ package main;
 import java.io.*;
 import java.util.*;
 import java.util.Queue;
-import entity.Enemy;
+
+import entity.enemy.BasicEnemy;
+import entity.enemy.Enemy;
+import entity.enemy.KingEnemy;
+import entity.enemy.LateEnemy;
+import entity.enemy.SpeedyEnemy;
+import entity.enemy.TankEnemy;
 
 public class EnemySpawner {
     public List<Queue<Enemy>> enemyQueues;
@@ -49,21 +55,32 @@ public class EnemySpawner {
                     int value = Integer.parseInt(numbers[col]);
 
                     if (value == 1) {
-                        enemyQueues.get(row).add(new Enemy(new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),3,150,gp));
+                        enemyQueues.get(row).add(new BasicEnemy(
+                                new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),
+                                gp));
                     } //ask about coordinate and default enemy settings
                     
                     if (value == 2) {
-                        //for enemy type 2
+                        enemyQueues.get(row).add(new SpeedyEnemy(
+                                new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),
+                                gp));
+
                     }
                     
                     if (value == 3) {
-                        //for enemy type 3
+                        enemyQueues.get(row).add(new TankEnemy(
+                                new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),
+                                gp));
                     }
                     if (value == 4){
-                        //for enemy type 4
+                        enemyQueues.get(row).add(new LateEnemy(
+                                new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),
+                                gp));
                     }
                     if (value == 5){
-                        //for enemy type 5
+                        enemyQueues.get(row).add(new KingEnemy(
+                                new Coordinate((gp.getWaypoints().get(0).getX() - 1) * gp.TILESIZE, gp.getWaypoints().get(0).getY() * gp.TILESIZE,gp),
+                                gp));
                     }
                 }
             }
@@ -79,14 +96,14 @@ public class EnemySpawner {
 
     public void update() {
         //
-        round = gp.info.round;
+        round = gp.info.getRound();
         cooldownTimer--;
         spawnEnemy();
     }
 
     private void spawnEnemy() {
         // System.out.println("Spawning enemy: ");
-        if (enemyQueues != null && cooldownTimer <= 0 && gp.info.isRoundGoing) {
+        if (enemyQueues != null && cooldownTimer <= 0 && gp.info.isRoundGoing()) {
             Queue<Enemy> currentQueue = enemyQueues.get(round);
             if (!currentQueue.isEmpty()) {
                 // Remove and return the head of the queue

@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -28,6 +27,7 @@ public class TitleScreen extends JLayeredPane {
     JButton startButton, loadButton;
     Sound sound = new Sound();
     private BufferedImage menuImage;
+    public String mapToLoad;
     
     //TitleScreen can be a different size if desired.
     //Right now, it's just the size of GamePanel.
@@ -35,8 +35,14 @@ public class TitleScreen extends JLayeredPane {
     private final int TITLEHEIGHT = 768;
     MenuHandler handler;
     
+    //Colors for making things (buttons, etc) prettier 
+    final Color beige = new Color(244,204,161);
+    final Color lightbrown = new Color(160,91,83);
+    final Color darkbrown = new Color(122,68,74);
     
     public TitleScreen(JFrame window) {
+        mapToLoad = "/maps/map.txt";
+        //Set up title screen background image
         try {
             menuImage = ImageIO.read(getClass().getResourceAsStream("/icons/menu.png"));
         } catch (IOException e) {
@@ -47,14 +53,12 @@ public class TitleScreen extends JLayeredPane {
         //Instantiate title screen
         setLayout(null);
         this.setPreferredSize(new Dimension(TITLEWIDTH,TITLEHEIGHT));
-        this.setBackground(new Color(207,198,184));
+        this.setBackground(beige);
         
         //Create buttonsPanel and instantiate
         buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new GridLayout(2, 1, 10, 10));
         buttonsPanel.setBounds(TITLEWIDTH/4, TITLEHEIGHT/2, TITLEWIDTH/2, TITLEHEIGHT/3);
-      
-        setOpaque(true);
         buttonsPanel.setOpaque(false);
         
         //Create font
@@ -68,6 +72,11 @@ public class TitleScreen extends JLayeredPane {
         //Give buttons fonts
         startButton.setFont(cascadia_body);
         loadButton.setFont(cascadia_body);
+        //Make buttons prettier
+        startButton.setBackground(lightbrown);
+        startButton.setForeground(beige);
+        loadButton.setBackground(darkbrown);
+        loadButton.setForeground(beige);
         
         //Create an action listener ===========================================================
         handler = new MenuHandler(this);
@@ -92,7 +101,10 @@ public class TitleScreen extends JLayeredPane {
         buttonsPanel.setVisible(true);
         revalidate();
         repaint();
+        
+        //Play title screen music
         playMusic(1, 45);
+        sound.loop();
     }
     
     @Override
@@ -102,7 +114,7 @@ public class TitleScreen extends JLayeredPane {
     }
     
     public void drawTitleScreen(Graphics g) {
-        //Draw dark gray rectangle over the entire screen as a backdrop to the menu
+        //Draw background image
         g.drawImage(menuImage, 0, 0, TITLEWIDTH, TITLEHEIGHT, null);
       
         //Draw the game's name
@@ -120,12 +132,14 @@ public class TitleScreen extends JLayeredPane {
         this.setVisible(false);
         sound.stop();
         
+        System.out.println("stoppeth");
+        
         //Disable buttons, for good measure
         startButton.setEnabled(false);
         loadButton.setEnabled(false);
         
         //Create GamePanel
-        GamePanel gamePanel = new GamePanel(handler);
+        GamePanel gamePanel = new GamePanel(handler, mapToLoad);
         window.add(gamePanel);
         window.revalidate();
         window.repaint();
