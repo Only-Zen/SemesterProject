@@ -9,7 +9,7 @@ import javax.swing.JLayeredPane;
 import java.awt.GridLayout;
 
 /**
- *
+ * Class that handles the graphics of the two game ending menus: game over and a victory.
  * @author lmm0060
  */
 public class GameEndMenu extends JLayeredPane {
@@ -27,8 +27,13 @@ public class GameEndMenu extends JLayeredPane {
     final Color beige = new Color(244,204,161);
     final Color lightbrown = new Color(160,91,83);
     final Color darkbrown = new Color(122,68,74);
-    
+    /**
+     * Constructs the game end menu object and its buttons.
+     * @param gp Uses GamePanel to get the size of the window and sync game data with the menu handler.
+     */
     public GameEndMenu(GamePanel gp) {
+
+        
         this.gp = gp;
         
         //Instantiate pause menu
@@ -81,13 +86,17 @@ public class GameEndMenu extends JLayeredPane {
         drawMenu(g);
     }
     
+    /**
+     * Draws the background and text of the game end menu.
+     * @param g The graphics component used to draw.
+     */
     public void drawMenu(Graphics g) {
         //Draw a small white rectangle below buttonsPanel
         g.setColor(beige);
         int x = (gp.SCREENWIDTH/3 * 2); int y = (gp.SCREENHEIGHT/3 * 2);
         g.fillRoundRect(gp.SCREENWIDTH/6, gp.SCREENHEIGHT/5, x, y, 10, 10);
         
-        if (gp.info.isGameWon == true) {
+        if (gp.info.isGameWon()) {
             textToShow = "The tavern is safe! Congratulations!"; }
         else {
             textToShow = "The rats have seized the tavern!"; }
@@ -99,9 +108,12 @@ public class GameEndMenu extends JLayeredPane {
         x = gp.SCREENWIDTH/2 - textLength/2; y = gp.SCREENHEIGHT/3;
         g.drawString(textToShow, x, y);
     }
-    
-    public void showMenu(boolean show) {
-         //Toggles pause menu
+    /**
+      * Toggles the visibility of the game end menu.
+      * @param show A Boolean that determines the whether the game end menu should be toggled visible (true) or invisible (false).
+      */
+    public void showMenu(boolean show) {    
+         //Toggles menu
         setVisible(show);
         buttonsPanel.setVisible(show);
         exitButton.setVisible(show);

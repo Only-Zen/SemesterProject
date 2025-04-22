@@ -9,14 +9,35 @@ import javax.imageio.ImageIO;
 import main.Coordinate;
 import main.GamePanel;
 
+/**
+ * An abstract base class representing a generic tower in the game.
+ * Towers are stationary entities that detect enemies within range and shoot projectiles at them.
+ * 
+ * @author mrsch
+ */
 public abstract class Tower {
+    /** The position of the tower on the game grid. */
     protected Coordinate position;
+
+    /** The range of the tower, determining how far it can detect and target enemies. */
     protected int range;
+
+    /** The damage dealt by each projectile fired by the tower. */
     protected int damage;
+
+    /** The number of shots the tower can fire per second. */
     protected int firerate;
+
+    /** A cooldown timer controlling when the tower can next shoot. */
     protected double cooldownTimer;
+
+    /** The cost to place this tower on the battlefield. */
     protected int cost;
+
+    /** The name of the tower, used for loading resources.*/
     protected String name;
+
+    /** Reference to the main game panel. */
     protected GamePanel gp;
     
     // Images for idle state and shooting animation
@@ -33,10 +54,27 @@ public abstract class Tower {
         //
     }
     
+    /**
+     * Constructs a basic tower with a default name and preset attributes.
+     *
+     * @param position The initial position of the tower.
+     * @param gp       The game panel reference.
+     */
     public Tower(Coordinate position, GamePanel gp){
         this("",position,120,3,3,30,gp);
     }
     
+    /**
+     * Constructs a tower with specified attributes and attempts to load its assets.
+     *
+     * @param name     The name of the tower (used for asset loading).
+     * @param position The initial position of the tower.
+     * @param range    The detection range of the tower.
+     * @param damage   The damage per shot.
+     * @param firerate The firing rate (shots per second).
+     * @param cost     The cost to place this tower.
+     * @param gp       The game panel reference.
+     */
     public Tower(String name, Coordinate position, int range, int damage, int firerate, int cost, GamePanel gp) {
         this.position = position;
         this.range = range;
@@ -61,6 +99,11 @@ public abstract class Tower {
         }
     }
     
+    /**
+     * Draws the tower on the screen based on its current state (idle or shooting).
+     *
+     * @param g2 The graphics context.
+     */
     public void draw(Graphics2D g2) {
         // Draw the appropriate image depending on whether the tower is charging.
         if (isCharging) {
@@ -72,6 +115,9 @@ public abstract class Tower {
         }
     }
     
+    /**
+     * Updates the tower’s state, including cooldown and animation logic.
+     */
     public void update() {
         // Decrement cooldown if still cooling down.
         
@@ -120,6 +166,11 @@ public abstract class Tower {
         }
     }
     
+    /**
+     * Fires a projectile toward the specified target coordinate.
+     *
+     * @param target The position of the target enemy.
+     */
     public void shoot(Coordinate target) {
         // Create a projectile starting from the center of the tower.
         gp.playMusic(3, 63);
@@ -128,6 +179,11 @@ public abstract class Tower {
         gp.projectile.add(new Projectile(projPos, target, 8, damage, gp.TILESIZE / 2, gp));
     }
     
+    /**
+     * Places the tower at a specified mouse coordinate by aligning to the grid.
+     *
+     * @param mouseCoordinate The mouse click location for placement.
+     */
     public void place(Coordinate mouseCoordinate) {
         // Place the tower at the center of the tile.
         position.setX(Math.floorDiv(mouseCoordinate.getX(), gp.TILESIZE) * gp.TILESIZE);
@@ -135,6 +191,12 @@ public abstract class Tower {
         gp.towers.add(this);
     }
     
+    /**
+     * Checks whether a given enemy is within the tower's attack range.
+     *
+     * @param enemy The enemy to check.
+     * @return {@code true} if the enemy is within range, {@code false} otherwise.
+     */
     public boolean isEnemyInRange(Enemy enemy) {
         // Calculate the distance from the tower to the enemy.
         double xDiff = enemy.getPosition().getX() - this.position.getX();
@@ -142,10 +204,20 @@ public abstract class Tower {
         return Math.hypot(xDiff, yDiff) <= this.range;
     }
     
+    /**
+     * Returns the cost of placing this tower.
+     *
+     * @return The tower's cost.
+     */
     public int getCost(){
         return cost;
     }
     
+    /**
+     * Returns a string representation of the tower's state, mainly for saving.
+     *
+     * @return A string with position, range, damage, and firerate info.
+     */
     public String getString() {
         return "Tower,Tower"       +
                 ",PosX="     + String.valueOf(position.getX()) +

@@ -141,7 +141,7 @@ public class GamePanel extends JPanel implements Runnable {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
-            if (!(isPaused || info.isGameOver)) { //Check if paused or game is ended. If so, do not update
+            if (!(isPaused || info.isGameOver())) { //Check if paused or game is ended. If so, do not update
                 if (delta >= 1) {
                     update();
                     repaint();
@@ -243,7 +243,7 @@ public class GamePanel extends JPanel implements Runnable {
             pause.drawPauseScreen(g);
             pause.showPauseMenu(true);
         }
-        else if (info.isGameOver) {
+        else if (info.isGameOver()) {
             gameover.drawMenu(g);
             gameover.showMenu(true);
         }
@@ -298,7 +298,7 @@ public class GamePanel extends JPanel implements Runnable {
             
             g2.setColor(new Color(0, 0, 0, 30));
             int tempRange = 0;
-            switch (info.towerInHand){
+            switch (info.getTowerInHand()){
                 case 1:
                     tempRange = 192;
                     break;
@@ -331,10 +331,20 @@ public class GamePanel extends JPanel implements Runnable {
         return frame;
     }
     
+    /**
+     * Retrieves the waypoints from the grid. Waypoints represent a list of
+     * coordinates that are used for  movement by Enemies within the game.
+     */    
     public ArrayList<Coordinate> getWaypoints(){
         return grid.getWaypoints();
     }
-
+    
+    /**
+     * Writes the save-file. Data is pulled mostly directly from GamePanel, but Towers make use of a ToString method.
+     * The format of each line is as follows:
+     * single type format: Header,data,/n
+     * multiple type format: Header,Title1=data1,Title2=data2,...,\n
+     */
     public void writeToDisk (String saveFilename, String mapFilename) {
         //  single type format: Header=data,/n
         //multiple type format: Header,Title1=data1,Title2=data2,...,\n
@@ -344,11 +354,11 @@ public class GamePanel extends JPanel implements Runnable {
             //Map Filename
             writer.write("Filename," + mapFilename +",\n");
             //Round
-            writer.write("Round," + info.round + ",\n");
+            writer.write("Round," + info.getRound() + ",\n");
             //Health
-            writer.write("Health," + info.playerHealth + ",\n");
+            writer.write("Health," + info.getPlayerHealth() + ",\n");
             //Money
-            writer.write("Money," + info.playerMoney + ",\n");
+            writer.write("Money," + info.getPlayerMoney() + ",\n");
             //Placed Towers
             for (Tower tower : towers) {
                 writer.write(tower.getString());
@@ -360,7 +370,12 @@ public class GamePanel extends JPanel implements Runnable {
             e.printStackTrace();
         }
     }
-
+    /**
+     *The readSavegame method is the outermost of three nested-methods that comprise the code that loads from a savefile
+     *They are: readSavegame -> ParseLineString -> Parse TowerString
+     * This is fully functional, but is a great opportunity for refactoring
+     * This complexity is due to the splitting of strings into arrays, which need to be reinitialized for later lines
+     */
     public void readSavegame(String filename) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
@@ -385,19 +400,19 @@ public class GamePanel extends JPanel implements Runnable {
                     break;
                 case "Round":
                     String[] rData = line.split(",");
-                    info.round = Integer.parseInt(rData[1]) ;
-                    System.out.println("Round" + info.round + "!\n");
+                    info.setRound(Integer.parseInt(rData[1])) ;
+                    System.out.println("Round" + info.getRound() + "!\n");
 
                     break;
                 case "Health":
                     String[] hData = line.split(",");
-                    info.playerHealth = Integer.parseInt(hData[1]) ;
-                    System.out.println("Round" + info.playerHealth + "!\n");
+                    info.setPlayerHealth(Integer.parseInt(hData[1]));
+                    System.out.println("Round" + info.getPlayerHealth() + "!\n");
                     break;
                 case "Money":
                     String[] mData = line.split(",");
-                    info.playerMoney = Integer.parseInt(mData[1]) ;
-                    System.out.println("Money" + info.playerMoney + "!\n");
+                    info.setPlayerMoney(Integer.parseInt(mData[1]));
+                    System.out.println("Money" + info.getPlayerMoney() + "!\n");
                     break;
                 case "Tower":
                     parseTowerString(line);//fields[1]);

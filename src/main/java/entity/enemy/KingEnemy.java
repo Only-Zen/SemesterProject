@@ -2,7 +2,10 @@ package entity.enemy;
 
 import main.Coordinate;
 import main.GamePanel;
-
+/**
+* Derived class of Enemy.
+* King Enemy is the 'final boss' rat with several times the health any other rat tempered by a low speed
+*/
 public class KingEnemy extends Enemy {
 
     public KingEnemy(Coordinate position, GamePanel gp){

@@ -6,6 +6,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * Class that handles the functionality of the buttons in menus.
+ */
+
 public class MenuHandler implements ActionListener {
     private GamePanel gp;
     private TitleScreen title;
@@ -17,22 +21,51 @@ public class MenuHandler implements ActionListener {
     protected String saveFilepath = "save.txt";
 
     // Constructor for TitleScreen actions
+    /**
+     * Constructs a Menu Handler object for the title screen.
+     * @param title Syncs with the title screen object.
+     */
     public MenuHandler(TitleScreen title){
+
+        
         this.title = title;
     }
     
     // Constructor for LevelSelect actions
+    /**
+     * Constructs a Menu Handler object for the level select screen.
+     * @param levelSelect Syncs with the level select screen object.
+     */
     public MenuHandler(LevelSelect levelSelect) {
+
         this.levelSelect = levelSelect;
     }
     
     // Constructor for GamePanel (pause menu) actions
+    /**
+     * Constructs a Menu Handler object for all in-game menus - the pause screen and the game end screen/.
+     * @param gp Syncs with the GamePanel object.
+     */
     public MenuHandler(GamePanel gp) {
+
         this.gp = gp;
     }
     
     @Override
+    /**
+     * Handles button events; called when a button is clicked and carries out their functionality.
+     * "Start" is called from the title screen and opens the level select menu.
+     * "Load" is called from the title screen and starts the game with saved data.
+     * "Play" is called from the pause menu and hides the menu, resuming the game.
+     * "Save" is called from the pause menu and saves the current game to file, for the game to load when calling "Load" from the title screen.
+     * "Exit" is called from the pause menu and the game end menu and closes the game.
+     * "Map1" is called from the level select menu and starts a new game with the first map.
+     * "Map2" is called from the level select menu and starts a new game with the second map.
+     * "Map3" is called from the level select menu and starts a new game with the third map.
+     * @param event Received from the button clicked and decides which action to carry out
+     */
     public void actionPerformed(ActionEvent event) {
+
         String action = event.getActionCommand();
         
         switch(action){
@@ -107,8 +140,13 @@ public class MenuHandler implements ActionListener {
                 break;
         }
     }
-    
+    /**
+     * Gets the map of the current save file.
+     * @param filename The name of the save file on disk.
+     * @return The map found in the save file.
+     */
     public String readMapLocation(String filename) {
+
         String mapLocation = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
