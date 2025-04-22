@@ -12,6 +12,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 
+/**
+ * Class that handles the graphics of the level selection screen.
+ */
+
 public class LevelSelect extends JPanel {
     
     // Constants for dimensions
@@ -46,7 +50,12 @@ public class LevelSelect extends JPanel {
     private MenuHandler handler;
     
     // New constructor now accepts the Sound instance as well.
-    public LevelSelect(JFrame window, Sound sound) {
+    /**
+     * Constructs the level selection menu object and its buttons.
+     * @param window The parent window; uses this to remove itself from the window and add a GamePanel object.
+     * @param sound Used to ensure all sounds have stopped.
+     */
+    public LevelSelect(JFrame window, Sound sound) {       
         // Store the window, default map location, and the shared sound instance.
         this.window = window;
         this.mapToLoad = "/maps/map.txt";
@@ -120,7 +129,11 @@ public class LevelSelect extends JPanel {
     }
     
     // Draw the background and the "Level Select" header text
-    public void drawBackground(Graphics g) {
+    /**
+     * Draws the background and text of the level selection menu.
+     * @param g The graphics component used to draw.
+     */
+    public void drawBackground(Graphics g) { 
         // Draw the background image
         g.drawImage(menuImage, 0, 0, TITLEWIDTH, TITLEHEIGHT, null);
         
@@ -135,12 +148,23 @@ public class LevelSelect extends JPanel {
     }
     
     // Helper method to update the map selection
+    /**
+     * The menu handler gets the map to be loaded, and this function syncs it with the level select object.
+     * @param mapToLoad The map passed by LevelSelect
+     */
+
     public void setMapToLoad(String mapToLoad) {
+
         this.mapToLoad = mapToLoad;
     }
     
     // Trigger the game startup: stop the music, remove this panel, and add the GamePanel.
+    /**
+     * Hides the level select menu and begins the game.
+     */
+
     public void startGame() {
+
         // Debug print before stopping sound
         System.out.println("LevelSelect.startGame() called. Stopping sound...");
         if (sound != null) {

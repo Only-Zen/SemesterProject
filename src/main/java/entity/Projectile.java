@@ -6,8 +6,8 @@ import main.Coordinate;
 import main.GamePanel;
 
 /**
+ *Projectiles are created by Towers that apply damage to Enemies
  *
- * @author mpk0012
  */
 
 public class Projectile {
@@ -23,7 +23,7 @@ public class Projectile {
     private int targetOffset;
     GamePanel gp;
     
-    // Primary constructorsodefnm
+    // Primary constructor
     public Projectile(Coordinate position, Coordinate target, int speed, int damage, int targetOffset, GamePanel gp) {
         this.speed       = speed;
         this.damage      = damage;

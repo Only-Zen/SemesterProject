@@ -14,7 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 
 /**
- *
+ * Class that handles the graphics of the title screen.
  * @author lmm0060
  */
 
@@ -39,8 +39,13 @@ public class TitleScreen extends JLayeredPane {
     final Color beige = new Color(244,204,161);
     final Color lightbrown = new Color(160,91,83);
     final Color darkbrown = new Color(122,68,74);
-    
+    /**
+     * Constructs the game end menu object and its buttons.
+     * @param window The parent window; uses this to remove itself from the window and add a GamePanel object.
+     */
     public TitleScreen(JFrame window) {
+
+        
         mapToLoad = "/maps/map.txt";
         //Set up title screen background image
         try {
@@ -112,8 +117,13 @@ public class TitleScreen extends JLayeredPane {
         super.paintComponent(g);
         drawTitleScreen(g);
     }
-    
+    /**
+     * Draws the background and text of the title screen.
+     * @param g The graphics component used to draw.
+     */
     public void drawTitleScreen(Graphics g) {
+
+        
         //Draw background image
         g.drawImage(menuImage, 0, 0, TITLEWIDTH, TITLEHEIGHT, null);
       
@@ -125,8 +135,12 @@ public class TitleScreen extends JLayeredPane {
         int x = TITLEWIDTH/2 - textLength/2; int y = TITLEHEIGHT/3;
         g.drawString(textToShow, x, y);
     }
-    
+    /**
+     * Hides the title screen and begins the game.
+     */
     public void StartGame(){
+
+        
         //Hide title screen
         this.getParent().remove(this);
         this.setVisible(false);
@@ -149,8 +163,14 @@ public class TitleScreen extends JLayeredPane {
         //Start game
         gamePanel.startGameThread();
     }
-    
+    /**
+     * Plays music on the title screen.
+     * @param i The music file
+     * @param volume The volume of the music
+     */
     public void playMusic(int i, int volume){
+
+        
         sound.setFile(i);
         sound.play();
         sound.setVolume(volume);

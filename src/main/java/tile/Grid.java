@@ -12,23 +12,43 @@ import javax.imageio.ImageIO;
 import main.Coordinate;
 import main.GamePanel;
 
+/**
+ * Manages the grid of tiles, loading tile images, the map layout,
+ * pathfinding waypoints for enemies, and rendering tiles.
+ */
 public class Grid {
-    GamePanel gp;
+    /** Reference to the main game panel for dimensions and state. */
+    private final GamePanel gp;
+
+    /** Array of all possible tile types (indexed by tile code). */
     public Tile[] tile;
-    public int mapTileNum[][];
-    public LinkedList enemyRoute = new LinkedList();
+
+    /** 2D array storing the tile code for each grid cell. */
+    public int[][] mapTileNum;
+
+    /** Sequence of integers encoding the generated path waypoints. */
+    public LinkedList<Integer> enemyRoute = new LinkedList<>();
+
+    /** List of actual pixel coordinates for each waypoint on the enemy path. */
     public ArrayList<Coordinate> enemyWaypoints = new ArrayList<>();
 
-    public Grid(GamePanel gp){
+    /**
+     * Constructs a new Grid tied to the given {@link GamePanel}.
+     * Initializes the tile array size and map array, then loads tile images.
+     *
+     * @param gp the {@link GamePanel} providing max rows, cols, and tile size
+     */
+    public Grid(GamePanel gp) {
         this.gp = gp;
-        // Make sure the array is big enough for all variants
-        tile = new Tile[200]; 
-        mapTileNum = new int[gp.MAXSCREENCOL][gp.MAXSCREENROW];
-
+        this.tile = new Tile[200];
+        this.mapTileNum = new int[gp.MAXSCREENCOL][gp.MAXSCREENROW];
         getTileImage();
     }
 
-    
+    /**
+     * Loads all tile images from resources and sets their occupied flags
+     * for impassable tiles (water, trees, etc.).
+     */
     public void getTileImage(){
         try {
             // Existing tiles
@@ -181,6 +201,13 @@ public class Grid {
         }
     }
 
+    /**
+    * Loads a map layout from a text file, parsing each row and column
+    * into {@link #mapTileNum}, randomizing variants when specified,
+    * and marking occupied tiles.
+    *
+    * @param filePath the resource path to the map file (e.g. "/maps/map01.txt")
+    */
     public void loadMap(String filePath){
         try {
             InputStream is = getClass().getResourceAsStream(filePath);
@@ -251,15 +278,19 @@ public class Grid {
             e.printStackTrace();
         }
     }
-
-    public boolean generatePath(){ // builds a set of waypoints that enemies can navagate
         /**
-        * There are some requirements for this program to work:
-        *   The algorithm assumes there is only a single possible and correct path
-        *   Except for the start, the path must not reach the edge
-        *   The path must have no dead-ends
-        *   The path might get stuck in cycles, although loop-de-loops should work
-        */
+         * This method builds the route that the Enemies traverse from the left edge of the Grid to some endpoint
+         * The method uses path tiles as allowable tiles to build the path over, but not all path tiles need to be on the route
+         * The route is saved as a linked-list of single integers, which represent the new value of the changed axis
+         * Because the path always starts horizontally, the list will always be of the form: y,x,y,x,y,x etc
+         * To add slightly more clarity, x values are signed negative
+         * There are some map-file requirements for this program to work:
+         *   The algorithm assumes there is only a single possible and correct path
+         *   Except for the start, the path must not reach the edge
+         *   The path must have no dead-ends
+         *   The path might get stuck in cycles, although loop-de-loops should work
+         */
+    public boolean generatePath(){ // builds a set of waypoints that enemies can navagate
         final int NORTH = 1;
         final int EAST  = 2;
         final int SOUTH = 3;
@@ -279,7 +310,7 @@ public class Grid {
             if(isPath(row, 0) == true){
                 enemyRoute.add(row);
                 // Print Waypoint for debug
-                System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
+                // System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
                 enemyWaypoints.add(new Coordinate(col, row, gp));
                 
                 break;
@@ -390,14 +421,14 @@ public class Grid {
                     enemyRoute.add(col);
                 }
                 // Print Waypoint for debug
-                System.out.print('('); System.out.print(col); System.out.print(','); System.out.print(row); System.out.print(") \n");
+                // System.out.print('('); System.out.print(col); System.out.print(','); System.out.print(row); System.out.print(") \n");
                 enemyWaypoints.add(new Coordinate(col, row, gp));
             }
             
         }
         
-        System.out.println("Path generated!");
-        System.out.println(enemyWaypoints);
+        System.out.println("[PASS] Path generated!");
+        // System.out.println(enemyWaypoints);
         return true;    
     }
       
@@ -429,7 +460,12 @@ public class Grid {
         }
     }
     
-        
+    /**
+     * Draws all tiles onto the provided {@link Graphics2D} context,
+     * including animated and rotated path variants.
+     *
+     * @param g2 the graphics context to draw on
+     */    
     public void draw(Graphics2D g2) {
         for (int row = 0; row < gp.MAXSCREENROW; row++) {
             for (int col = 0; col < gp.MAXSCREENCOL; col++) {
@@ -578,6 +614,11 @@ public class Grid {
         return new PathVariant(5, 0);
     }
     
+    /**
+     * Retrieves a list of waypoints used for navigation in the grid.
+     *
+     * @return An ArrayList of Coordinate objects representing the enemy waypoints.
+     */    
     public ArrayList<Coordinate> getWaypoints(){
         return enemyWaypoints;
     }

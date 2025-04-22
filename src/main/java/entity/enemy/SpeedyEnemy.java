@@ -2,7 +2,10 @@ package entity.enemy;
 
 import main.Coordinate;
 import main.GamePanel;
-
+/**
+* Derived from Enemy
+* SpeedyEnemy is a faster variation of BasicEnemy
+*/
 public class SpeedyEnemy extends Enemy {
 
     public SpeedyEnemy(Coordinate position, GamePanel gp) {

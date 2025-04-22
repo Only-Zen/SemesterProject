@@ -9,30 +9,53 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
 
+/**
+ * Manages the current game state, including player stats, game progress,
+ * button controls, and description boxes.
+ * 
+ * @author mrsch
+ */
 public class GameInfo {
-    public int playerMoney;
-    public int playerHealth;
-    public int round;
-    public int towerInHand;
-    public int towerHoveredOver;
-    public boolean isRoundGoing; //variable to see if the current round is still going.
-    public boolean isGameOver;
-    public boolean isGameWon;
-    public boolean autoPlay;
+    /** The button used to manually start a new wave of enemies. */
     public StartButton startButton;
+
+    /** The button used to toggle automatic wave starting. */
     public AutoStartButton autoStartButton;
-    public SpeedUpButton speedUpButton;
-    public boolean speedUp;
+
+    /** The button used to pause and resume the game. */
     public PauseButton pauseButton;
+
+    /** The button used to select the basic tower for placement. */
     public TowerButton basicTowerButton;
+
+    /** The button used to select the bomber tower for placement. */
     public TowerButton bomberTowerButton;
+
+    /** The button used to select the rapid-fire tower for placement. */
     public TowerButton rapidTowerButton;
+    
+    private int playerMoney;
+    private int playerHealth;
+    private int round;
+    private int towerInHand;
+    private int towerHoveredOver;
+    
+    private boolean isRoundGoing; //variable to see if the current round is still going.
+    private boolean isGameOver;
+    private boolean isGameWon;
+    private boolean autoPlay;
+    
     private DescriptionBox[] descriptions;
     private DescriptionBox desc1;
     private BufferedImage infoOverlay;
     GamePanel gp;
     GameEndMenu gameover;
     
+    /**
+     * Constructs a GameInfo object and initializes game state and UI components.
+     * 
+     * @param gp the main game panel
+     */
     public GameInfo(GamePanel gp){
         playerMoney = 250;
         playerHealth = 100;
@@ -43,14 +66,12 @@ public class GameInfo {
         isGameOver = false;
         isGameWon = false;
         autoPlay = false;
-        speedUp = false;
         startButton = new StartButton(10, 126, 144, 48);
         autoStartButton = new AutoStartButton(1474, 68, 48, 48);
         pauseButton = new PauseButton(1474,10,48,48);
         basicTowerButton = new TowerButton(164, 10, 50, 50, 1);
         bomberTowerButton = new TowerButton(224, 10, 50, 50, 2);
         rapidTowerButton = new TowerButton(284, 10, 50, 50, 3);
-        speedUpButton = new SpeedUpButton(1474, 126, 48, 48);
         
         desc1 = new DescriptionBox(new Coordinate(164,70,gp),"","","");
         loadDescriptions(("/descriptions/descriptions.txt"));
@@ -66,6 +87,11 @@ public class GameInfo {
         }
     }
         
+    /**
+     * Renders game information and buttons to the screen.
+     * 
+     * @param g2 the graphics context
+     */
     public void draw(Graphics2D g2){
         //
         g2.drawImage(infoOverlay,10,10,144,96,null);
@@ -80,7 +106,6 @@ public class GameInfo {
         basicTowerButton.draw(g2,towerInHand);
         bomberTowerButton.draw(g2,towerInHand);
         rapidTowerButton.draw(g2,towerInHand);
-        speedUpButton.draw(g2, speedUp);
         
         //desc1.draw(g2);
         if(towerHoveredOver != 0){
@@ -88,6 +113,10 @@ public class GameInfo {
         } 
     }
     
+    /**
+     * Updates the game state each frame.
+     * Responsible for checking if a round can end or not as well as game speed.
+     */
     public void update(){
         if (playerHealth <= 0){
             //dead
@@ -105,15 +134,13 @@ public class GameInfo {
                 gp.info.startRound();
             }
         }
-        if (speedUp == true){
-            gp.FPS = 90;
-            //System.out.println("Speed up");
-        } else {
-            gp.FPS = 60;
-            //System.out.println("Don't Speed up");
-        }
     }
     
+    /**
+     * Loads tower descriptions from a file.
+     * 
+     * @param filePath the path to the description file
+     */
     public void loadDescriptions(String filePath){
         //
         try {
@@ -129,7 +156,7 @@ public class GameInfo {
 
             // Read each row
             descriptions = new DescriptionBox[rows + 1];
-            System.out.println("I made it mom");
+            // System.out.println("I made it mom");
             for (int row = 0; row < rows; row++) {
                 String name = br.readLine();
                 String cost = br.readLine();
@@ -140,7 +167,7 @@ public class GameInfo {
             }
             
             br.close();
-            System.out.println("Loaded descriptions");
+            System.out.println("[PASS] Descriptions loaded successfully ");
 
                 
 
@@ -150,10 +177,12 @@ public class GameInfo {
         }
     }
     
+    /** Begins a new round. */
     public void startRound(){
         isRoundGoing = true;
     }
     
+    /** Ends the current round and applies money/round logic. */
     public void endRound(){
         isRoundGoing = false;
         if ((round + 1) > 10){
@@ -168,4 +197,52 @@ public class GameInfo {
             isGameOver = true;
         }
     }
+   
+   /** @return current player money */
+    public int getPlayerMoney() { return playerMoney; }
+
+    /** @param i sets player money */
+    public void setPlayerMoney(int i) { playerMoney = i; }
+
+    /** @param i adds money to player */
+    public void gainMoney(int i) { playerMoney += i; }
+
+    /** @param i subtracts money from player */
+    public void spendMoney(int i) { playerMoney -= i; }
+
+    /** @return current player health */
+    public int getPlayerHealth() { return playerHealth; }
+
+    /** @param i sets player health */
+    public void setPlayerHealth(int i) { playerHealth = i; }
+
+    /** @param i reduces player health by i */
+    public void takeDamage(int i) { playerHealth -= i; }
+
+    /** @return current round number */
+    public int getRound() { return round; }
+
+    /** @param i sets current round */
+    public void setRound(int i) { round = i; }
+
+    /** @return the currently selected tower */
+    public int getTowerInHand() { return towerInHand; }
+
+    /** @param i sets the tower in hand */
+    public void setTowerInHand(int i) { towerInHand = i; }
+
+    /** @param i sets the currently hovered tower */
+    public void setTowerHoveredOver(int i) { towerHoveredOver = i; }
+
+    /** @return true if a round is in progress */
+    public boolean isRoundGoing() { return isRoundGoing; }
+
+    /** @return true if the game is over */
+    public boolean isGameOver() { return isGameOver; }
+
+    /** @return true if the game is won */
+    public boolean isGameWon() { return isGameWon; }
+
+    /** Toggles auto-play mode */
+    public void toggleAutoPlay() { autoPlay = !autoPlay; }
 }

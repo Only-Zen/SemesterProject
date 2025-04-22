@@ -2,7 +2,11 @@ package entity.enemy;
 
 import main.Coordinate;
 import main.GamePanel;
-
+/**
+* Derived from Enemy
+* replaces BasicEnemy in mid-game.
+* It has slightly increased starts the reduce the number of rats needed to achieve a set round-difficulty
+*/
 public class LateEnemy extends Enemy {
 
     public LateEnemy(Coordinate position, GamePanel gp){

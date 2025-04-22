@@ -8,11 +8,12 @@ import javax.imageio.ImageIO;
 import main.Coordinate;
 import main.GamePanel;
 
+/**
+ * The abstract class for a general enemy.
+ * There is high degree of commonality between the derived classes, with only the arguments and images differing.
+ */
 public abstract class Enemy
 {
-    /**
-     * The abstract class for a general enemy.
-     */
     protected Coordinate position;
     protected Coordinate nextCoord;
     protected int coordinateCounter = 0;
@@ -61,13 +62,13 @@ public abstract class Enemy
         }
     }
     
+    
+    /**
+     * Draws the enemy to the screen.
+     * @param g2 Provides tools for drawing graphics.
+     */
     public void draw(Graphics2D g2)
     {
-        /**
-         * Draws the enemy to the screen.
-         * @param g2 Provides tools for drawing graphics.
-         */
-        
         //g2.setColor(Color.RED);
         //g2.fillRect(position.getX(), position.getY(), size, size);
         // Draw the enemy as a red square
@@ -122,66 +123,59 @@ public abstract class Enemy
         }
     }
 
-    
+    /**
+    * Updates health and checks for death when an enemy takes damage.
+    * @param damage Sent by projectile and determines damage taken.
+    */
     public void takeDamage(int damage)
     {
-        /**
-         * Updates health and checks for death when an enemy takes damage.
-         * @param damage Sent by projectile and determines damage taken.
-         */
-        
         health = (health - damage);
         if (health <= 0)
         {
             onDeath();
         }
     }
-            
+    
+    /**
+    * Handles deleting an enemy upon death.
+    */        
     public void onDeath()
     {
-        /**
-         * Handles deleting an enemy upon death.
-         */
-        
         isAlive = false;
         
         //Enemy uses onDeath for dying and reaching the end, so this checks which one
         if(coordinateCounter >= waypoints.size() - 1){
-            gp.info.playerHealth -= this.damage;
+            gp.info.takeDamage(this.damage);
             gp.playMusic(5, 43);
         }
         else{
-            gp.info.playerMoney += this.value;
+            gp.info.gainMoney(this.value);
             gp.playMusic(2, 38);
         }
     }
-    
+    /**
+     * Getter that returns current health value of an enemy.
+     * @return the health value as an int
+     */
     public int getHealth()
     {
-        /**
-         * Getter that returns current health value of an enemy.
-         * @return the health value as an int
-         */
         
         return health;
     }
-    
-    public Coordinate getPosition(){
-        /**
-         * Getter that returns the position of an enemy.
-         * @return the position value as a Coordinate
-         */
-        
+    /**
+     * Getter that returns the position of an enemy.
+     * @return the position value as a Coordinate
+     */
+    public Coordinate getPosition(){ 
         return position;
     }
     
+    /**
+    * Getter that returns the size of an enemy.
+    * @return the size value as an int
+    */
     public int getSize()
     {
-        /**
-         * Getter that returns the size of an enemy.
-         * @return the size value as an int
-         */
-        
         return size;
     }
     
