@@ -117,7 +117,7 @@ public class GameInfo {
 
             // Read each row
             descriptions = new DescriptionBox[rows + 1];
-            System.out.println("I made it mom");
+            // System.out.println("I made it mom");
             for (int row = 0; row < rows; row++) {
                 String name = br.readLine();
                 String cost = br.readLine();

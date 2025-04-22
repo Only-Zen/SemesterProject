@@ -50,7 +50,7 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
             // Left-click: place a tower
             if (e.getButton() == MouseEvent.BUTTON1) {
                 //If pause button is clicked, then pause the game
-                System.out.println(mouseCoordinate + " " + gp.info.pauseButton.isClicked(mouseCoordinate));
+                // System.out.println(mouseCoordinate + " " + gp.info.pauseButton.isClicked(mouseCoordinate));
                 
                 if (gp.info.pauseButton.isClicked(mouseCoordinate)){
                     System.out.println("Pause button clicked.");
@@ -88,7 +88,7 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
                     if (gp.info.playerMoney >= newTower.getCost()){
                         gp.towers.add(newTower);
                         gp.occupiedTiles[tileCoordinate.getGrid().getX()/gp.TILESIZE][tileCoordinate.getGrid().getY()/gp.TILESIZE] = true;
-                        System.out.println("Tower placed!");
+                        // System.out.println("Tower placed!");
                         gp.info.playerMoney -= newTower.getCost();
                     }
                 }

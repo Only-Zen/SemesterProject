@@ -279,7 +279,7 @@ public class Grid {
             if(isPath(row, 0) == true){
                 enemyRoute.add(row);
                 // Print Waypoint for debug
-                System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
+                // System.out.print('('); System.out.print(row); System.out.print(','); System.out.print(col); System.out.print(") \n");
                 enemyWaypoints.add(new Coordinate(col, row, gp));
                 
                 break;
@@ -390,14 +390,14 @@ public class Grid {
                     enemyRoute.add(col);
                 }
                 // Print Waypoint for debug
-                System.out.print('('); System.out.print(col); System.out.print(','); System.out.print(row); System.out.print(") \n");
+                // System.out.print('('); System.out.print(col); System.out.print(','); System.out.print(row); System.out.print(") \n");
                 enemyWaypoints.add(new Coordinate(col, row, gp));
             }
             
         }
         
         System.out.println("Path generated!");
-        System.out.println(enemyWaypoints);
+        // System.out.println(enemyWaypoints);
         return true;    
     }
       
