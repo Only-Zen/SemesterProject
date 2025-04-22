@@ -42,7 +42,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     Grid grid = new Grid(this);
     
-    public int FPS = 60;
+    public final int FPS = 60;
     Thread gameThread;
     MouseHandler mouseH;
     EnemySpawner enemySpawner;
@@ -132,12 +132,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
+        double drawInterval = 1_000_000_000.0 / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
 
         while (gameThread != null) {
-            double drawInterval = 1_000_000_000.0 / FPS;
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
