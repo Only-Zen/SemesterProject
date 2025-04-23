@@ -1,5 +1,8 @@
 package main;
 
+import menu.MenuHandler;
+import menu.GameEndMenu;
+import menu.Pause;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -167,7 +170,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             //Load Savegame if needed
             if(mh.triggerReadFromDisk) {
-                readSavegame(mh.saveFilepath);
+                readSavegame(mh.getSave());
                 mh.triggerReadFromDisk = false;
             }
 

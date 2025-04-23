@@ -1,4 +1,4 @@
-package main;
+package menu;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import java.awt.GridLayout;
+import main.GamePanel;
 
 /**
  * Class that handles the graphics of the two game ending menus: game over and a victory.

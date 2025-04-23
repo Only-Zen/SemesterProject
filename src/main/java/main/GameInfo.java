@@ -1,5 +1,6 @@
 package main;
 
+import menu.GameEndMenu;
 import button.*;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;

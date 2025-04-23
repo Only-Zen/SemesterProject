@@ -1,5 +1,6 @@
 package main;
 
+import menu.TitleScreen;
 import javax.swing.JFrame;
 
 /**

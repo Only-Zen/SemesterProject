@@ -1,10 +1,11 @@
-package main;
+package menu;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import main.GamePanel;
 
 /**
  * Class that handles the functionality of the buttons in menus.
@@ -165,5 +166,8 @@ public class MenuHandler implements ActionListener {
             e.printStackTrace();
         }
         return mapLocation;
+    }
+    public String getSave(){
+        return saveFilepath;
     }
 }

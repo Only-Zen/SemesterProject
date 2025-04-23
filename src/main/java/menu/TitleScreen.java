@@ -1,4 +1,4 @@
-package main;
+package menu;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -12,6 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
+import main.GamePanel;
+import main.Sound;
 
 /**
  * Class that handles the graphics of the title screen.
